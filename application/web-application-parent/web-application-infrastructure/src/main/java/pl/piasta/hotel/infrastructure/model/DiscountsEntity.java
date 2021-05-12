@@ -23,7 +23,7 @@ public class DiscountsEntity {
     private Integer id;
     @Column(name = "code", nullable = false, length = 20)
     private String code;
-    @Column(name = "value")
+    @Column(name = "value", nullable = false)
     private Integer value;
 
 }
