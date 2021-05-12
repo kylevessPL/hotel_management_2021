@@ -70,4 +70,7 @@
             <column name="name" value="Bank Transfer"/>
         </insert>
     </changeSet>
+    <changeSet author="geekon" id="9.0-13">
+        <dropSequence schemaName="public" sequenceName="seq_special_offers"/>
+    </changeSet>
 </databaseChangeLog>
