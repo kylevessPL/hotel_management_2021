@@ -5,34 +5,69 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
 
     <changeSet author="geekon" id="9.0-1">
-        <createSequence sequenceName="seq_bookings_services" cycle="false" minValue="1" maxValue="9223372036854775807" startValue="1" incrementBy="1"/>
+        <dropTable cascadeConstraints="true" tableName="special_offers"/>
     </changeSet>
     <changeSet author="geekon" id="9.0-2">
-        <dropTable cascadeConstraints="true" tableName="bookings_services"/>
+        <createSequence sequenceName="seq_discounts" cycle="false" minValue="1" maxValue="9223372036854775807" startValue="1" incrementBy="1"/>
     </changeSet>
     <changeSet author="geekon" id="9.0-3">
-        <createTable tableName="bookings_services">
-            <column name="id" type="INTEGER" defaultValueComputed="nextval('seq_bookings_services')">
-                <constraints nullable="false" unique="true" primaryKey="true" primaryKeyName="bookings_services_pk"/>
+        <createTable tableName="discounts">
+            <column name="id" type="INTEGER" defaultValueComputed="nextval('seq_discounts')">
+                <constraints nullable="false" unique="true" primaryKey="true" primaryKeyName="discounts_pk"/>
             </column>
-            <column name="booking_id" type="INTEGER">
+            <column name="code" type="VARCHAR(20)">
                 <constraints nullable="false"/>
             </column>
-            <column name="service_id" type="INTEGER">
+            <column defaultValueNumeric="0" name="value" type="INTEGER">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
     <changeSet author="geekon" id="9.0-4">
-        <addForeignKeyConstraint baseColumnNames="service_id" baseTableName="bookings_services" constraintName="bookings_services_fk0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="additional_services"/>
+        <insert schemaName="public" tableName="discounts">
+            <column name="code" value="PROMO5"/>
+            <column name="value" value="5"/>
+        </insert>
     </changeSet>
     <changeSet author="geekon" id="9.0-5">
-        <addForeignKeyConstraint baseColumnNames="booking_id" baseTableName="bookings_services" constraintName="bookings_services_fk1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="bookings" />
+        <insert schemaName="public" tableName="discounts">
+            <column name="code" value="PROMO10"/>
+            <column name="value" value="10"/>
+        </insert>
     </changeSet>
     <changeSet author="geekon" id="9.0-6">
-        <addForeignKeyConstraint baseColumnNames="room_id" baseTableName="room_amenities" constraintName="room_amenities_fk0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="rooms" />
+        <insert schemaName="public" tableName="discounts">
+            <column name="code" value="PROMO15"/>
+            <column name="value" value="15"/>
+        </insert>
     </changeSet>
     <changeSet author="geekon" id="9.0-7">
-        <addForeignKeyConstraint baseColumnNames="amenity_id" baseTableName="room_amenities" constraintName="room_amenities_fk1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="amenities" />
+        <insert schemaName="public" tableName="discounts">
+            <column name="code" value="PROMO20"/>
+            <column name="value" value="20"/>
+        </insert>
+    </changeSet>
+    <changeSet author="geekon" id="9.0-8">
+        <delete schemaName="public" tableName="payment_forms"/>
+    </changeSet>
+    <changeSet author="geekon" id="9.0-9">
+        <insert schemaName="public" tableName="payment_forms">
+            <column name="name" value="Credit Card"/>
+        </insert>
+    </changeSet>
+    <changeSet author="geekon" id="9.0-10">
+        <insert schemaName="public" tableName="payment_forms">
+            <column name="name" value="PayPal"/>
+        </insert>
+    </changeSet>
+    <changeSet author="geekon" id="9.0-11">
+        <insert schemaName="public" tableName="payment_forms">
+            <column name="name" value="Bitcoin"/>
+        </insert>
+    </changeSet>
+    <changeSet author="geekon" id="9.0-12">
+        <insert schemaName="public" tableName="payment_forms">
+            <column name="name" value="Bank Transfer"/>
+        </insert>
     </changeSet>
 </databaseChangeLog>
