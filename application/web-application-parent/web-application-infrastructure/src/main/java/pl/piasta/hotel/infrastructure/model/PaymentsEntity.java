@@ -20,7 +20,7 @@ public class PaymentsEntity {
 
     @Id @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "payments_generator")
-    @SequenceGenerator(name="payments_generator", sequenceName = "seq_payments", allocationSize = 1)
+    @SequenceGenerator(name = "payments_generator", sequenceName = "seq_payments", allocationSize = 1)
     private Integer id;
     @Column(name = "booking_id", nullable = false)
     private Integer bookingId;

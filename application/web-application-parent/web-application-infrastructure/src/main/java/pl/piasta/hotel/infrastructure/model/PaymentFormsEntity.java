@@ -19,7 +19,7 @@ public class PaymentFormsEntity {
 
     @Id @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "payment_forms_generator")
-    @SequenceGenerator(name="payment_forms_generator", sequenceName = "seq_payment_forms", allocationSize = 1)
+    @SequenceGenerator(name = "payment_forms_generator", sequenceName = "seq_payment_forms", allocationSize = 1)
     private Integer id;
     @Column(name = "name", nullable = false, length = 20)
     private String name;

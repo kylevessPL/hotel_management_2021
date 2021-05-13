@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import pl.piasta.hotel.domainmodel.rooms.DateDetails;
 import pl.piasta.hotel.domainmodel.rooms.Room;
 import pl.piasta.hotel.domainmodel.rooms.RoomCommand;
-import pl.piasta.hotel.domainmodel.rooms.SortDetails;
-import pl.piasta.hotel.domainmodel.rooms.SortDir;
+import pl.piasta.hotel.domainmodel.utils.SortDetails;
+import pl.piasta.hotel.domainmodel.utils.SortDir;
 
 import java.util.Comparator;
 import java.util.List;

@@ -20,7 +20,7 @@ public class RoomsEntity {
 
     @Id @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rooms_generator")
-    @SequenceGenerator(name="rooms_generator", sequenceName = "seq_rooms", allocationSize = 1)
+    @SequenceGenerator(name = "rooms_generator", sequenceName = "seq_rooms", allocationSize = 1)
     private Integer id;
     @Column(name = "room_number", nullable = false, length = 10)
     private String roomNumber;

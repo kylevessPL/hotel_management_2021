@@ -9,12 +9,12 @@ import pl.piasta.hotel.domainmodel.rooms.RoomDetails;
 import pl.piasta.hotel.domainmodel.rooms.RoomFinalDetails;
 import pl.piasta.hotel.infrastructure.dao.AmenitiesEntityDao;
 import pl.piasta.hotel.infrastructure.dao.BookingsEntityDao;
-import pl.piasta.hotel.infrastructure.dao.RoomAmenitiesEntityDao;
+import pl.piasta.hotel.infrastructure.dao.RoomsAmenitiesEntityDao;
 import pl.piasta.hotel.infrastructure.dao.RoomsEntityDao;
 import pl.piasta.hotel.infrastructure.mapper.RoomsEntityMapper;
 import pl.piasta.hotel.infrastructure.model.AmenitiesEntity;
 import pl.piasta.hotel.infrastructure.model.BookingsEntity;
-import pl.piasta.hotel.infrastructure.model.RoomAmenitiesEntity;
+import pl.piasta.hotel.infrastructure.model.RoomsAmenitiesEntity;
 import pl.piasta.hotel.infrastructure.model.RoomsEntity;
 
 import java.sql.Date;
@@ -31,7 +31,7 @@ public class RoomsRepositoryImpl implements RoomsRepository {
     private final RoomsEntityMapper roomsEntityMapper;
     private final RoomsEntityDao roomsDao;
     private final BookingsEntityDao bookingsDao;
-    private final RoomAmenitiesEntityDao roomAmenitiesDao;
+    private final RoomsAmenitiesEntityDao roomAmenitiesDao;
     private final AmenitiesEntityDao amenitiesDao;
 
     @Override
@@ -42,14 +42,14 @@ public class RoomsRepositoryImpl implements RoomsRepository {
                 .map(BookingsEntity::getRoomId)
                 .collect(Collectors.toList());
         List<RoomsEntity> rooms = bookedRooms.isEmpty() ? roomsDao.findAll() : roomsDao.findByIdNotIn(bookedRooms);
-        List<RoomAmenitiesEntity> roomAmenities = roomAmenitiesDao.findAllByRoomIdIn(rooms
+        List<RoomsAmenitiesEntity> roomAmenities = roomAmenitiesDao.findAllByRoomIdIn(rooms
                 .stream()
                 .map(RoomsEntity::getId)
                 .distinct()
                 .collect(Collectors.toList()));
         List<AmenitiesEntity> amenities = amenitiesDao.findAllByIdIn(roomAmenities
                 .stream()
-                .map(RoomAmenitiesEntity::getAmenityId)
+                .map(RoomsAmenitiesEntity::getAmenityId)
                 .distinct()
                 .collect(Collectors.toList()));
 
@@ -58,7 +58,7 @@ public class RoomsRepositoryImpl implements RoomsRepository {
             List<Integer> amenityList = roomAmenities
                     .stream()
                     .filter(a -> a.getRoomId().equals(room.getId()))
-                    .map(RoomAmenitiesEntity::getAmenityId)
+                    .map(RoomsAmenitiesEntity::getAmenityId)
                     .collect(Collectors.toList());
             roomAmenitiesMap.put(room.getId(), amenities
                     .stream()
@@ -72,19 +72,16 @@ public class RoomsRepositoryImpl implements RoomsRepository {
     @Transactional(readOnly = true)
     public Optional<RoomDetails> getRoomDetails(Integer roomId) {
         Optional<RoomsEntity> roomsEntity = roomsDao.findById(roomId);
-        if(roomsEntity.isPresent()) {
-            return roomsEntityMapper.mapToRoomDetails(roomsEntity);
-        }
-        return Optional.empty();
+        return roomsEntityMapper.mapToRoomDetails(roomsEntity);
     }
 
     @Override
     public RoomFinalDetails getRoomFinalDetails(Integer roomId) {
         RoomsEntity room = roomsDao.getOne(roomId);
-        List<RoomAmenitiesEntity> roomAmenities = roomAmenitiesDao.findAllByRoomId(room.getId());
+        List<RoomsAmenitiesEntity> roomAmenities = roomAmenitiesDao.findAllByRoomId(room.getId());
         List<AmenitiesEntity> amenities = amenitiesDao.findAllByIdIn(roomAmenities
                 .stream()
-                .map(RoomAmenitiesEntity::getAmenityId)
+                .map(RoomsAmenitiesEntity::getAmenityId)
                 .distinct()
                 .collect(Collectors.toList()));
         return roomsEntityMapper.mapToRoomFinalDetails(room, amenities);

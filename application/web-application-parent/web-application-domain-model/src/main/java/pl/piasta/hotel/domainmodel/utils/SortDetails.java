@@ -1,4 +1,4 @@
-package pl.piasta.hotel.domainmodel.rooms;
+package pl.piasta.hotel.domainmodel.utils;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

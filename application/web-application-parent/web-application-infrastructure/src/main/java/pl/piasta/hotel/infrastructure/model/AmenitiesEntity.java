@@ -19,7 +19,7 @@ public class AmenitiesEntity {
 
     @Id @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "amenities_generator")
-    @SequenceGenerator(name="amenities_generator", sequenceName = "seq_amenities", allocationSize = 1)
+    @SequenceGenerator(name = "amenities_generator", sequenceName = "seq_amenities", allocationSize = 1)
     private Integer id;
     @Column(name = "name", nullable = false, length = 40)
     private String name;

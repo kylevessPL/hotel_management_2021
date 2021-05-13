@@ -66,30 +66,21 @@ public class BookingsRepositoryImpl implements BookingsRepository {
     @Transactional(readOnly = true)
     public Optional<BookingConfirmationDetails> getBookingConfirmationDetails(Integer bookingId) {
         Optional<BookingsEntity> bookingsEntity = dao.findById(bookingId);
-        if(bookingsEntity.isPresent()) {
-            return bookingsEntityMapper.mapToBookingConfirmationDetails(bookingsEntity);
-        }
-        return Optional.empty();
+        return bookingsEntityMapper.mapToBookingConfirmationDetails(bookingsEntity);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<BookingFinalDetails> getBookingFinalDetails(Integer bookingId) {
         Optional<BookingsEntity> bookingsEntity = dao.findById(bookingId);
-        if(bookingsEntity.isPresent()) {
-            return bookingsEntityMapper.mapToBookingFinalDetails(bookingsEntity);
-        }
-        return Optional.empty();
+        return bookingsEntityMapper.mapToBookingFinalDetails(bookingsEntity);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<BookingCancellationDetails> getBookingCancellationDetails(Integer bookingId) {
         Optional<BookingsEntity> bookingsEntity = dao.findById(bookingId);
-        if(bookingsEntity.isPresent()) {
-            return bookingsEntityMapper.mapToBookingCancellationDetails(bookingsEntity);
-        }
-        return Optional.empty();
+        return bookingsEntityMapper.mapToBookingCancellationDetails(bookingsEntity);
     }
 
     void updateEntity(BookingsEntity booking, BookingDetails bookingDetails) {

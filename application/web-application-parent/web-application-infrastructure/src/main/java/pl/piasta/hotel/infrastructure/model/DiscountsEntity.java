@@ -19,7 +19,7 @@ public class DiscountsEntity {
 
     @Id @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "discounts_generator")
-    @SequenceGenerator(name="discounts_generator", sequenceName = "seq_discounts", allocationSize = 1)
+    @SequenceGenerator(name = "discounts_generator", sequenceName = "seq_discounts", allocationSize = 1)
     private Integer id;
     @Column(name = "code", nullable = false, length = 20)
     private String code;

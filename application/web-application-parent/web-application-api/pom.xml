@@ -17,16 +17,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
             <groupId>pl.piasta.hotel</groupId>
             <artifactId>application-dto</artifactId>
         </dependency>
         <dependency>
-            <groupId>pl.piasta.hotel</groupId>
-            <artifactId>web-application-domain</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
             <groupId>org.mapstruct</groupId>

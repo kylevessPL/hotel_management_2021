@@ -20,7 +20,7 @@ public class AdditionalServicesEntity {
 
     @Id @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "additional_services_generator")
-    @SequenceGenerator(name="additional_services_generator", sequenceName = "seq_additional_services", allocationSize = 1)
+    @SequenceGenerator(name = "additional_services_generator", sequenceName = "seq_additional_services", allocationSize = 1)
     private Integer id;
     @Column(name = "name", nullable = false, length = 40)
     private String name;

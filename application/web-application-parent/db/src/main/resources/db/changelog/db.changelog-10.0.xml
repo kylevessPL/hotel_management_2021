@@ -1,0 +1,50 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <changeSet author="geekon" id="10.0-1">
+        <renameTable schemaName="public" oldTableName="room_amenities" newTableName="rooms_amenities"/>
+    </changeSet>
+    <changeSet author="geekon" id="10.0-2">
+        <createSequence sequenceName="seq_users" cycle="false" minValue="1" maxValue="9223372036854775807" startValue="1" incrementBy="1"/>
+        <createTable tableName="users">
+            <column name="id" type="INTEGER" defaultValueComputed="nextval('seq_users')">
+                <constraints nullable="false" unique="true" primaryKey="true" primaryKeyName="users_pk"/>
+            </column>
+            <column name="username" type="VARCHAR(20)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="username_ix0"/>
+            </column>
+            <column name="email" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="email_ix0"/>
+            </column>
+            <column name="password" type="VARCHAR(120)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="geekon" id="10.0-3">
+        <createSequence sequenceName="seq_roles" cycle="false" minValue="1" maxValue="9223372036854775807" startValue="1" incrementBy="1"/>
+        <createTable tableName="roles">
+            <column name="id" type="INTEGER" defaultValueComputed="nextval('seq_roles')">
+                <constraints nullable="false" unique="true" primaryKey="true" primaryKeyName="roles_pk"/>
+            </column>
+            <column name="name" type="VARCHAR(20)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="name_ix0"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="geekon" id="10.0-4">
+        <createTable tableName="users_roles">
+            <column name="user_id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="users_roles_pk"/>
+            </column>
+            <column name="role_id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="users_roles_pk"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="users_roles" constraintName="users_roles_fk0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="users" />
+        <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="users_roles" constraintName="users_roles_fk1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="roles" />
+    </changeSet>
+</databaseChangeLog>

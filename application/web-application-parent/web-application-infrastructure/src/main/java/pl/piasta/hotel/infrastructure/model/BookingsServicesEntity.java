@@ -19,7 +19,7 @@ public class BookingsServicesEntity {
 
     @Id @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bookings_services_generator")
-    @SequenceGenerator(name="bookings_services_generator", sequenceName = "seq_bookings_services", allocationSize = 1)
+    @SequenceGenerator(name = "bookings_services_generator", sequenceName = "seq_bookings_services", allocationSize = 1)
     private Integer id;
     @Column(name = "booking_id", nullable = false)
     private Integer bookingId;
