@@ -30,7 +30,7 @@ import pl.piasta.hotel.domainmodel.rooms.DateDetails;
 import pl.piasta.hotel.domainmodel.rooms.RoomDetails;
 import pl.piasta.hotel.domainmodel.rooms.RoomFinalDetails;
 import pl.piasta.hotel.domainmodel.rooms.RoomInfo;
-import pl.piasta.hotel.domainmodel.utils.BookingException;
+import pl.piasta.hotel.domainmodel.utils.ApplicationException;
 import pl.piasta.hotel.domainmodel.utils.ErrorCode;
 
 import java.math.BigDecimal;
@@ -141,11 +141,11 @@ public class BookingsServiceImpl implements BookingsService {
     }
 
     private BookingFinalDetails getBookingFinalDetails(Integer id) {
-        return bookingsRepository.getBookingFinalDetails(id).orElseThrow(() -> new BookingException(ErrorCode.BOOKING_NOT_FOUND));
+        return bookingsRepository.getBookingFinalDetails(id).orElseThrow(() -> new ApplicationException(ErrorCode.BOOKING_NOT_FOUND));
     }
 
     private BookingCancellationDetails getBookingCancellationDetails(Integer bookingId) {
-        return bookingsRepository.getBookingCancellationDetails(bookingId).orElseThrow(() -> new BookingException(ErrorCode.BOOKING_NOT_FOUND));
+        return bookingsRepository.getBookingCancellationDetails(bookingId).orElseThrow(() -> new ApplicationException(ErrorCode.BOOKING_NOT_FOUND));
     }
 
     private PaymentForm getBookingPaymentForm(Integer bookingId) {
@@ -165,7 +165,7 @@ public class BookingsServiceImpl implements BookingsService {
         Integer customerId = bookingCancellationDetails.getCustomerId();
         String bookingCustomerDocumentId = customersRepository.getCustomerDocumentId(customerId);
         if(!bookingCustomerDocumentId.equals(documentId)) {
-            throw new BookingException(ErrorCode.BOOKING_NOT_OWNED);
+            throw new ApplicationException(ErrorCode.BOOKING_NOT_OWNED);
         }
     }
 
@@ -206,14 +206,14 @@ public class BookingsServiceImpl implements BookingsService {
             return Collections.emptyList();
         }
         return additionalServicesRepository.getAdditionalServices(Arrays.asList(additionalServices))
-                .orElseThrow(() -> new BookingException(ErrorCode.ADDITIONAL_SERVICE_NOT_FOUND));
+                .orElseThrow(() -> new ApplicationException(ErrorCode.ADDITIONAL_SERVICE_NOT_FOUND));
     }
 
     private RoomDetails getRoomDetails(Integer roomId, DateDetails dateDetails) {
         if(!isRoomAvailable(roomId, dateDetails)) {
-            throw new BookingException(ErrorCode.ROOM_NOT_AVAILABLE);
+            throw new ApplicationException(ErrorCode.ROOM_NOT_AVAILABLE);
         }
-        return roomsRepository.getRoomDetails(roomId).orElseThrow(() -> new BookingException(ErrorCode.ROOM_NOT_FOUND));
+        return roomsRepository.getRoomDetails(roomId).orElseThrow(() -> new ApplicationException(ErrorCode.ROOM_NOT_FOUND));
     }
 
     private boolean isRoomAvailable(Integer roomId, DateDetails dateDetails) {
@@ -238,24 +238,24 @@ public class BookingsServiceImpl implements BookingsService {
     }
 
     private BookingConfirmationDetails getBookingConfirmationDetails(Integer bookingId) {
-        return bookingsRepository.getBookingConfirmationDetails(bookingId).orElseThrow(() -> new BookingException(ErrorCode.BOOKING_NOT_FOUND));
+        return bookingsRepository.getBookingConfirmationDetails(bookingId).orElseThrow(() -> new ApplicationException(ErrorCode.BOOKING_NOT_FOUND));
     }
 
     private void checkPaymentValidity(Integer paymentFormId) {
         if(!paymentFormExists(paymentFormId)) {
-            throw new BookingException(ErrorCode.PAYMENT_FORM_NOT_FOUND);
+            throw new ApplicationException(ErrorCode.PAYMENT_FORM_NOT_FOUND);
         }
     }
 
     private void checkBookingValidity(BookingStatus bookingStatus, BookingDate bookingDate) {
         switch(bookingStatus) {
             case CONFIRMED:
-                throw new BookingException((ErrorCode.BOOKING_ALREADY_CONFIRMED));
+                throw new ApplicationException((ErrorCode.BOOKING_ALREADY_CONFIRMED));
             case CANCELLED:
-                throw new BookingException(ErrorCode.BOOKING_ALREADY_CANCELLED);
+                throw new ApplicationException(ErrorCode.BOOKING_ALREADY_CANCELLED);
             default:
                 if(!isBookingDateValid(bookingDate)) {
-                    throw new BookingException(ErrorCode.BOOKING_EXPIRED);
+                    throw new ApplicationException(ErrorCode.BOOKING_EXPIRED);
                 }
         }
     }

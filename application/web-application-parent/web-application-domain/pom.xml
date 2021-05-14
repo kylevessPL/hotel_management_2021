@@ -28,6 +28,10 @@
             <artifactId>spring-tx</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+        </dependency>
+        <dependency>
             <groupId>pl.piasta.hotel</groupId>
             <artifactId>web-application-domain-model</artifactId>
         </dependency>

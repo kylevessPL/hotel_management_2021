@@ -6,26 +6,38 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import pl.piasta.hotel.domainmodel.utils.BookingException;
+import pl.piasta.hotel.domainmodel.utils.ApplicationException;
 import pl.piasta.hotel.domainmodel.utils.ErrorCode;
 
 @ControllerAdvice
 public final class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(value = BookingException.class)
-    protected ResponseEntity<Object> handleBookingError(BookingException ex) {
+    @ExceptionHandler(value = ApplicationException.class)
+    protected ResponseEntity<Object> handleBookingError(ApplicationException ex) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         logger.warn(status.toString(), ex);
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 ex.getErrorCode().getCode(),
                 ex.getMessage());
+        return new ResponseEntity<>(errorResponse, new HttpHeaders(), status);
+    }
+
+    @ExceptionHandler(value = BadCredentialsException.class)
+    protected ResponseEntity<Object> handleBadCredentialsError(BadCredentialsException ex) {
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        logger.warn(status.toString(), ex);
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.UNAUTHORIZED.value(),
+                ErrorCode.BAD_CREDENTIALS.getCode(),
+                ErrorCode.BAD_CREDENTIALS.getMessage());
         return new ResponseEntity<>(errorResponse, new HttpHeaders(), status);
     }
 

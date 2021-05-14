@@ -47,4 +47,10 @@
         <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="users_roles" constraintName="users_roles_fk0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="users" />
         <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="users_roles" constraintName="users_roles_fk1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="roles" />
     </changeSet>
+    <changeSet author="geekon" id="10.0.5">
+        <insert schemaName="public" tableName="roles">
+            <column name="name" value="ROLE_ADMIN"/>
+            <column name="name" value="ROLE_USER"/>
+        </insert>
+    </changeSet>
 </databaseChangeLog>

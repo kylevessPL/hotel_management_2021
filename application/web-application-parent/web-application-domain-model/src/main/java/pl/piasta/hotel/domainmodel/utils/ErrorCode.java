@@ -16,7 +16,10 @@ public enum ErrorCode {
     PAYMENT_FORM_NOT_FOUND("P04", "Payment form not found"),
     ROOM_NOT_AVAILABLE("R12", "Room not available"),
     ROOM_NOT_FOUND("R04", "Room not found"),
-    VALIDATION_FAILED("V06", "Validation failed");
+    VALIDATION_FAILED("V06", "Validation failed"),
+    USERNAME_OCCUPIED("A01", "Username already in use"),
+    EMAIL_OCCUPIED("A02", "Email already in use"),
+    BAD_CREDENTIALS("A03", "Bad credentials");
 
     private final String code;
     private final String message;

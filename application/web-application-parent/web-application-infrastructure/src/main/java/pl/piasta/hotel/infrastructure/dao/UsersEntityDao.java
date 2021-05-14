@@ -10,5 +10,4 @@ public interface UsersEntityDao extends JpaRepository<UsersEntity, Integer> {
     Optional<UsersEntity> findByUsername(String username);
     Boolean existsByUsername(String username);
     Boolean existsByEmail(String email);
-
 }

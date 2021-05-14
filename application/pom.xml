@@ -133,6 +133,16 @@
                 <artifactId>springdoc-openapi-data-rest</artifactId>
                 <version>${springdoc.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-security</artifactId>
+                <version>${springdoc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk15on</artifactId>
+                <version>1.68</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>

@@ -1,4 +1,4 @@
-package pl.piasta.hotel.security.utils;
+package pl.piasta.hotel.domain.security.utils;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -20,7 +20,6 @@ public class JwtUtils {
 
     @Value("${app.jwtSecret}")
     private String jwtSecret;
-
     @Value("${app.jwtExpirationMs}")
     private int jwtExpirationMs;
 

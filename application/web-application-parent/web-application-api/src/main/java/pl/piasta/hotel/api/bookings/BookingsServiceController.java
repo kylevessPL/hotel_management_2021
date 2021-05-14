@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,7 +40,7 @@ public class BookingsServiceController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     @PostMapping(value = "/hotel/services/bookings/book", produces = MediaType.APPLICATION_JSON_VALUE)
-    public BookingResponse book(@ParameterObject @RequestBody @Valid BookingRequest bookingRequest) {
+    public BookingResponse book(@RequestBody @Valid BookingRequest bookingRequest) {
         return bookingMapper.mapToResponse(bookingsService.bookAndGetSummary(
                 bookingMapper.mapToCommand(bookingRequest))
         );
@@ -58,7 +57,7 @@ public class BookingsServiceController {
     })
     @PostMapping(value = "/hotel/services/bookings/confirm", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void confirmBooking(@ParameterObject @RequestBody @Valid BookingConfirmationRequest bookingConfirmationRequest) {
+    public void confirmBooking(@RequestBody @Valid BookingConfirmationRequest bookingConfirmationRequest) {
         bookingsService.confirmBooking(bookingMapper.mapToCommand(bookingConfirmationRequest));
     }
 
@@ -73,7 +72,7 @@ public class BookingsServiceController {
     })
     @PutMapping(value = "/hotel/services/bookings/cancel", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void cancelBooking(@ParameterObject @RequestBody @Valid BookingCancellationRequest bookingCancellationRequest) {
+    public void cancelBooking(@RequestBody @Valid BookingCancellationRequest bookingCancellationRequest) {
         bookingsService.cancelBooking(bookingMapper.mapToCommand(bookingCancellationRequest));
     }
 
