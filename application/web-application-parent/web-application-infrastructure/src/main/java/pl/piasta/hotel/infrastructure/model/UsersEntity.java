@@ -34,6 +34,8 @@ public class UsersEntity {
     private String email;
     @Column(name = "password", nullable = false, length = 120)
     private String password;
+    @Column(name = "image_id", length = 128)
+    private String image_id;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

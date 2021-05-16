@@ -3,11 +3,16 @@
     {
       "name": "app.jwtSecret",
       "type": "java.lang.String",
-      "description": "Description for app.jwtSecret."
+      "description": "JWT secret key"
     },
     {
       "name": "app.jwtExpirationMs",
       "type": "java.lang.String",
-      "description": "Description for app.jwtExpirationMs."
+      "description": "JWT access token expiration time"
+    },
+    {
+      "name": "app.jwtRefreshExpirationMs",
+      "type": "java.lang.String",
+      "description": "JWT refresh token expiration time"
     }
   ] }

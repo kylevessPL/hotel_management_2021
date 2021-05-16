@@ -7,9 +7,12 @@ import java.util.Set;
 
 @RequiredArgsConstructor
 @Getter
-public final class UserLoginInfo {
+public final class TokenInfo {
 
-    private final String token;
+    private final String accessToken;
+    private final String refreshToken;
+    private final String type = "Bearer";
+    private final int expires;
     private final Integer id;
     private final String username;
     private final String email;

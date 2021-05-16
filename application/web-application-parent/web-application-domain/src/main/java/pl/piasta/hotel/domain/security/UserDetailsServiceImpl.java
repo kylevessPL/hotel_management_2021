@@ -10,9 +10,9 @@ import pl.piasta.hotel.domainmodel.security.UserInfo;
 
 @Service
 @RequiredArgsConstructor
-public class UsersServiceImpl implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final UsersRepository repository;
+    private final AuthRepository repository;
 
     @Override
     @Transactional(readOnly = true)

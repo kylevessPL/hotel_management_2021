@@ -3,12 +3,16 @@ package pl.piasta.hotel.infrastructure.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import pl.piasta.hotel.domain.security.UsersRepository;
+import pl.piasta.hotel.domain.security.AuthRepository;
+import pl.piasta.hotel.domainmodel.security.RefreshToken;
 import pl.piasta.hotel.domainmodel.security.UserInfo;
 import pl.piasta.hotel.domainmodel.security.utils.Role;
+import pl.piasta.hotel.infrastructure.dao.RefreshTokensEntityDao;
 import pl.piasta.hotel.infrastructure.dao.RolesEntityDao;
 import pl.piasta.hotel.infrastructure.dao.UsersEntityDao;
+import pl.piasta.hotel.infrastructure.mapper.RefreshTokensEntityMapper;
 import pl.piasta.hotel.infrastructure.mapper.UsersEntityMapper;
+import pl.piasta.hotel.infrastructure.model.RefreshTokensEntity;
 import pl.piasta.hotel.infrastructure.model.RolesEntity;
 import pl.piasta.hotel.infrastructure.model.UsersEntity;
 
@@ -18,17 +22,19 @@ import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
-public class UsersRepositoryImpl implements UsersRepository {
+public class AuthRepositoryImpl implements AuthRepository {
 
-    private final UsersEntityMapper mapper;
+    private final UsersEntityMapper usersEntityMapper;
+    private final RefreshTokensEntityMapper refreshTokensEntityMapper;
     private final UsersEntityDao usersEntityDao;
     private final RolesEntityDao rolesEntityDao;
+    private final RefreshTokensEntityDao refreshTokensEntityDao;
 
     @Override
     @Transactional(readOnly = true)
     public Optional<UserInfo> findUserByUsername(String username) {
         Optional<UsersEntity> usersEntity = usersEntityDao.findByUsername(username);
-        return mapper.mapToUserInfo(usersEntity);
+        return usersEntityMapper.mapToUserInfo(usersEntity);
     }
 
     @Override
@@ -38,7 +44,7 @@ public class UsersRepositoryImpl implements UsersRepository {
                 .map(rolesEntityDao::getByName)
                 .collect(Collectors.toSet());
         UsersEntity usersEntity = new UsersEntity();
-        updateEntity(usersEntity, username, email, password, rolesEntitySet);
+        updateUsersEntity(usersEntity, username, email, password, rolesEntitySet);
         usersEntityDao.save(usersEntity);
     }
 
@@ -54,10 +60,33 @@ public class UsersRepositoryImpl implements UsersRepository {
         return usersEntityDao.existsByEmail(email);
     }
 
-    void updateEntity(UsersEntity user, String username, String email, String password, Set<RolesEntity> roles) {
+    @Override
+    @Transactional
+    public void saveRefreshToken(RefreshToken refreshToken) {
+        UsersEntity usersEntity = usersEntityDao.getByUsername(refreshToken.getSubject());
+        RefreshTokensEntity refreshTokensEntity = new RefreshTokensEntity();
+        updateRefreshTokensEntity(refreshTokensEntity, usersEntity, refreshToken);
+        refreshTokensEntityDao.save(refreshTokensEntity);
+    }
+
+    @Override
+    @Transactional
+    public Optional<RefreshToken> deleteRefreshTokenByToken(String token) {
+        return refreshTokensEntityMapper.mapToTokenInfo(refreshTokensEntityDao.deleteByToken(token));
+    }
+
+    void updateUsersEntity(UsersEntity user, String username, String email, String password, Set<RolesEntity> roles) {
         user.setUsername(username);
         user.setEmail(email);
         user.setPassword(password);
         user.setRoles(roles);
+    }
+
+    void updateRefreshTokensEntity(
+            RefreshTokensEntity refreshTokensEntity,
+            UsersEntity usersEntity, RefreshToken refreshToken) {
+        refreshTokensEntity.setToken(refreshToken.getToken());
+        refreshTokensEntity.setExpiryDate(refreshToken.getExpiryDate());
+        refreshTokensEntity.setUser(usersEntity);
     }
 }

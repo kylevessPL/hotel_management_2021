@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import pl.piasta.hotel.api.security.mapper.AuthMapper;
 import pl.piasta.hotel.domain.security.AuthService;
+import pl.piasta.hotel.domainmodel.security.RefreshTokenCommand;
 import pl.piasta.hotel.domainmodel.security.UserLoginCommand;
 import pl.piasta.hotel.domainmodel.security.UserRegisterCommand;
-import pl.piasta.hotel.dto.security.UserLoginInfoResponse;
+import pl.piasta.hotel.dto.security.RefreshTokenInfoResponse;
+import pl.piasta.hotel.dto.security.TokenInfoResponse;
 
 import javax.validation.Valid;
 
@@ -43,9 +45,9 @@ public class AuthController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     @PostMapping(value = "/signin", produces = MediaType.APPLICATION_JSON_VALUE)
-    public UserLoginInfoResponse authenticateUser(@Valid @RequestBody UserLoginRequest loginRequest) {
+    public TokenInfoResponse authenticateUser(@Valid @RequestBody UserLoginRequest loginRequest) {
         UserLoginCommand command = mapper.mapToCommand(loginRequest);
-        return mapper.mapToResponse(service.loginUser(command));
+        return mapper.mapToResponse(service.authenticateUser(command));
     }
 
     @SecurityRequirements
@@ -63,5 +65,21 @@ public class AuthController {
     public void registerUser(@RequestBody @Valid UserRegisterRequest registerRequest) {
         UserRegisterCommand command = mapper.mapToCommand(registerRequest);
         service.registerUser(command);
+    }
+
+    @SecurityRequirements
+    @Operation(
+            summary = "Refresh access token",
+            operationId = "refreshToken"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully generated new token pair"),
+            @ApiResponse(responseCode = "400", description = "Invalid or expired refresh token provided"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+    })
+    @PostMapping(value = "/refreshtoken", produces = MediaType.APPLICATION_JSON_VALUE)
+    public RefreshTokenInfoResponse refreshToken(@Valid @RequestBody RefreshTokenRequest tokenRequest) {
+        RefreshTokenCommand command = mapper.mapToCommand(tokenRequest);
+        return mapper.mapToResponse(service.refreshToken(command));
     }
 }
