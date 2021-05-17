@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import pl.piasta.hotel.domainmodel.rooms.DateDetails;
 import pl.piasta.hotel.domainmodel.rooms.Room;
 import pl.piasta.hotel.domainmodel.rooms.RoomCommand;
-import pl.piasta.hotel.domainmodel.utils.SortDetails;
 import pl.piasta.hotel.domainmodel.utils.SortDir;
+import pl.piasta.hotel.domainmodel.utils.SortProperties;
 
 import java.util.Comparator;
 import java.util.List;
@@ -20,22 +20,22 @@ public class RoomsServiceImpl implements RoomsService {
     @Override
     public List<Room> getAllAvailableRoomsWithinDateRange(RoomCommand roomCommand) {
         DateDetails dateDetails = roomCommand.getDateDetails();
-        SortDetails sortDetails = roomCommand.getSortDetails();
+        SortProperties sortProperties = roomCommand.getSortProperties();
         List<Room> rooms = repository.getAllAvailableRoomsWithinDateRange(dateDetails.getStartDate(), dateDetails.getEndDate());
-        sortRooms(rooms, sortDetails);
+        sortRooms(rooms, sortProperties);
         return rooms;
     }
 
-    private void sortRooms(List<Room> rooms, SortDetails sortDetails) {
+    private void sortRooms(List<Room> rooms, SortProperties sortProperties) {
         Comparator<Room> comparator;
-        if(sortDetails.getSortBy().equalsIgnoreCase("bedAmount")) {
+        if(sortProperties.getSortBy().equalsIgnoreCase("bedAmount")) {
             comparator = Comparator.comparing(Room::getBedAmount).thenComparing(Room::getStandardPrice);
-        } else if(sortDetails.getSortBy().equalsIgnoreCase("standardPrice")) {
+        } else if(sortProperties.getSortBy().equalsIgnoreCase("standardPrice")) {
             comparator = Comparator.comparing(Room::getStandardPrice).thenComparing(Room::getBedAmount);
         } else {
             comparator = Comparator.comparing(Room::getId);
         }
-        if(sortDetails.getSortDir() == SortDir.ASC) {
+        if(sortProperties.getSortDir() == SortDir.ASC) {
             rooms.sort(comparator);
         } else {
             rooms.sort(comparator.reversed());

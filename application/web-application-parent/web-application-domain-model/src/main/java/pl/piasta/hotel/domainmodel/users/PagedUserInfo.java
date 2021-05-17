@@ -1,4 +1,4 @@
-package pl.piasta.hotel.domainmodel.security;
+package pl.piasta.hotel.domainmodel.users;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -9,12 +9,11 @@ import java.util.Set;
 
 @RequiredArgsConstructor
 @Getter
-public final class UserInfo {
+public final class PagedUserInfo {
 
     private final Integer id;
     private final String username;
     private final String email;
-    private final String password;
     private final Set<Role> roles;
     private final AccountStatus status;
 

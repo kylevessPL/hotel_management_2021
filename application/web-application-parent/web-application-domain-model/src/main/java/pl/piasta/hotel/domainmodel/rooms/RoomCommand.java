@@ -3,7 +3,7 @@ package pl.piasta.hotel.domainmodel.rooms;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pl.piasta.hotel.domainmodel.utils.SortDetails;
+import pl.piasta.hotel.domainmodel.utils.SortProperties;
 
 @NoArgsConstructor
 @Getter
@@ -11,6 +11,6 @@ import pl.piasta.hotel.domainmodel.utils.SortDetails;
 public class RoomCommand {
 
     private DateDetails dateDetails;
-    private SortDetails sortDetails;
+    private SortProperties sortProperties;
 
 }

@@ -2,9 +2,13 @@ package pl.piasta.hotel.infrastructure.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
+import pl.piasta.hotel.domainmodel.security.utils.AccountStatus;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,6 +20,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -34,8 +39,12 @@ public class UsersEntity {
     private String email;
     @Column(name = "password", nullable = false, length = 120)
     private String password;
-    @Column(name = "image_id", length = 128)
-    private String image_id;
+    @Type(type="pg-uuid")
+    @Column(name = "image_id", length = 36)
+    private UUID image_id;
+    @Column(name = "status", nullable = false, length = 6)
+    @Enumerated(EnumType.STRING)
+    private AccountStatus status = AccountStatus.ACTIVE;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

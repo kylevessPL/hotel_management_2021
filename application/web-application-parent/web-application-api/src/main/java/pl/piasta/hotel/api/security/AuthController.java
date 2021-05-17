@@ -1,6 +1,7 @@
 package pl.piasta.hotel.api.security;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
@@ -27,7 +28,7 @@ import javax.validation.Valid;
 @Tag(name = "Authentication API", description = "API performing user authentication operations")
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -36,13 +37,15 @@ public class AuthController {
 
     @SecurityRequirements
     @Operation(
-            summary = "Login user",
+            summary = "Authenticate user and get token",
             operationId = "signInUser"
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully logged in"),
-            @ApiResponse(responseCode = "401", description = "Bad credentials provided"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "400", description = "Malformed request syntax", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Account locked or bad credentials provided", content = @Content),
+            @ApiResponse(responseCode = "422", description = "Validation failed", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content)
     })
     @PostMapping(value = "/signin", produces = MediaType.APPLICATION_JSON_VALUE)
     public TokenInfoResponse authenticateUser(@Valid @RequestBody UserLoginRequest loginRequest) {
@@ -56,8 +59,10 @@ public class AuthController {
             operationId = "signUpUser"
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Successfully registered user"),
-            @ApiResponse(responseCode = "400", description = "Username or email already in use"),
+            @ApiResponse(responseCode = "204", description = "Success"),
+            @ApiResponse(responseCode = "400", description = "Malformed request syntax"),
+            @ApiResponse(responseCode = "409", description = "Username or email already in use"),
+            @ApiResponse(responseCode = "422", description = "Validation failed"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     @PostMapping(value = "/signup", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -73,11 +78,13 @@ public class AuthController {
             operationId = "refreshToken"
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully generated new token pair"),
-            @ApiResponse(responseCode = "400", description = "Invalid or expired refresh token provided"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "400", description = "Malformed request syntax", content = @Content),
+            @ApiResponse(responseCode = "409", description = "Invalid or expired refresh token provided", content = @Content),
+            @ApiResponse(responseCode = "422", description = "Validation failed", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content)
     })
-    @PostMapping(value = "/refreshtoken", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/refresh-token", produces = MediaType.APPLICATION_JSON_VALUE)
     public RefreshTokenInfoResponse refreshToken(@Valid @RequestBody RefreshTokenRequest tokenRequest) {
         RefreshTokenCommand command = mapper.mapToCommand(tokenRequest);
         return mapper.mapToResponse(service.refreshToken(command));

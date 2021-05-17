@@ -6,52 +6,101 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import pl.piasta.hotel.domainmodel.utils.ApplicationException;
 import pl.piasta.hotel.domainmodel.utils.ErrorCode;
+import pl.piasta.hotel.domainmodel.utils.FileUploadException;
+import pl.piasta.hotel.domainmodel.utils.ResourceNotFoundException;
+
+import javax.validation.ConstraintViolationException;
 
 @ControllerAdvice
 public final class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(value = ApplicationException.class)
-    protected ResponseEntity<Object> handleBookingError(ApplicationException ex) {
-        HttpStatus status = HttpStatus.BAD_REQUEST;
+    @ExceptionHandler(value = ResourceNotFoundException.class)
+    protected ResponseEntity<Object> handleResourceNotFoundError(ResourceNotFoundException ex) {
+        HttpStatus status = HttpStatus.NOT_FOUND;
         logger.warn(status.toString(), ex);
         ErrorResponse errorResponse = new ErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
+                status.value(),
                 ex.getErrorCode().getCode(),
                 ex.getMessage());
         return new ResponseEntity<>(errorResponse, new HttpHeaders(), status);
     }
 
-    @ExceptionHandler(value = BadCredentialsException.class)
-    protected ResponseEntity<Object> handleBadCredentialsError(BadCredentialsException ex) {
-        HttpStatus status = HttpStatus.UNAUTHORIZED;
+    @ExceptionHandler(value = FileUploadException.class)
+    protected ResponseEntity<Object> handleFileUploadError(FileUploadException ex) {
+        HttpStatus status = HttpStatus.EXPECTATION_FAILED;
         logger.warn(status.toString(), ex);
         ErrorResponse errorResponse = new ErrorResponse(
-                HttpStatus.UNAUTHORIZED.value(),
-                ErrorCode.BAD_CREDENTIALS.getCode(),
-                ErrorCode.BAD_CREDENTIALS.getMessage());
+                status.value(),
+                ex.getErrorCode().getCode(),
+                ex.getMessage());
+        return new ResponseEntity<>(errorResponse, new HttpHeaders(), status);
+    }
+
+    @ExceptionHandler(value = ApplicationException.class)
+    protected ResponseEntity<Object> handleBookingError(ApplicationException ex) {
+        HttpStatus status = HttpStatus.CONFLICT;
+        logger.warn(status.toString(), ex);
+        ErrorResponse errorResponse = new ErrorResponse(
+                status.value(),
+                ex.getErrorCode().getCode(),
+                ex.getMessage());
         return new ResponseEntity<>(errorResponse, new HttpHeaders(), status);
     }
 
     @ExceptionHandler(value = {
-            MethodArgumentTypeMismatchException.class,
-            IllegalArgumentException.class
+            IllegalArgumentException.class,
+            ConstraintViolationException.class
     })
     protected ResponseEntity<Object> handleValidationError(Exception ex) {
-        HttpStatus status = HttpStatus.BAD_REQUEST;
+        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
         logger.warn(status.toString(), ex);
         ErrorResponse errorResponse = new ErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
+                status.value(),
                 ErrorCode.VALIDATION_FAILED.getCode(),
                 ErrorCode.VALIDATION_FAILED.getMessage());
+        return new ResponseEntity<>(errorResponse, new HttpHeaders(), status);
+    }
+
+    @ExceptionHandler(value = AuthenticationException.class)
+    protected ResponseEntity<Object> handleAuthenticationExceptionError(AuthenticationException ex) {
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        logger.warn(status.toString(), ex);
+        ErrorResponse errorResponse = new ErrorResponse(
+                status.value(),
+                ErrorCode.BAD_CREDENTIALS.getCode(),
+                ex.getMessage());
+        return new ResponseEntity<>(errorResponse, new HttpHeaders(), status);
+    }
+
+    @ExceptionHandler(value = AccessDeniedException.class)
+    protected ResponseEntity<Object> handleAccessDeniedError(AccessDeniedException ex) {
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        logger.warn(status.toString(), ex);
+        ErrorResponse errorResponse = new ErrorResponse(
+                status.value(),
+                "",
+                status.getReasonPhrase());
+        return new ResponseEntity<>(errorResponse, new HttpHeaders(), status);
+    }
+
+    @ExceptionHandler(value = DisabledException.class)
+    protected ResponseEntity<Object> handleAccountDisabledError(DisabledException ex) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        logger.warn(status.toString(), ex);
+        ErrorResponse errorResponse = new ErrorResponse(
+                status.value(),
+                ErrorCode.ACCOUNT_DISABLED.getCode(),
+                ErrorCode.ACCOUNT_DISABLED.getMessage());
         return new ResponseEntity<>(errorResponse, new HttpHeaders(), status);
     }
 

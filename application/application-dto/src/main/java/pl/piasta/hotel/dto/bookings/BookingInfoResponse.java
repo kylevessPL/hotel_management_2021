@@ -16,6 +16,6 @@ public class BookingInfoResponse {
     private BookingPeriod period;
     @Schema(description = "Booked room details")
     private RoomInfoResponse room;
-    @Schema(description = "Booking payment status")
-    private PaymentStatus paymentStatus;
+    @Schema(description = "Booking payment status", example = "PAYED")
+    private String paymentStatus;
 }

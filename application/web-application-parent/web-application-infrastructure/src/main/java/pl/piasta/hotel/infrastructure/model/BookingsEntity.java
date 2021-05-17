@@ -33,8 +33,6 @@ public class BookingsEntity {
     private Date startDate;
     @Column(name = "end_date", nullable = false)
     private Date endDate;
-    @Column(name = "customer_id", nullable = false)
-    private Integer customerId;
     @Column(name = "room_id", nullable = false)
     private Integer roomId;
     @Column(name = "offer_id")

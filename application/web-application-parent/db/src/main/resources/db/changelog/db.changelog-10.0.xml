@@ -90,6 +90,9 @@
         <addForeignKeyConstraint baseColumnNames="booking_id" baseTableName="users_bookings" constraintName="users_bookings_fk1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="bookings" />
     </changeSet>
     <changeSet author="geekon" id="10.0-9">
+        <sql splitStatements="false">DO 'DECLARE val bool :=(SELECT usesuper FROM pg_user where usename = CURRENT_USER); BEGIN IF val = true THEN CREATE EXTENSION IF NOT EXISTS "uuid-ossp"; END IF; END';</sql>
+    </changeSet>
+    <changeSet author="geekon" id="10.0-10">
         <createTable tableName="images">
             <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
                 <constraints nullable="false" unique="true" primaryKey="true" primaryKeyName="images_pk"/>
@@ -104,16 +107,14 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="users_bookings" constraintName="users_bookings_fk0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="users" />
-        <addForeignKeyConstraint baseColumnNames="booking_id" baseTableName="users_bookings" constraintName="users_bookings_fk1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="bookings" />
     </changeSet>
-    <changeSet author="geekon" id="10.0-10">
+    <changeSet author="geekon" id="10.0-11">
         <addColumn schemaName="public" tableName="users">
             <column name="image_id" type="${uuid_type}"/>
         </addColumn>
         <addForeignKeyConstraint baseColumnNames="image_id" baseTableName="users" constraintName="users_fk0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="images" />
     </changeSet>
-    <changeSet author="geekon" id="10.0-11">
+    <changeSet author="geekon" id="10.0-12">
         <createSequence sequenceName="seq_refresh_tokens" cycle="false" minValue="1" maxValue="9223372036854775807" startValue="1" incrementBy="1"/>
         <createTable tableName="refresh_tokens">
             <column name="id" type="INTEGER" defaultValueComputed="nextval('seq_refresh_tokens')">
@@ -130,5 +131,46 @@
             </column>
         </createTable>
         <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="refresh_tokens" constraintName="refresh_tokens_fk0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="users" />
+    </changeSet>
+    <changeSet author="geekon" id="10.0-13">
+        <addColumn schemaName="public" tableName="additional_services">
+            <column name="desc" type="VARCHAR(512)"/>
+        </addColumn>
+        <update schemaName="public" tableName="additional_services">
+            <column name="desc"
+                    type="VARCHAR(512)"
+                    value="Each breakfast pack includes: cereal, milk, juice, fruit pot. Served to bed at 9 a.m."/>
+            <where>id = 1</where>
+        </update>
+        <update schemaName="public" tableName="additional_services">
+            <column name="desc"
+                    type="VARCHAR(512)"
+                    value="Our bistro offers plenty of tasty meals, plus rotating specials. Our menu includes a range of dishes; from salads to steaks and your typical pub classics. With our lunch &amp; dinner pack you can choose what you want."/>
+            <where>id = 2</where>
+        </update>
+        <update schemaName="public" tableName="additional_services">
+            <column name="desc"
+                    type="VARCHAR(512)"
+                    value="With our additional cleaning service you are able to get your clothes washed every time you feel the need."/>
+            <where>id = 3</where>
+        </update>
+        <update schemaName="public" tableName="additional_services">
+            <column name="desc"
+                    type="VARCHAR(512)"
+                    value="If you stay with a child under 13 years old, you can order an additional bed. No other costs."/>
+            <where>id = 4</where>
+        </update>
+    </changeSet>
+    <changeSet author="geekon" id="10.0-14">
+        <dropForeignKeyConstraint baseTableName="users" constraintName="users_fk0"/>
+        <renameTable schemaName="public" oldTableName="images" newTableName="files"/>
+        <addForeignKeyConstraint baseColumnNames="image_id" baseTableName="users" constraintName="users_fk0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="files" />
+    </changeSet>
+    <changeSet author="geekon" id="10.0-15">
+        <addColumn schemaName="public" tableName="users">
+            <column name="status" type="VARCHAR(6)" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
     </changeSet>
 </databaseChangeLog>

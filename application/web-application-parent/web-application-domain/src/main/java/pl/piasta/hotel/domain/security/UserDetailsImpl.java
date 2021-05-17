@@ -2,20 +2,21 @@ package pl.piasta.hotel.domain.security;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import pl.piasta.hotel.domainmodel.security.UserInfo;
+import pl.piasta.hotel.domainmodel.security.utils.AccountStatus;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Getter(onMethod = @__(@Override))
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class UserDetailsImpl implements UserDetails {
-
-    private static final long serialVersionUID = 1L;
 
     @Getter
     @EqualsAndHashCode.Include
@@ -25,15 +26,8 @@ public class UserDetailsImpl implements UserDetails {
     private final String email;
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
-
-    public UserDetailsImpl(Integer id, String username, String email, String password,
-                           Collection<? extends GrantedAuthority> authorities) {
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.authorities = authorities;
-    }
+    @Getter
+    private final AccountStatus status;
 
     public static UserDetailsImpl build(UserInfo userInfo) {
         List<GrantedAuthority> authorities = userInfo.getRoles().stream()
@@ -44,7 +38,8 @@ public class UserDetailsImpl implements UserDetails {
                 userInfo.getUsername(),
                 userInfo.getEmail(),
                 userInfo.getPassword(),
-                authorities);
+                authorities,
+                userInfo.getStatus());
     }
 
     @Override
@@ -64,6 +59,6 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return status.equals(AccountStatus.ACTIVE);
     }
 }
