@@ -5,7 +5,9 @@ import lombok.Getter;
 @Getter
 public class FileUploadException extends ApplicationException {
 
-    public FileUploadException(ErrorCode errorCode) {
+    private static final ErrorCode errorCode = ErrorCode.FILE_UPLOAD_COMMON;
+
+    public FileUploadException() {
         super(errorCode);
     }
 }

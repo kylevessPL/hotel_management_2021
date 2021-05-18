@@ -7,8 +7,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class SortDetails {
+public class PageCommand {
 
+    private Integer page;
+    private Integer size;
     private String sortBy;
     private SortDir sortDir;
 

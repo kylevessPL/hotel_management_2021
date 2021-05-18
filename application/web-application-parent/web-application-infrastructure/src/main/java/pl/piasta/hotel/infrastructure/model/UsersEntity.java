@@ -41,7 +41,7 @@ public class UsersEntity {
     private String password;
     @Type(type="pg-uuid")
     @Column(name = "image_id", length = 36)
-    private UUID image_id;
+    private UUID imageId;
     @Column(name = "status", nullable = false, length = 6)
     @Enumerated(EnumType.STRING)
     private AccountStatus status = AccountStatus.ACTIVE;

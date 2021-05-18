@@ -22,7 +22,9 @@ public enum ErrorCode {
     ACCOUNT_DISABLED("A04", "Account disabled"),
     REFRESH_TOKEN_EXPIRED("A05", "Refresh token expired"),
     REFRESH_TOKEN_NOT_FOUND("A06", "Invalid refresh token"),
-    USER_NOT_FOUND("U01", "User not found");
+    USER_NOT_FOUND("U01", "User not found"),
+    USER_AVATAR_NOT_FOUND("U02", "User avatar not found"),
+    FILE_UPLOAD_COMMON("C01", "File upload error");
 
     private final String code;
     private final String message;

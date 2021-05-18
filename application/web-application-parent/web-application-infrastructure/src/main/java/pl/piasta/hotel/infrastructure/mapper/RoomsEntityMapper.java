@@ -19,7 +19,7 @@ public class RoomsEntityMapper {
 
     private final AmenitiesEntityMapper amenitiesEntityMapper;
 
-     public List<Room> mapToRoom(List<RoomsEntity> rooms, Map<Integer, List<AmenitiesEntity>> roomAmenitiesMap) {
+    public List<Room> mapToRoom(List<RoomsEntity> rooms, Map<Integer, List<AmenitiesEntity>> roomAmenitiesMap) {
         return rooms.stream()
                 .map(entity -> new Room(
                         entity.getId(),

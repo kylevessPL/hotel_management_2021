@@ -1,5 +1,6 @@
 package pl.piasta.hotel.api.utils;
 
+import org.apache.tomcat.util.http.fileupload.impl.SizeException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import pl.piasta.hotel.domainmodel.utils.ApplicationException;
 import pl.piasta.hotel.domainmodel.utils.ErrorCode;
@@ -35,7 +37,21 @@ public final class GlobalExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(errorResponse, new HttpHeaders(), status);
     }
 
-    @ExceptionHandler(value = FileUploadException.class)
+    @ExceptionHandler(value = SizeException.class)
+    protected ResponseEntity<Object> handleFileSizeError(FileUploadException ex) {
+        HttpStatus status = HttpStatus.PAYLOAD_TOO_LARGE;
+        logger.warn(status.toString(), ex);
+        ErrorResponse errorResponse = new ErrorResponse(
+                status.value(),
+                "",
+                status.getReasonPhrase());
+        return new ResponseEntity<>(errorResponse, new HttpHeaders(), status);
+    }
+
+    @ExceptionHandler(value = {
+            FileUploadException.class,
+            MultipartException.class
+    })
     protected ResponseEntity<Object> handleFileUploadError(FileUploadException ex) {
         HttpStatus status = HttpStatus.EXPECTATION_FAILED;
         logger.warn(status.toString(), ex);

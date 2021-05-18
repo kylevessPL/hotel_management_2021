@@ -20,13 +20,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import pl.piasta.hotel.api.users.mapper.UsersMapper;
 import pl.piasta.hotel.api.utils.PageResponse;
+import pl.piasta.hotel.api.utils.ValidateMultipartFile;
 import pl.piasta.hotel.domain.security.UserDetailsImpl;
 import pl.piasta.hotel.domain.users.UsersService;
 import pl.piasta.hotel.domainmodel.utils.PageCommand;
+import pl.piasta.hotel.dto.users.AvatarImageResponse;
 import pl.piasta.hotel.dto.users.PagedUserInfo;
 import pl.piasta.hotel.dto.users.UsersPageResponse;
 
@@ -56,6 +61,48 @@ public class UsersServiceController {
     public void updateUserPassword(Authentication authentication, @Valid @RequestBody UpdateUserPasswordRequest request) {
         Integer id = ((UserDetailsImpl) authentication.getPrincipal()).getId();
         service.updateUserPassword(id, mapper.mapToCommand(request));
+    }
+
+    @Operation(
+            summary = "Update current user avatar image",
+            operationId = "updateCurrentUserAvatar"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Success"),
+            @ApiResponse(responseCode = "400", description = "Malformed request syntax"),
+            @ApiResponse(responseCode = "413", description = "File size too large"),
+            @ApiResponse(responseCode = "417", description = "File type not supported"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping(
+            value = "/current/avatar",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public void updateUserAvatar(
+            Authentication authentication,
+            @ValidateMultipartFile(acceptedTypes = { MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE }) @RequestParam MultipartFile file) {
+        Integer id = ((UserDetailsImpl) authentication.getPrincipal()).getId();
+        service.updateUserAvatar(id, file);
+    }
+
+    @Operation(
+            summary = "Get current user avatar image",
+            operationId = "getCurrentUserAvatar"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "400", description = "Malformed request syntax", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Avatar image not exists", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
+    @RequestMapping(
+            method = {RequestMethod.GET, RequestMethod.HEAD},
+            value = "/current/avatar",
+            produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public AvatarImageResponse getUserAvatar(Authentication authentication) {
+        Integer id = ((UserDetailsImpl) authentication.getPrincipal()).getId();
+        return mapper.mapToResponse(service.getUserAvatar(id));
     }
 
     @Operation(

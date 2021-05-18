@@ -1,5 +1,6 @@
 package pl.piasta.hotel.api.utils;
 
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.Arrays;
