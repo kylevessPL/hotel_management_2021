@@ -13,5 +13,6 @@ public interface UsersService {
     void updateAccountStatus(Integer id, UpdateAccountStatusCommand command);
     void updateUserPassword(Integer id, UpdateUserPasswordCommand command);
     void updateUserAvatar(Integer id, MultipartFile file);
+    void removeUserAvatar(Integer id);
     AvatarImage getUserAvatar(Integer id);
 }

@@ -9,5 +9,4 @@ public interface RoomsAmenitiesEntityDao extends JpaRepository<RoomsAmenitiesEnt
 
     List<RoomsAmenitiesEntity> findAllByRoomIdIn(List<Integer> roomId);
     List<RoomsAmenitiesEntity> findAllByRoomId(Integer roomId);
-
 }

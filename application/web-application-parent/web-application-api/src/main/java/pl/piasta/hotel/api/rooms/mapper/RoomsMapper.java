@@ -12,14 +12,13 @@ import pl.piasta.hotel.dto.rooms.RoomResponse;
 import java.util.List;
 
 @Mapper
-public interface RoomMapper {
+public interface RoomsMapper {
 
     List<RoomResponse> mapToResponse(List<Room> rooms);
     RoomInfoResponse mapToResponse(RoomInfo room);
     @Mapping(source = "startDate", target = "dateDetails.startDate")
     @Mapping(source = "endDate", target = "dateDetails.endDate")
-    @Mapping(source = "sortBy", target = "sortDetails.sortBy")
-    @Mapping(source = "sortDir", target = "sortDetails.sortDir")
+    @Mapping(source = "sortBy", target = "sortProperties.sortBy")
+    @Mapping(source = "sortDir", target = "sortProperties.sortDir")
     RoomCommand mapToCommand(RoomQuery roomQuery);
-
 }

@@ -19,5 +19,4 @@ public class PaymentFormsEntityMapper {
     public PaymentForm mapToPaymentForm(PaymentFormsEntity paymentForm) {
         return new PaymentForm(paymentForm.getId(), paymentForm.getName());
     }
-
 }

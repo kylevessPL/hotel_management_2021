@@ -52,5 +52,4 @@ public class UsersEntity {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<RolesEntity> roles = new HashSet<>();
-
 }

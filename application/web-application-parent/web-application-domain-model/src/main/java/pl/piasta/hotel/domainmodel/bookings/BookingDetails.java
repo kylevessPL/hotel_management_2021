@@ -12,8 +12,6 @@ import java.math.BigDecimal;
 public final class BookingDetails {
 
     private final DateDetails dateDetails;
-    private final Integer customerId;
     private final RoomDetails roomDetails;
     private final BigDecimal finalPrice;
-
 }

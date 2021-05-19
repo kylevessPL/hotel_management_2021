@@ -15,5 +15,4 @@ public class AmenitiesEntityMapper {
                 .map(amenity -> new Amenity(amenity.getName()))
                 .collect(Collectors.toList());
     }
-
 }

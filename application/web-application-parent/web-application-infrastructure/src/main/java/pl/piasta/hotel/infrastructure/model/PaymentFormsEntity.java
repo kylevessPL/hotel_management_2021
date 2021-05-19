@@ -23,5 +23,4 @@ public class PaymentFormsEntity {
     private Integer id;
     @Column(name = "name", nullable = false, length = 20)
     private String name;
-
 }

@@ -65,6 +65,12 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
+    @Transactional
+    public void removeUserAvatar(Integer id) {
+        repository.removeUserAvatar(id);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public AvatarImage getUserAvatar(Integer id) {
         return repository.getUserAvatar(id).orElseThrow(() ->

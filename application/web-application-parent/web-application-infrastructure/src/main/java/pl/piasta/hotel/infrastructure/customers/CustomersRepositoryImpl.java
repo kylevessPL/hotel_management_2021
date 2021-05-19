@@ -16,16 +16,10 @@ public class CustomersRepositoryImpl implements CustomersRepository {
 
     @Override
     @Transactional
-    public Integer saveCustomerAndGetId(CustomerDetails customerDetails) {
+    public Integer saveCustomer(CustomerDetails customerDetails) {
         CustomersEntity customer = dao.findByDocumentId(customerDetails.getDocumentId()).orElseGet(CustomersEntity::new);
         updateEntity(customer, customerDetails);
         return dao.save(customer).getId();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public String getCustomerDocumentId(Integer customerId) {
-        return dao.getOne(customerId).getDocumentId();
     }
 
     void updateEntity(CustomersEntity customer, CustomerDetails customerDetails) {
@@ -38,5 +32,4 @@ public class CustomersRepositoryImpl implements CustomersRepository {
         customer.setDocumentType(customerDetails.getDocumentType());
         customer.setDocumentId(customerDetails.getDocumentId());
     }
-
 }

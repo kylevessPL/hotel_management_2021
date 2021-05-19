@@ -86,5 +86,4 @@ public class PageResponseAdvice implements ResponseBodyAdvice<Object> {
             response.getHeaders().add(LINK, String.join(", ", linksHeader));
         }
     }
-
 }

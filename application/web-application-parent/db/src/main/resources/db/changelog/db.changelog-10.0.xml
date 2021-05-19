@@ -93,9 +93,9 @@
         <sql splitStatements="false">DO 'DECLARE val bool :=(SELECT usesuper FROM pg_user where usename = CURRENT_USER); BEGIN IF val = true THEN CREATE EXTENSION IF NOT EXISTS "uuid-ossp"; END IF; END';</sql>
     </changeSet>
     <changeSet author="geekon" id="10.0-10">
-        <createTable tableName="images">
+        <createTable tableName="files">
             <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
-                <constraints nullable="false" unique="true" primaryKey="true" primaryKeyName="images_pk"/>
+                <constraints nullable="false" unique="true" primaryKey="true" primaryKeyName="files_pk"/>
             </column>
             <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
@@ -112,7 +112,7 @@
         <addColumn schemaName="public" tableName="users">
             <column name="image_id" type="${uuid_type}"/>
         </addColumn>
-        <addForeignKeyConstraint baseColumnNames="image_id" baseTableName="users" constraintName="users_fk0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="images" />
+        <addForeignKeyConstraint baseColumnNames="image_id" baseTableName="users" constraintName="users_fk0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="files" />
     </changeSet>
     <changeSet author="geekon" id="10.0-12">
         <createSequence sequenceName="seq_refresh_tokens" cycle="false" minValue="1" maxValue="9223372036854775807" startValue="1" incrementBy="1"/>
@@ -162,11 +162,6 @@
         </update>
     </changeSet>
     <changeSet author="geekon" id="10.0-14">
-        <dropForeignKeyConstraint baseTableName="users" constraintName="users_fk0"/>
-        <renameTable schemaName="public" oldTableName="images" newTableName="files"/>
-        <addForeignKeyConstraint baseColumnNames="image_id" baseTableName="users" constraintName="users_fk0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="files" />
-    </changeSet>
-    <changeSet author="geekon" id="10.0-15">
         <addColumn schemaName="public" tableName="users">
             <column name="status" type="VARCHAR(6)" defaultValue="ACTIVE">
                 <constraints nullable="false"/>

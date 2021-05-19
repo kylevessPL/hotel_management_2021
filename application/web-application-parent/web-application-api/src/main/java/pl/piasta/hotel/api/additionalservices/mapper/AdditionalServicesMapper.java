@@ -7,8 +7,7 @@ import pl.piasta.hotel.dto.additionalservices.AdditionalServiceResponse;
 import java.util.List;
 
 @Mapper
-public interface AdditionalServiceMapper {
+public interface AdditionalServicesMapper {
 
     List<AdditionalServiceResponse> mapToResponse(List<AdditionalService> additionalServices);
-
 }

@@ -17,5 +17,4 @@ public final class UserInfo {
     private final String password;
     private final Set<Role> roles;
     private final AccountStatus status;
-
 }

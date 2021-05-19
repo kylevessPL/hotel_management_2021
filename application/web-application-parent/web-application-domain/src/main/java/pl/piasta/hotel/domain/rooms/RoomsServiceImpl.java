@@ -41,5 +41,4 @@ public class RoomsServiceImpl implements RoomsService {
             rooms.sort(comparator.reversed());
         }
     }
-
 }

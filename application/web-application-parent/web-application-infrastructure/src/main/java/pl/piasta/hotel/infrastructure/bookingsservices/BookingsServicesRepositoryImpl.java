@@ -29,5 +29,4 @@ public class BookingsServicesRepositoryImpl implements BookingsServicesRepositor
         bookingService.setBookingId(bookingId);
         bookingService.setServiceId(additionalService);
     }
-
 }

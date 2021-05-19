@@ -36,5 +36,4 @@ public class PaymentsRepositoryImpl implements PaymentsRepository {
         payment.setPaymentFormId(paymentDetails.getPaymentFormId());
         payment.setTransactionId(paymentDetails.getTransationId());
     }
-
 }

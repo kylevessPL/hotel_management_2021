@@ -34,5 +34,4 @@ public class PaymentFormsRepositoryImpl implements PaymentFormsRepository {
     public PaymentForm getPaymentForm(Integer paymentFormId) {
         return paymentFormsEntityMapper.mapToPaymentForm(dao.getOne(paymentFormId));
     }
-
 }

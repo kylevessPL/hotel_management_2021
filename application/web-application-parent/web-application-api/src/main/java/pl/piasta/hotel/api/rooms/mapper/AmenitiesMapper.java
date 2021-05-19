@@ -7,8 +7,7 @@ import pl.piasta.hotel.dto.amenities.AmenityResponse;
 import java.util.List;
 
 @Mapper
-public interface AmenityMapper {
+public interface AmenitiesMapper {
 
     List<AmenityResponse> mapToResponse(List<Amenity> amenities);
-
 }

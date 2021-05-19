@@ -9,5 +9,4 @@ public final class PaymentForm {
 
     private final Integer id;
     private final String name;
-
 }

@@ -41,5 +41,4 @@ public class CustomersEntity {
     private DocumentType documentType;
     @Column(name = "document_id", nullable = false, length = 10)
     private String documentId;
-
 }

@@ -8,5 +8,4 @@ import java.util.List;
 public interface RoomsService {
 
     List<Room> getAllAvailableRoomsWithinDateRange(RoomCommand roomCommand);
-
 }

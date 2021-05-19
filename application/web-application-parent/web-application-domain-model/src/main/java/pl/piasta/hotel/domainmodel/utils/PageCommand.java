@@ -13,5 +13,4 @@ public class PageCommand {
     private Integer size;
     private String sortBy;
     private SortDir sortDir;
-
 }

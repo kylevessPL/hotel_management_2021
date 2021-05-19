@@ -4,7 +4,5 @@ import pl.piasta.hotel.domainmodel.customers.CustomerDetails;
 
 public interface CustomersRepository {
 
-    Integer saveCustomerAndGetId(CustomerDetails customerDetails);
-    String getCustomerDocumentId(Integer customerId);
-
+    Integer saveCustomer(CustomerDetails customerDetails);
 }

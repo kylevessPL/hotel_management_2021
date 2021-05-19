@@ -15,5 +15,4 @@ public final class Room {
     private final Integer bedAmount;
     private final BigDecimal standardPrice;
     private final List<Amenity> amenities;
-
 }

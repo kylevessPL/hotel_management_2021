@@ -1,15 +1,21 @@
 package pl.piasta.hotel.security.utils;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import pl.piasta.hotel.domain.bookings.BookingsService;
 import pl.piasta.hotel.domain.security.UserDetailsImpl;
 
 @Component
+@RequiredArgsConstructor
 public class SecurityControl {
 
-    public boolean hasPermission(Integer id) {
+    private final BookingsService bookingsService;
+
+    public boolean hasBookingPermission(Integer bookingId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return ((UserDetailsImpl) authentication.getPrincipal()).getId().equals(id);
+        Integer userId = ((UserDetailsImpl) authentication.getPrincipal()).getId();
+        return bookingsService.hasPermission(userId, bookingId);
     }
 }

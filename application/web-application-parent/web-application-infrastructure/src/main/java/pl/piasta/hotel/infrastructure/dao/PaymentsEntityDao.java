@@ -6,5 +6,4 @@ import pl.piasta.hotel.infrastructure.model.PaymentsEntity;
 public interface PaymentsEntityDao extends JpaRepository<PaymentsEntity, Integer> {
 
     PaymentsEntity findByBookingId(Integer bookingId);
-
 }

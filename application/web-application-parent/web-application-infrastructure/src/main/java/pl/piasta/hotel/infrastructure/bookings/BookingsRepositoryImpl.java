@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import pl.piasta.hotel.domain.bookings.BookingsRepository;
 import pl.piasta.hotel.domainmodel.bookings.BookingCancellationDetails;
-import pl.piasta.hotel.domainmodel.bookings.BookingConfirmationDetails;
 import pl.piasta.hotel.domainmodel.bookings.BookingDetails;
 import pl.piasta.hotel.domainmodel.bookings.BookingFinalDetails;
 import pl.piasta.hotel.domainmodel.bookings.BookingStatus;
@@ -14,8 +13,8 @@ import pl.piasta.hotel.infrastructure.dao.BookingsEntityDao;
 import pl.piasta.hotel.infrastructure.mapper.BookingsEntityMapper;
 import pl.piasta.hotel.infrastructure.model.BookingsEntity;
 
-import java.sql.Date;
-import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,8 +29,8 @@ public class BookingsRepositoryImpl implements BookingsRepository {
     @Override
     @Transactional(readOnly = true)
     public List<Integer> getBookingsRoomIdBetweenDates(DateDetails dateDetails) {
-        Date startDate = dateDetails.getStartDate();
-        Date endDate = dateDetails.getEndDate();
+        LocalDate startDate = dateDetails.getStartDate();
+        LocalDate endDate = dateDetails.getEndDate();
         return dao.findByStartDateLessThanEqualAndEndDateGreaterThanEqual(startDate, endDate)
                 .stream()
                 .map(BookingsEntity::getRoomId)
@@ -40,18 +39,10 @@ public class BookingsRepositoryImpl implements BookingsRepository {
 
     @Override
     @Transactional
-    public Integer saveBookingAndGetId(BookingDetails bookingDetails) {
+    public Integer saveBooking(BookingDetails bookingDetails) {
         BookingsEntity booking = new BookingsEntity();
         updateEntity(booking, bookingDetails);
         return dao.save(booking).getId();
-    }
-
-    @Override
-    @Transactional
-    public void saveBookingConfirmation(Integer bookingId) {
-        BookingsEntity booking = dao.getOne(bookingId);
-        booking.setStatus(BookingStatus.CONFIRMED);
-        dao.save(booking);
     }
 
     @Override
@@ -60,13 +51,6 @@ public class BookingsRepositoryImpl implements BookingsRepository {
         BookingsEntity booking = dao.getOne(bookingId);
         booking.setStatus(BookingStatus.CANCELLED);
         dao.save(booking);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<BookingConfirmationDetails> getBookingConfirmationDetails(Integer bookingId) {
-        Optional<BookingsEntity> bookingsEntity = dao.findById(bookingId);
-        return bookingsEntityMapper.mapToBookingConfirmationDetails(bookingsEntity);
     }
 
     @Override
@@ -84,12 +68,10 @@ public class BookingsRepositoryImpl implements BookingsRepository {
     }
 
     void updateEntity(BookingsEntity booking, BookingDetails bookingDetails) {
-        booking.setBookDate(new Timestamp(System.currentTimeMillis()));
+        booking.setBookDate(Instant.now());
         booking.setStartDate(bookingDetails.getDateDetails().getStartDate());
         booking.setEndDate(bookingDetails.getDateDetails().getEndDate());
-        booking.setCustomerId(bookingDetails.getCustomerId());
         booking.setRoomId(bookingDetails.getRoomDetails().getRoomId());
         booking.setFinalPrice(bookingDetails.getFinalPrice());
     }
-
 }

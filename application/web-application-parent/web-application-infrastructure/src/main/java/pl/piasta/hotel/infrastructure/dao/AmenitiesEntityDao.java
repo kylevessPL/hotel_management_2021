@@ -8,5 +8,4 @@ import java.util.List;
 public interface AmenitiesEntityDao extends JpaRepository<AmenitiesEntity, Integer> {
 
     List<AmenitiesEntity> findAllByIdIn(List<Integer> id);
-
 }

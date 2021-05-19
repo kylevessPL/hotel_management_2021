@@ -8,5 +8,4 @@ import java.util.List;
 public interface AdditionalServicesEntityDao extends JpaRepository<AdditionalServicesEntity, Integer> {
 
     List<AdditionalServicesEntity> findAllByIdIn(List<Integer> additionalServices);
-
 }

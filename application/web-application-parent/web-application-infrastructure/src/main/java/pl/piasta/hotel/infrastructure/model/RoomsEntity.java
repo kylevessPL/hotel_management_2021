@@ -28,5 +28,4 @@ public class RoomsEntity {
     private Integer bedAmount;
     @Column(name = "standard_price", precision = 2)
     private BigDecimal standardPrice;
-
 }

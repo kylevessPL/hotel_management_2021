@@ -4,5 +4,4 @@ public enum DocumentType {
 
     IDCARD,
     PASSPORT
-
 }

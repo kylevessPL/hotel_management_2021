@@ -10,5 +10,4 @@ public final class PaymentDetails {
     private final Integer bookingId;
     private final Integer paymentFormId;
     private final String transationId;
-    
 }

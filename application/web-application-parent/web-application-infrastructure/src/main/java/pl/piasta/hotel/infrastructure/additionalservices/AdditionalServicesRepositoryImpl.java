@@ -44,5 +44,4 @@ public class AdditionalServicesRepositoryImpl implements AdditionalServicesRepos
                 .collect(Collectors.toList())
                 .containsAll(additionalServicesList);
     }
-
 }

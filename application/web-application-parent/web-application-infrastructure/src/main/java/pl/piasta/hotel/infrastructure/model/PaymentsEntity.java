@@ -30,5 +30,4 @@ public class PaymentsEntity {
     private Integer paymentFormId;
     @Column(name = "transaction_id", nullable = false, length = 36)
     private String transactionId;
-
 }

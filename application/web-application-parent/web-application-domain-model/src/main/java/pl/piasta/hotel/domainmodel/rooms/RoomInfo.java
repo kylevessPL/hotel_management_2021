@@ -13,5 +13,4 @@ public final class RoomInfo {
     private final String roomNumber;
     private final Integer bedAmount;
     private final List<Amenity> amenities;
-
 }

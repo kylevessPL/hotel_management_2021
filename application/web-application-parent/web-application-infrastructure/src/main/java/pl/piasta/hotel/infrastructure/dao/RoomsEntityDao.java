@@ -8,5 +8,4 @@ import java.util.List;
 public interface RoomsEntityDao extends JpaRepository<RoomsEntity, Integer> {
 
     List<RoomsEntity> findByIdNotIn(List<Integer> bookedRooms);
-
 }

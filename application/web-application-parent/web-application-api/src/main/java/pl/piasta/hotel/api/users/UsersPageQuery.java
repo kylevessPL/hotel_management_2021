@@ -32,5 +32,4 @@ public class UsersPageQuery {
     private String sortBy = "id";
     @Parameter(description = "Sort direction")
     private SortDir sortDir = SortDir.ASC;
-
 }

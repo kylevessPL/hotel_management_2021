@@ -9,5 +9,4 @@ public final class PageProperties {
 
     private final Integer page;
     private final Integer size;
-
 }

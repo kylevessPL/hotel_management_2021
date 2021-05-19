@@ -6,5 +6,4 @@ public interface PaymentsRepository {
 
     void savePayment(PaymentDetails paymentDetails);
     Integer getBookingPaymentFormId(Integer bookingId);
-
 }

@@ -30,11 +30,10 @@ public class RoomsEntityMapper {
     }
 
     public Optional<RoomDetails> mapToRoomDetails(Optional<RoomsEntity> rooms) {
-         return rooms.map(e -> new RoomDetails(e.getId(), e.getStandardPrice()));
+         return rooms.map(e -> new RoomDetails(e.getId(), e.getStandardPrice(), e.getBedAmount()));
     }
 
     public RoomFinalDetails mapToRoomFinalDetails(RoomsEntity rooms, List<AmenitiesEntity> amenities) {
          return new RoomFinalDetails(rooms.getRoomNumber(), rooms.getBedAmount(), amenitiesEntityMapper.mapToAmenity(amenities));
     }
-
 }

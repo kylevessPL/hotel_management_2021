@@ -8,5 +8,4 @@ import lombok.RequiredArgsConstructor;
 public final class Amenity {
 
     private final String name;
-
 }

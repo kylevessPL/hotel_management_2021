@@ -15,5 +15,4 @@ public class AdditionalServicesEntityMapper {
                 .map(entity -> new AdditionalService(entity.getId(), entity.getName(), entity.getPrice()))
                 .collect(Collectors.toList());
     }
-
 }

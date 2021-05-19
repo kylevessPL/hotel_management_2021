@@ -5,15 +5,14 @@ import lombok.RequiredArgsConstructor;
 import pl.piasta.hotel.domainmodel.payments.PaymentStatus;
 import pl.piasta.hotel.domainmodel.rooms.RoomInfo;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 @RequiredArgsConstructor
 @Getter
 public final class BookingInfo {
 
-    private final Date startDate;
-    private final Date endDate;
+    private final LocalDate startDate;
+    private final LocalDate endDate;
     private final RoomInfo room;
     private final PaymentStatus paymentStatus;
-
 }

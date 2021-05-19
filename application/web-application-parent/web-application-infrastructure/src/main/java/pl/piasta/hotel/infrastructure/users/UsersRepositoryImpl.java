@@ -85,6 +85,15 @@ public class UsersRepositoryImpl implements UsersRepository {
     }
 
     @Override
+    @Transactional
+    public void removeUserAvatar(Integer id) {
+        UUID uuid = usersEntityDao.getOne(id).getImageId();
+        if (uuid != null) {
+            filesEntityDao.deleteById(uuid);
+        }
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Optional<AvatarImage> getUserAvatar(Integer id) {
         UUID uuid = usersEntityDao.getOne(id).getImageId();

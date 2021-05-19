@@ -3,6 +3,7 @@ package pl.piasta.hotel.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -57,6 +58,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/swagger-ui/**",
                         "/webjars/**").permitAll()
                 .antMatchers("/api/v1/auth/**").permitAll()
+                .antMatchers("/api/v1/rooms/**").permitAll()
+                .antMatchers("/api/v1/additional-services/**").permitAll()
+                .antMatchers("/api/v1/payment-forms/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/v1/discounts/**").permitAll()
+                .antMatchers(HttpMethod.HEAD, "/api/v1/discounts/**").permitAll()
                 .anyRequest().authenticated();
         http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }

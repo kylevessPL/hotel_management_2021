@@ -25,5 +25,4 @@ public class DiscountsEntity {
     private String code;
     @Column(name = "value", nullable = false)
     private Integer value;
-
 }

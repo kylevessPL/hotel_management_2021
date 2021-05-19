@@ -6,5 +6,4 @@ public enum PaymentStatus {
     UPPON_ARRIVAL,
     NO_PAYMENT_INFO,
     BOOKING_CANCELLED
-
 }

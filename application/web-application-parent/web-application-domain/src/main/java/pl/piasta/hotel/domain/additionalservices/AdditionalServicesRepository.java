@@ -9,5 +9,4 @@ public interface AdditionalServicesRepository {
 
     List<AdditionalService> getAdditionalServices();
     Optional<List<AdditionalService>> getAdditionalServices(List<Integer> additionalServicesList);
-
 }

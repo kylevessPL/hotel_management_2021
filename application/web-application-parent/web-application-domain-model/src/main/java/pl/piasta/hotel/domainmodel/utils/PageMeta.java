@@ -14,5 +14,4 @@ public final class PageMeta {
     private final Integer currentPage;
     private final Integer totalPage;
     private final Long totalCount;
-
 }

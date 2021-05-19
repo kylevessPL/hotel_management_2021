@@ -161,5 +161,4 @@ public final class GlobalExceptionHandler extends ResponseEntityExceptionHandler
                 status.getReasonPhrase());
         return new ResponseEntity<>(errorResponse, headers, status);
     }
-
 }

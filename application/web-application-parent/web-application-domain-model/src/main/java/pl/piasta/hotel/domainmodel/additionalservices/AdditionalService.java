@@ -12,5 +12,4 @@ public final class AdditionalService {
     private final int id;
     private final String name;
     private final BigDecimal price;
-
 }

@@ -16,5 +16,4 @@ public class AdditionalServicesServiceImpl implements AdditionalServicesService 
     public List<AdditionalService> getAllAdditionalServices() {
         return repository.getAdditionalServices();
     }
-
 }

@@ -25,5 +25,4 @@ public class UsersBookingsEntity {
     private Integer userId;
     @Column(name = "booking_id", nullable = false)
     private Integer bookingId;
-
 }

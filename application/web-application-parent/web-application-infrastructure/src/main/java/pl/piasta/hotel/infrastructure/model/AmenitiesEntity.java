@@ -23,5 +23,4 @@ public class AmenitiesEntity {
     private Integer id;
     @Column(name = "name", nullable = false, length = 40)
     private String name;
-
 }

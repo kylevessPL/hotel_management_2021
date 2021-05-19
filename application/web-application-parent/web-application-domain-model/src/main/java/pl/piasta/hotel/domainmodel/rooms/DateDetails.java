@@ -4,14 +4,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 @NoArgsConstructor
 @Getter
 @Setter
 public class DateDetails {
 
-    private Date startDate;
-    private Date endDate;
-
+    private LocalDate startDate;
+    private LocalDate endDate;
 }

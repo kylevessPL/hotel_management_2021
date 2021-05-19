@@ -17,7 +17,7 @@ import pl.piasta.hotel.infrastructure.model.BookingsEntity;
 import pl.piasta.hotel.infrastructure.model.RoomsAmenitiesEntity;
 import pl.piasta.hotel.infrastructure.model.RoomsEntity;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +36,7 @@ public class RoomsRepositoryImpl implements RoomsRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Room> getAllAvailableRoomsWithinDateRange(Date startDate, Date endDate) {
+    public List<Room> getAllAvailableRoomsWithinDateRange(LocalDate startDate, LocalDate endDate) {
         List<Integer> bookedRooms = bookingsDao.findByStartDateLessThanEqualAndEndDateGreaterThanEqual(startDate, endDate)
                 .stream()
                 .map(BookingsEntity::getRoomId)
@@ -76,6 +76,7 @@ public class RoomsRepositoryImpl implements RoomsRepository {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public RoomFinalDetails getRoomFinalDetails(Integer roomId) {
         RoomsEntity room = roomsDao.getOne(roomId);
         List<RoomsAmenitiesEntity> roomAmenities = roomAmenitiesDao.findAllByRoomId(room.getId());
@@ -86,5 +87,4 @@ public class RoomsRepositoryImpl implements RoomsRepository {
                 .collect(Collectors.toList()));
         return roomsEntityMapper.mapToRoomFinalDetails(room, amenities);
     }
-
 }

@@ -13,5 +13,4 @@ public final class PageResponse<T> {
     private final int pageSize;
     private final PageMeta pageMeta;
     private final List<T> content;
-
 }

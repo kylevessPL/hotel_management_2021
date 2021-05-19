@@ -21,7 +21,7 @@ public class FilesEntity {
 
     @Id
     @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid4")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Type(type="pg-uuid")
     @Column(length = 36)
     private UUID id;

@@ -17,5 +17,4 @@ public class CustomerDetails {
     private String city;
     private DocumentType documentType;
     private String documentId;
-    
 }

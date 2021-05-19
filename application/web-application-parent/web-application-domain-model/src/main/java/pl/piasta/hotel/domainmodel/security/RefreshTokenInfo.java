@@ -9,6 +9,6 @@ public final class RefreshTokenInfo {
 
     private final String accessToken;
     private final String refreshToken;
-    private final String tokenType = "Bearer";
+    private final String type = "Bearer";
     private final int expires;
 }

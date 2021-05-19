@@ -26,5 +26,4 @@ public class AdditionalServicesEntity {
     private String name;
     @Column(name = "price", precision = 2)
     private BigDecimal price;
-
 }

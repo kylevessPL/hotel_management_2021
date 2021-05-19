@@ -14,5 +14,6 @@ public interface UsersRepository {
     boolean updateAccountStatus(Integer id, AccountStatus status);
     boolean updateUserPassword(Integer id, String password);
     void updateUserAvatar(Integer id, AvatarImage file);
+    void removeUserAvatar(Integer id);
     Optional<AvatarImage> getUserAvatar(Integer id);
 }

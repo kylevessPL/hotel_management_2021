@@ -12,5 +12,4 @@ public class RoomCommand {
 
     private DateDetails dateDetails;
     private SortProperties sortProperties;
-
 }

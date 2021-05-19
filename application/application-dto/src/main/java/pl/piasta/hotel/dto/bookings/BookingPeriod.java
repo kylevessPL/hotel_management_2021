@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 @Schema
 @NoArgsConstructor
@@ -14,7 +14,7 @@ import java.sql.Date;
 public class BookingPeriod {
 
     @Schema(description = "Booking start date")
-    private Date startDate;
+    private LocalDate startDate;
     @Schema(description = "Booking end date")
-    private Date endDate;
+    private LocalDate endDate;
 }

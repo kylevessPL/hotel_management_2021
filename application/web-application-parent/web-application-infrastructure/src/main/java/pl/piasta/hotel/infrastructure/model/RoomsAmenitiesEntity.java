@@ -25,5 +25,4 @@ public class RoomsAmenitiesEntity {
     private Integer roomId;
     @Column(name = "amenity_id", nullable = false)
     private Integer amenityId;
-
 }

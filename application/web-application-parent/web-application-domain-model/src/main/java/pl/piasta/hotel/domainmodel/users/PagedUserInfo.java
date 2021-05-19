@@ -16,5 +16,4 @@ public final class PagedUserInfo {
     private final String email;
     private final Set<Role> roles;
     private final AccountStatus status;
-
 }

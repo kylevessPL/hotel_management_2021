@@ -11,5 +11,5 @@ public final class RoomDetails {
 
     private final Integer roomId;
     private final BigDecimal standardPrice;
-
+    private final Integer bedAmount;
 }

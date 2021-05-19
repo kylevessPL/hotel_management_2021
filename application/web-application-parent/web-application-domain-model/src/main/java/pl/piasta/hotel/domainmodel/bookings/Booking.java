@@ -14,5 +14,4 @@ public final class Booking {
     private final Integer bookingId;
     private final BigDecimal finalPrice;
     private final List<PaymentForm> paymentForms;
-    
 }

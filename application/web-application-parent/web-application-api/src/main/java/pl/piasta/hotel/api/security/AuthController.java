@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.piasta.hotel.api.security.mapper.AuthMapper;
 import pl.piasta.hotel.domain.security.AuthService;
 import pl.piasta.hotel.domainmodel.security.RefreshTokenCommand;
+import pl.piasta.hotel.domainmodel.security.RefreshTokenInfo;
+import pl.piasta.hotel.domainmodel.security.TokenInfo;
 import pl.piasta.hotel.domainmodel.security.UserLoginCommand;
 import pl.piasta.hotel.domainmodel.security.UserRegisterCommand;
 import pl.piasta.hotel.dto.security.RefreshTokenInfoResponse;
@@ -26,7 +27,6 @@ import pl.piasta.hotel.dto.security.TokenInfoResponse;
 import javax.validation.Valid;
 
 @Tag(name = "Authentication API", description = "API performing user authentication operations")
-@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -50,7 +50,8 @@ public class AuthController {
     @PostMapping(value = "/signin", produces = MediaType.APPLICATION_JSON_VALUE)
     public TokenInfoResponse authenticateUser(@Valid @RequestBody UserLoginRequest loginRequest) {
         UserLoginCommand command = mapper.mapToCommand(loginRequest);
-        return mapper.mapToResponse(service.authenticateUser(command));
+        TokenInfo tokenInfo = service.authenticateUser(command);
+        return mapper.mapToResponse(tokenInfo);
     }
 
     @SecurityRequirements
@@ -65,8 +66,8 @@ public class AuthController {
             @ApiResponse(responseCode = "422", description = "Validation failed"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
-    @PostMapping(value = "/signup", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PostMapping(value = "/signup", produces = MediaType.APPLICATION_JSON_VALUE)
     public void registerUser(@RequestBody @Valid UserRegisterRequest registerRequest) {
         UserRegisterCommand command = mapper.mapToCommand(registerRequest);
         service.registerUser(command);
@@ -87,6 +88,7 @@ public class AuthController {
     @PostMapping(value = "/refresh-token", produces = MediaType.APPLICATION_JSON_VALUE)
     public RefreshTokenInfoResponse refreshToken(@Valid @RequestBody RefreshTokenRequest tokenRequest) {
         RefreshTokenCommand command = mapper.mapToCommand(tokenRequest);
-        return mapper.mapToResponse(service.refreshToken(command));
+        RefreshTokenInfo refreshTokenInfo = service.refreshToken(command);
+        return mapper.mapToResponse(refreshTokenInfo);
     }
 }
