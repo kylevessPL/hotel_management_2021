@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -48,9 +47,6 @@ import pl.piasta.hotel.dto.users.UsersPageResponse;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 @Tag(name = "Users API", description = "API performing operations on user resources")
 @RestController
@@ -190,10 +186,7 @@ public class UsersServiceController {
             @ApiResponse(responseCode = "404", description = "Avatar image not exists", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
-    @RequestMapping(
-            method = {RequestMethod.GET, RequestMethod.HEAD},
-            value = "/current/avatar",
-            produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @GetMapping(value = "/current/avatar", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public byte[] getUserAvatar(Authentication authentication, HttpServletResponse response) {
         Integer id = ((UserDetailsImpl) authentication.getPrincipal()).getId();
         AvatarImageResponse avatar = usersMapper.mapToResponse(usersService.getUserAvatar(id));
