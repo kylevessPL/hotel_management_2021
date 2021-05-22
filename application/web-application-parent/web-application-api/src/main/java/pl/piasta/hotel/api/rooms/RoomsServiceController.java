@@ -23,7 +23,7 @@ import java.util.List;
 
 @Tag(name = "Rooms API", description = "API performing operations on room resources")
 @RestController
-@RequestMapping("/rooms")
+@RequestMapping("${app.api.base-path}/rooms")
 @RequiredArgsConstructor
 public class RoomsServiceController {
 

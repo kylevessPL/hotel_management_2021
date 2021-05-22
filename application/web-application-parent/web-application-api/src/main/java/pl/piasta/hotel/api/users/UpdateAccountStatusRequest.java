@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Setter
 public class UpdateAccountStatusRequest implements Serializable {
 
-    @Schema(description = "Account status", example = "LOCKED")
+    @Schema(description = "Account status", example = "ACTIVE")
     @NotNull
     private AccountStatus status;
 }

@@ -112,7 +112,7 @@
         <addColumn schemaName="public" tableName="users">
             <column name="image_id" type="${uuid_type}"/>
         </addColumn>
-        <addForeignKeyConstraint baseColumnNames="image_id" baseTableName="users" constraintName="users_fk0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="files" />
+        <addForeignKeyConstraint baseColumnNames="image_id" baseTableName="users" constraintName="users_fk0" deferrable="false" initiallyDeferred="false" onDelete="SET NULL" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="files" />
     </changeSet>
     <changeSet author="geekon" id="10.0-12">
         <createSequence sequenceName="seq_refresh_tokens" cycle="false" minValue="1" maxValue="9223372036854775807" startValue="1" incrementBy="1"/>
@@ -167,5 +167,8 @@
                 <constraints nullable="false"/>
             </column>
         </addColumn>
+    </changeSet>
+    <changeSet author="geekon" id="10.0-15">
+        <addNotNullConstraint tableName="additional_services" columnName="price"/>
     </changeSet>
 </databaseChangeLog>

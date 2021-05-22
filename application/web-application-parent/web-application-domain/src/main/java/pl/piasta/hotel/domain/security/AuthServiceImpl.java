@@ -37,13 +37,13 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder encoder;
     private final JwtUtils jwtUtils;
 
-    @Value("${app.jwtExpirationMs}")
+    @Value("${app.security.access-token.expiration}")
     private int jwtExpirationMs;
-    @Value("${app.jwtRefreshExpirationMs}")
+    @Value("${app.security.refresh-token.expiration}")
     private int jwtRefreshExpirationMs;
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public TokenInfo authenticateUser(UserLoginCommand command) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(command.getUsername(), command.getPassword()));

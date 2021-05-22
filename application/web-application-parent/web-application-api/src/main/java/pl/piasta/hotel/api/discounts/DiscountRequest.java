@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pl.piasta.hotel.api.utils.ValidateDates;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -12,7 +11,6 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Schema
-@ValidateDates
 @NoArgsConstructor
 @Getter
 @Setter

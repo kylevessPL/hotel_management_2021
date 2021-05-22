@@ -12,7 +12,7 @@ public class AdditionalServicesEntityMapper {
 
     public List<AdditionalService> mapToAdditionalService(List<AdditionalServicesEntity> additionalServices) {
         return additionalServices.stream()
-                .map(entity -> new AdditionalService(entity.getId(), entity.getName(), entity.getPrice()))
+                .map(entity -> new AdditionalService(entity.getId(), entity.getName(), entity.getPrice(), entity.getDescription()))
                 .collect(Collectors.toList());
     }
 }

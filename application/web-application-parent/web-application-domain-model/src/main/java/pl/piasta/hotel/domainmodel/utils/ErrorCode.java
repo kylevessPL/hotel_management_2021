@@ -21,10 +21,9 @@ public enum ErrorCode {
     VALIDATION_FAILED("V01", "Validation failed"),
     USERNAME_OCCUPIED("A01", "Username already in use"),
     EMAIL_OCCUPIED("A02", "Email already in use"),
-    BAD_CREDENTIALS("A03", "Bad credentials"),
-    ACCOUNT_DISABLED("A04", "Account disabled"),
-    REFRESH_TOKEN_EXPIRED("A05", "Refresh token expired"),
-    REFRESH_TOKEN_NOT_FOUND("A06", "Invalid refresh token"),
+    ACCOUNT_DISABLED("A03", "Account disabled"),
+    REFRESH_TOKEN_EXPIRED("A04", "Refresh token expired"),
+    REFRESH_TOKEN_NOT_FOUND("A05", "Refresh token invalid or already used"),
     USER_NOT_FOUND("U01", "User not found"),
     USER_AVATAR_NOT_FOUND("U02", "User avatar not found"),
     FILE_UPLOAD_COMMON("C01", "File upload error");

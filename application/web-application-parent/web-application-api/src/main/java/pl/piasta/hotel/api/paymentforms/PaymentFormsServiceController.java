@@ -20,7 +20,7 @@ import java.util.List;
 
 @Tag(name = "Payment Forms API", description = "API performing operations on payment form resources")
 @RestController
-@RequestMapping("/payment-forms")
+@RequestMapping("${app.api.base-path}/payment-forms")
 @RequiredArgsConstructor
 public class PaymentFormsServiceController {
 

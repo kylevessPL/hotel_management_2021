@@ -14,5 +14,10 @@
       "name": "app.jwtRefreshExpirationMs",
       "type": "java.lang.String",
       "description": "JWT refresh token expiration time"
+    },
+    {
+      "name": "app.api.base-path",
+      "type": "java.lang.String",
+      "description": "API base path"
     }
   ] }

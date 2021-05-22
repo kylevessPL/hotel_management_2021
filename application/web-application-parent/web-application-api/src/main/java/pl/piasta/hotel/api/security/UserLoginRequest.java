@@ -20,7 +20,7 @@ public class UserLoginRequest implements Serializable {
     @NotBlank
     @Size(min = 3, max = 20)
     private String username;
-    @Schema(description = "User password", example = "example")
+    @Schema(description = "User password", example = "7GJ13T%lwqXaJYo2@^")
     @NotBlank
     @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).+$")
     @Size(min = 6, max = 120)

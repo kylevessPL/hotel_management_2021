@@ -24,6 +24,8 @@ public class AdditionalServicesEntity {
     private Integer id;
     @Column(name = "name", nullable = false, length = 40)
     private String name;
-    @Column(name = "price", precision = 2)
-    private BigDecimal price;
+    @Column(name = "price", nullable = false, precision = 2)
+    private BigDecimal price = BigDecimal.ZERO;
+    @Column(name = "desc", length = 512)
+    private String description;
 }

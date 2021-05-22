@@ -9,7 +9,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.Table;
 import java.util.UUID;
 
@@ -29,7 +28,7 @@ public class FilesEntity {
     private String name;
     @Column(name = "type", nullable = false)
     private String type;
-    @Lob
+    @Type(type="org.hibernate.type.BinaryType")
     @Column(name = "data", nullable = false)
     private byte[] data;
 }

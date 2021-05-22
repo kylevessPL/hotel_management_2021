@@ -21,4 +21,6 @@ public class AdditionalServiceResponse {
     private String name;
     @Schema(description = "Additional service price", example = "19.99")
     private BigDecimal price;
+    @Schema(description = "Additional service description", example = "Each breakfast pack includes: cereal, milk, juice, fruit pot. Served to bed at 9 a.m.")
+    private String description;
 }

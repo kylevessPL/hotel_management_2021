@@ -20,7 +20,7 @@ import java.util.List;
 
 @Tag(name = "Additional Services API", description = "API performing operations on additional service resources")
 @RestController
-@RequestMapping("/additional-services")
+@RequestMapping("${app.api.base-path}/additional-services")
 @RequiredArgsConstructor
 public class AdditionalServicesServiceController {
 

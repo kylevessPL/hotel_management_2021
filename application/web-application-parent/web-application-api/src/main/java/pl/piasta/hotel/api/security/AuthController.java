@@ -28,7 +28,7 @@ import javax.validation.Valid;
 
 @Tag(name = "Authentication API", description = "API performing user authentication operations")
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("${app.api.base-path}/auth")
 @RequiredArgsConstructor
 public class AuthController {
 

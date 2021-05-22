@@ -1,6 +1,6 @@
 package pl.piasta.hotel.api.utils;
 
-import org.apache.tomcat.util.http.fileupload.impl.SizeException;
+import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import pl.piasta.hotel.domainmodel.utils.ApplicationException;
@@ -21,6 +22,8 @@ import pl.piasta.hotel.domainmodel.utils.ErrorCode;
 import pl.piasta.hotel.domainmodel.utils.FileUploadException;
 import pl.piasta.hotel.domainmodel.utils.ResourceNotFoundException;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 
 @ControllerAdvice
@@ -37,8 +40,8 @@ public final class GlobalExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(errorResponse, new HttpHeaders(), status);
     }
 
-    @ExceptionHandler(value = SizeException.class)
-    protected ResponseEntity<Object> handleFileSizeError(FileUploadException ex) {
+    @ExceptionHandler(value = MaxUploadSizeExceededException.class)
+    protected ResponseEntity<Object> handleMaxUploadSizeExceededError(MaxUploadSizeExceededException ex) {
         HttpStatus status = HttpStatus.PAYLOAD_TOO_LARGE;
         logger.warn(status.toString(), ex);
         ErrorResponse errorResponse = new ErrorResponse(
@@ -87,13 +90,19 @@ public final class GlobalExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(errorResponse, new HttpHeaders(), status);
     }
 
-    @ExceptionHandler(value = AuthenticationException.class)
-    protected ResponseEntity<Object> handleAuthenticationExceptionError(AuthenticationException ex) {
+    @ExceptionHandler(value = {
+            AuthenticationException.class,
+            JwtException.class
+    })
+    protected ResponseEntity<Object> handleJwtExceptionError(@NonNull HttpServletRequest request,
+                                                             @NonNull HttpServletResponse response,
+                                                             @Nullable Object body,
+                                                             @NonNull Exception ex) {
         HttpStatus status = HttpStatus.UNAUTHORIZED;
         logger.warn(status.toString(), ex);
         ErrorResponse errorResponse = new ErrorResponse(
                 status.value(),
-                ErrorCode.BAD_CREDENTIALS.getCode(),
+                "",
                 ex.getMessage());
         return new ResponseEntity<>(errorResponse, new HttpHeaders(), status);
     }

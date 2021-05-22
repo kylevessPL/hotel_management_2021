@@ -27,7 +27,7 @@ public class UsersPageQuery {
     private Integer size = 20;
     @Parameter(
             description = "Value to sort by",
-            schema = @Schema(type = "string", allowableValues = { "id, username, email, roles, status" }, defaultValue = "id"))
+            schema = @Schema(type = "string", allowableValues = { "id", "username", "email", "roles", "status" }, defaultValue = "id"))
     @ValidateString(acceptedValues = { "id", "username", "email", "roles", "status" })
     private String sortBy = "id";
     @Parameter(description = "Sort direction")

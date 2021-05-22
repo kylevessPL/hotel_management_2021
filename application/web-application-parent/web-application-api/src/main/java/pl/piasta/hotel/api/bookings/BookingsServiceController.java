@@ -23,7 +23,7 @@ import pl.piasta.hotel.dto.bookings.BookingInfoResponse;
 
 @Tag(name = "Bookings API", description = "API performing operations on booking resources")
 @RestController
-@RequestMapping("/bookings")
+@RequestMapping("${app.api.base-path}/bookings")
 @RequiredArgsConstructor
 public class BookingsServiceController {
 

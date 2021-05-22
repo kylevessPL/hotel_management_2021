@@ -16,6 +16,7 @@ import pl.piasta.hotel.infrastructure.model.RefreshTokensEntity;
 import pl.piasta.hotel.infrastructure.model.RolesEntity;
 import pl.piasta.hotel.infrastructure.model.UsersEntity;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -72,7 +73,11 @@ public class AuthRepositoryImpl implements AuthRepository {
     @Override
     @Transactional
     public Optional<RefreshToken> deleteRefreshTokenByToken(String token) {
-        return refreshTokensEntityMapper.mapToTokenInfo(refreshTokensEntityDao.deleteByToken(token));
+        List<RefreshTokensEntity> deleted = refreshTokensEntityDao.deleteByToken(token);
+        if (deleted.size() != 0) {
+            return refreshTokensEntityMapper.mapToTokenInfo(Optional.of(deleted.get(0)));
+        }
+        return Optional.empty();
     }
 
     void updateUsersEntity(UsersEntity user, String username, String email, String password, Set<RolesEntity> roles) {

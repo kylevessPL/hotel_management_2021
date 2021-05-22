@@ -14,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,8 +35,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
 @Tag(name = "Discounts API", description = "API performing operations on discount resources")
+@Validated
 @RestController
-@RequestMapping("/discounts")
+@RequestMapping("${app.api.base-path}/discounts")
 @RequiredArgsConstructor
 public class DiscountsServiceController {
 
@@ -71,8 +73,8 @@ public class DiscountsServiceController {
                 .encode()
                 .build()
                 .toUriString();
-        response.addHeader(HttpHeaders.LOCATION, path);
-        response.addHeader(HttpHeaders.CONTENT_LENGTH, "0");
+        response.setHeader(HttpHeaders.LOCATION, path);
+        response.setContentLength(0);
     }
 
     @Operation(
@@ -99,7 +101,7 @@ public class DiscountsServiceController {
             operationId = "getDiscountDetails"
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Success"),
+            @ApiResponse(responseCode = "200", description = "Success"),
             @ApiResponse(responseCode = "400", description = "Malformed request syntax", content = @Content),
             @ApiResponse(responseCode = "409", description = "Invalid discount code", content = @Content),
             @ApiResponse(responseCode = "422", description = "Validation failed", content = @Content),

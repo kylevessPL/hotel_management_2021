@@ -11,8 +11,8 @@ import lombok.Setter;
 @Setter
 public class DiscountDetailsResponse {
 
-    @Schema(description = "Discount code")
+    @Schema(description = "Discount code", example = "PROMO5")
     private String code;
-    @Schema(description = "Discount value")
+    @Schema(description = "Discount percentage value", example = "5")
     private Integer value;
 }

@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -47,10 +48,13 @@ import pl.piasta.hotel.dto.users.UsersPageResponse;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 @Tag(name = "Users API", description = "API performing operations on user resources")
 @RestController
-@RequestMapping("/users")
+@RequestMapping("${app.api.base-path}/users")
 @RequiredArgsConstructor
 public class UsersServiceController {
 
@@ -168,7 +172,20 @@ public class UsersServiceController {
             operationId = "getCurrentUserAvatar"
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Success",
+                    content = @Content,
+                    headers = {
+                            @Header(
+                                    name = HttpHeaders.CONTENT_DISPOSITION,
+                                    description = "Attachment type and filename",
+                                    schema = @Schema(type = "string")),
+                            @Header(
+                                    name = HttpHeaders.CONTENT_LENGTH,
+                                    description = "Attachment size in bytes",
+                                    schema = @Schema(type = "string")),
+                    }),
             @ApiResponse(responseCode = "400", description = "Malformed request syntax", content = @Content),
             @ApiResponse(responseCode = "404", description = "Avatar image not exists", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
@@ -177,9 +194,16 @@ public class UsersServiceController {
             method = {RequestMethod.GET, RequestMethod.HEAD},
             value = "/current/avatar",
             produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public AvatarImageResponse getUserAvatar(Authentication authentication) {
+    public byte[] getUserAvatar(Authentication authentication, HttpServletResponse response) {
         Integer id = ((UserDetailsImpl) authentication.getPrincipal()).getId();
-        return usersMapper.mapToResponse(usersService.getUserAvatar(id));
+        AvatarImageResponse avatar = usersMapper.mapToResponse(usersService.getUserAvatar(id));
+        response.setHeader(
+                HttpHeaders.CONTENT_DISPOSITION,
+                ContentDisposition.attachment()
+                        .filename(avatar.getName())
+                        .build().toString());
+        response.setContentLength(avatar.getData().length);
+        return avatar.getData();
     }
 
     @Operation(
@@ -188,7 +212,7 @@ public class UsersServiceController {
     )
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "200",
+                    responseCode = "201",
                     description = "Success",
                     content = @Content,
                     headers = @Header(
@@ -214,8 +238,8 @@ public class UsersServiceController {
                 .buildAndExpand(bookingResponse.getBookingId())
                 .encode()
                 .getPath();
-        response.addHeader(HttpHeaders.LOCATION, path);
-        response.addHeader(HttpHeaders.CONTENT_LENGTH, "0");
+        response.setHeader(HttpHeaders.LOCATION, path);
+        response.setContentLength(0);
         return bookingResponse;
     }
 }
