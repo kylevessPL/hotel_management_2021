@@ -1,17 +1,17 @@
 {
   "properties": [
     {
-      "name": "app.jwtSecret",
+      "name": "app.security.jwt-secret",
       "type": "java.lang.String",
       "description": "JWT secret key."
     },
     {
-      "name": "app.jwtExpirationMs",
+      "name": "app.security.access-token.expiration",
       "type": "java.lang.String",
       "description": "JWT access token expiration time."
     },
     {
-      "name": "app.jwtRefreshExpirationMs",
+      "name": "app.security.refresh-token.expiration",
       "type": "java.lang.String",
       "description": "JWT refresh token expiration time."
     },
