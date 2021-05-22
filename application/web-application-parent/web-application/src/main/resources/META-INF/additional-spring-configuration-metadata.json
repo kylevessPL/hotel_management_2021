@@ -3,21 +3,21 @@
     {
       "name": "app.jwtSecret",
       "type": "java.lang.String",
-      "description": "JWT secret key"
+      "description": "JWT secret key."
     },
     {
       "name": "app.jwtExpirationMs",
       "type": "java.lang.String",
-      "description": "JWT access token expiration time"
+      "description": "JWT access token expiration time."
     },
     {
       "name": "app.jwtRefreshExpirationMs",
       "type": "java.lang.String",
-      "description": "JWT refresh token expiration time"
+      "description": "JWT refresh token expiration time."
     },
     {
       "name": "app.api.base-path",
       "type": "java.lang.String",
-      "description": "API base path"
+      "description": "API base path."
     }
   ] }

@@ -17,14 +17,6 @@ public class PaymentsRepositoryImpl implements PaymentsRepository {
     private final PaymentsEntityDao dao;
 
     @Override
-    @Transactional
-    public void savePayment(PaymentDetails paymentDetails) {
-        PaymentsEntity payment = new PaymentsEntity();
-        updateEntity(payment, paymentDetails);
-        dao.save(payment);
-    }
-
-    @Override
     @Transactional(readOnly = true)
     public Integer getBookingPaymentFormId(Integer bookingId) {
         return dao.findByBookingId(bookingId).getPaymentFormId();
