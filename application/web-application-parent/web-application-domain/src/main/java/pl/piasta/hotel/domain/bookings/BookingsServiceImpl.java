@@ -105,7 +105,7 @@ public class BookingsServiceImpl implements BookingsService {
     private BookingInfo createBookingInfo(BookingFinalDetails bookingFinalDetails, RoomFinalDetails roomFinalDetails, PaymentStatus paymentStatus) {
         BookingDate bookingDate = createBookingDate(bookingFinalDetails);
         RoomInfo roomInfo = bookingUtils.createRoomInfo(roomFinalDetails);
-        return new BookingInfo(bookingDate, roomInfo, paymentStatus);
+        return new BookingInfo(bookingDate, roomInfo, bookingFinalDetails.getFinalPrice(), paymentStatus);
     }
 
     private BookingDate createBookingDate(BookingFinalDetails bookingDetails) {

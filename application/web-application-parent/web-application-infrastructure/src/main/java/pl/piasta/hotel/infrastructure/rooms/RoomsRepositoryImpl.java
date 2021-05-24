@@ -43,8 +43,8 @@ public class RoomsRepositoryImpl implements RoomsRepository {
     @Override
     @Transactional(readOnly = true)
     public RoomsPage getAllAvailableRoomsWithinDateRange(DateDetails dateDetails, PageProperties pageProperties, SortProperties sortProperties) {
-        List<Integer> bookedRooms = bookingsDao.findByStartDateLessThanEqualAndEndDateGreaterThanEqual(
-                dateDetails.getStartDate(), dateDetails.getEndDate())
+        List<Integer> bookedRooms = bookingsDao.findByStartDateLessThanAndEndDateGreaterThan(
+                dateDetails.getEndDate(), dateDetails.getStartDate())
                 .stream()
                 .map(BookingsEntity::getRoomId)
                 .collect(Collectors.toList());

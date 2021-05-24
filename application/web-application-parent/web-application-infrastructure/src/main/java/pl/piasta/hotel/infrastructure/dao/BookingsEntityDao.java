@@ -11,5 +11,5 @@ import java.util.List;
 public interface BookingsEntityDao extends JpaRepository<BookingsEntity, Integer> {
 
     Page<BookingsEntity> findAllByIdIn(List<Integer> idList, Pageable pageable);
-    List<BookingsEntity> findByStartDateLessThanEqualAndEndDateGreaterThanEqual(LocalDate startDate, LocalDate endDate);
+    List<BookingsEntity> findByStartDateLessThanAndEndDateGreaterThan(LocalDate endDate, LocalDate startDate);
 }

@@ -63,7 +63,7 @@ public class UsersServiceImpl implements UsersService {
             RoomFinalDetails roomFinalDetails = getRoomFinalDetails(e.getRoomId());
             RoomInfo roomInfo = bookingUtils.createRoomInfo(roomFinalDetails);
             PaymentStatus paymentStatus = bookingUtils.createPaymentStatus(id, e.getBookingStatus());
-            return new BookingInfo(e.getBookingDate(), roomInfo, paymentStatus);
+            return new BookingInfo(e.getBookingDate(), roomInfo, e.getFinalPrice(), paymentStatus);
         }).collect(Collectors.toList());
         return new UserBookingsPage(bookingsPage.getMeta(), bookingInfoList);
     }

@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.piasta.hotel.dto.rooms.RoomInfoResponse;
 
+import java.math.BigDecimal;
+
 @Schema
 @NoArgsConstructor
 @Getter
@@ -16,6 +18,8 @@ public class BookingInfoResponse {
     private BookingDate bookingDate;
     @Schema(description = "Booked room details")
     private RoomInfoResponse room;
+    @Schema(description = "Booked room final price")
+    private BigDecimal finalPrice;
     @Schema(description = "Booking payment status", example = "PAYED")
     private String paymentStatus;
 }
