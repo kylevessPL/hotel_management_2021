@@ -35,7 +35,9 @@ import pl.piasta.hotel.domainmodel.utils.ResourceNotFoundException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
+import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -236,7 +238,7 @@ public class BookingsServiceImpl implements BookingsService {
 
     private boolean isBookingDateValid(BookingDate bookingDate) {
         LocalDate currentDate = LocalDate.now();
-        LocalDate bookDate = LocalDate.from(bookingDate.getBookDate());
+        LocalDate bookDate = LocalDateTime.ofInstant(bookingDate.getBookDate(), ZoneOffset.UTC).toLocalDate();
         LocalDate startDate = bookingDate.getStartDate();
         return currentDate.isBefore(startDate) && Period.between(bookDate, currentDate).getDays() <= 14;
     }
