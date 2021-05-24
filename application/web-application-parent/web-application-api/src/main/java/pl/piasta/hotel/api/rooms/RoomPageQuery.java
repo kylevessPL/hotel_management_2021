@@ -21,16 +21,12 @@ import java.time.LocalDate;
 @Setter
 public class RoomPageQuery {
 
-    @Parameter(
-            description = "Booking start date",
-            schema = @Schema(type = "date"))
+    @Parameter(description = "Booking start date")
     @NotNull
     @Future
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate startDate;
-    @Parameter(
-            description = "Booking end date",
-            schema = @Schema(type = "date"))
+    @Parameter(description = "Booking end date")
     @NotNull
     @Future
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
