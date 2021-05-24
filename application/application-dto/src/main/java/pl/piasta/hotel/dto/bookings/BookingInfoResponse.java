@@ -12,8 +12,8 @@ import pl.piasta.hotel.dto.rooms.RoomInfoResponse;
 @Setter
 public class BookingInfoResponse {
 
-    @Schema(description = "Booking period details")
-    private BookingPeriod period;
+    @Schema(description = "Booking date details")
+    private BookingDate bookingDate;
     @Schema(description = "Booked room details")
     private RoomInfoResponse room;
     @Schema(description = "Booking payment status", example = "PAYED")

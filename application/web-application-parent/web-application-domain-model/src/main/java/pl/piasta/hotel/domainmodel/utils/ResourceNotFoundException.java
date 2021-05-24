@@ -1,11 +1,8 @@
 package pl.piasta.hotel.domainmodel.utils;
 
-import lombok.Getter;
+public class ResourceNotFoundException extends RuntimeException {
 
-@Getter
-public class ResourceNotFoundException extends ApplicationException {
-
-    public ResourceNotFoundException(ErrorCode errorCode) {
-        super(errorCode);
+    public ResourceNotFoundException() {
+        super();
     }
 }

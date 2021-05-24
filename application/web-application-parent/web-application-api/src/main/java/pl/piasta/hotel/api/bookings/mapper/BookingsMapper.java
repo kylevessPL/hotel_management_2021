@@ -18,7 +18,5 @@ public interface BookingsMapper {
     @Mapping(source = "startDate", target = "dateDetails.startDate")
     @Mapping(source = "endDate", target = "dateDetails.endDate")
     BookingCommand mapToCommand(BookingRequest bookingRequest);
-    @Mapping(source = "startDate", target = "period.startDate")
-    @Mapping(source = "endDate", target = "period.endDate")
     BookingInfoResponse mapToResponse(BookingInfo bookingInfo);
 }

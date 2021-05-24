@@ -16,10 +16,10 @@ import java.io.Serializable;
 @Setter
 public class DiscountRequest implements Serializable {
 
-    @Schema(description = "Discount code")
+    @Schema(description = "Discount code", example = "PROMO5")
     @NotBlank
     private String code;
-    @Schema(description = "Discount value")
+    @Schema(description = "Discount value", example = "5")
     @NotNull
     @Min(1)
     private Integer value;

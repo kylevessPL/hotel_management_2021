@@ -13,7 +13,7 @@ public class SecurityControl {
 
     private final BookingsService bookingsService;
 
-    public boolean hasBookingPermission(Integer bookingId) {
+    public boolean hasBookingResourcePermission(Integer bookingId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Integer userId = ((UserDetailsImpl) authentication.getPrincipal()).getId();
         return bookingsService.hasPermission(userId, bookingId);

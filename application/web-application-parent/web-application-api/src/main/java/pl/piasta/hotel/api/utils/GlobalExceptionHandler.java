@@ -4,7 +4,6 @@ import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.security.access.AccessDeniedException;
@@ -22,39 +21,26 @@ import pl.piasta.hotel.domainmodel.utils.ErrorCode;
 import pl.piasta.hotel.domainmodel.utils.FileUploadException;
 import pl.piasta.hotel.domainmodel.utils.ResourceNotFoundException;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 
 @ControllerAdvice
 public final class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(value = ResourceNotFoundException.class)
-    protected ResponseEntity<Object> handleResourceNotFoundError(ResourceNotFoundException ex) {
-        HttpStatus status = HttpStatus.NOT_FOUND;
-        logger.warn(status.toString(), ex);
-        ErrorResponse errorResponse = new ErrorResponse(
-                status.value(),
-                ex.getErrorCode().getCode(),
-                ex.getMessage());
-        return new ResponseEntity<>(errorResponse, new HttpHeaders(), status);
+    @ExceptionHandler({ResourceNotFoundException.class, AccessDeniedException.class})
+    protected ResponseEntity<Object> handleResourceNotFoundError(@NonNull WebRequest request,
+                                                                 @NonNull HttpServletResponse response,
+                                                                 @Nullable Object body,
+                                                                 @NonNull Exception ex) {
+        return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
-    @ExceptionHandler(value = MaxUploadSizeExceededException.class)
-    protected ResponseEntity<Object> handleMaxUploadSizeExceededError(MaxUploadSizeExceededException ex) {
-        HttpStatus status = HttpStatus.PAYLOAD_TOO_LARGE;
-        logger.warn(status.toString(), ex);
-        ErrorResponse errorResponse = new ErrorResponse(
-                status.value(),
-                "",
-                status.getReasonPhrase());
-        return new ResponseEntity<>(errorResponse, new HttpHeaders(), status);
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    protected ResponseEntity<Object> handleMaxUploadSizeExceededError(MaxUploadSizeExceededException ex, WebRequest request) {
+        return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.PAYLOAD_TOO_LARGE, request);
     }
 
-    @ExceptionHandler(value = {
-            FileUploadException.class,
-            MultipartException.class
-    })
+    @ExceptionHandler({FileUploadException.class, MultipartException.class})
     protected ResponseEntity<Object> handleFileUploadError(FileUploadException ex) {
         HttpStatus status = HttpStatus.EXPECTATION_FAILED;
         logger.warn(status.toString(), ex);
@@ -65,7 +51,7 @@ public final class GlobalExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(errorResponse, new HttpHeaders(), status);
     }
 
-    @ExceptionHandler(value = ApplicationException.class)
+    @ExceptionHandler(ApplicationException.class)
     protected ResponseEntity<Object> handleBookingError(ApplicationException ex) {
         HttpStatus status = HttpStatus.CONFLICT;
         logger.warn(status.toString(), ex);
@@ -76,10 +62,7 @@ public final class GlobalExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(errorResponse, new HttpHeaders(), status);
     }
 
-    @ExceptionHandler(value = {
-            IllegalArgumentException.class,
-            ConstraintViolationException.class
-    })
+    @ExceptionHandler({IllegalArgumentException.class, ConstraintViolationException.class})
     protected ResponseEntity<Object> handleValidationError(Exception ex) {
         HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
         logger.warn(status.toString(), ex);
@@ -90,11 +73,8 @@ public final class GlobalExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(errorResponse, new HttpHeaders(), status);
     }
 
-    @ExceptionHandler(value = {
-            AuthenticationException.class,
-            JwtException.class
-    })
-    protected ResponseEntity<Object> handleJwtExceptionError(@NonNull HttpServletRequest request,
+    @ExceptionHandler({AuthenticationException.class, JwtException.class})
+    protected ResponseEntity<Object> handleJwtExceptionError(@NonNull WebRequest request,
                                                              @NonNull HttpServletResponse response,
                                                              @Nullable Object body,
                                                              @NonNull Exception ex) {
@@ -107,18 +87,7 @@ public final class GlobalExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(errorResponse, new HttpHeaders(), status);
     }
 
-    @ExceptionHandler(value = AccessDeniedException.class)
-    protected ResponseEntity<Object> handleAccessDeniedError(AccessDeniedException ex) {
-        HttpStatus status = HttpStatus.NOT_FOUND;
-        logger.warn(status.toString(), ex);
-        ErrorResponse errorResponse = new ErrorResponse(
-                status.value(),
-                "",
-                status.getReasonPhrase());
-        return new ResponseEntity<>(errorResponse, new HttpHeaders(), status);
-    }
-
-    @ExceptionHandler(value = DisabledException.class)
+    @ExceptionHandler(DisabledException.class)
     protected ResponseEntity<Object> handleAccountDisabledError(DisabledException ex) {
         HttpStatus status = HttpStatus.FORBIDDEN;
         logger.warn(status.toString(), ex);
@@ -140,19 +109,11 @@ public final class GlobalExceptionHandler extends ResponseEntityExceptionHandler
 
     @Override
     @NonNull
-    protected ResponseEntity<Object> handleHttpMessageNotReadable(@NonNull HttpMessageNotReadableException ex,
-                                                                  @NonNull HttpHeaders headers,
-                                                                  @NonNull HttpStatus status,
-                                                                  @NonNull WebRequest request) {
-        return handleValidationError(ex);
-    }
-
-    @Override
-    @NonNull
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(@NonNull MethodArgumentNotValidException ex,
-                                                                  @NonNull HttpHeaders headers,
-                                                                  @NonNull HttpStatus status,
-                                                                  @NonNull WebRequest request) {
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+            @NonNull MethodArgumentNotValidException ex,
+            @NonNull HttpHeaders headers,
+            @NonNull HttpStatus status,
+            @NonNull WebRequest request) {
         return handleValidationError(ex);
     }
 
@@ -164,10 +125,10 @@ public final class GlobalExceptionHandler extends ResponseEntityExceptionHandler
                                                              @NonNull HttpStatus status,
                                                              @NonNull WebRequest request) {
         logger.warn(status.toString(), ex);
-        ErrorResponse errorResponse = new ErrorResponse(
+        ErrorResponse errorBody = new ErrorResponse(
                 status.value(),
                 "",
                 status.getReasonPhrase());
-        return new ResponseEntity<>(errorResponse, headers, status);
+        return super.handleExceptionInternal(ex, errorBody, headers, status, request);
     }
 }

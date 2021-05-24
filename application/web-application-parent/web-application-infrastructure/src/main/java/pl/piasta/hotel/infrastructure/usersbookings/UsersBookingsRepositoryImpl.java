@@ -7,13 +7,23 @@ import pl.piasta.hotel.domain.usersbookings.UsersBookingsRepository;
 import pl.piasta.hotel.infrastructure.dao.UsersBookingsEntityDao;
 import pl.piasta.hotel.infrastructure.model.UsersBookingsEntity;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
 public class UsersBookingsRepositoryImpl implements UsersBookingsRepository {
 
     private final UsersBookingsEntityDao dao;
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Integer> getAllUserBookingsIdList(Integer userId) {
+        return dao.findAllBookingIdByUserId(userId).stream()
+                .mapToInt(UsersBookingsEntity::getBookingId)
+                .boxed().collect(Collectors.toList());
+    }
 
     @Override
     @Transactional(readOnly = true)

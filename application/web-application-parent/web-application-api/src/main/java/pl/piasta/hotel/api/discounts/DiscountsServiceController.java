@@ -103,7 +103,7 @@ public class DiscountsServiceController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success"),
             @ApiResponse(responseCode = "400", description = "Malformed request syntax", content = @Content),
-            @ApiResponse(responseCode = "409", description = "Invalid discount code", content = @Content),
+            @ApiResponse(responseCode = "409", description = "Discount code does not exist", content = @Content),
             @ApiResponse(responseCode = "422", description = "Validation failed", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })

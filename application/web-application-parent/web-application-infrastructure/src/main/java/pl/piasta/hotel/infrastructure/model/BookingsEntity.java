@@ -35,8 +35,6 @@ public class BookingsEntity {
     private LocalDate endDate;
     @Column(name = "room_id", nullable = false)
     private Integer roomId;
-    @Column(name = "offer_id")
-    private Integer offerId;
     @Column(name = "final_price", precision = 2)
     private BigDecimal finalPrice;
     @Column(name = "status", nullable = false)

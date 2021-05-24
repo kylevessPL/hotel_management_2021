@@ -40,7 +40,9 @@ import pl.piasta.hotel.domain.users.UsersService;
 import pl.piasta.hotel.domainmodel.bookings.Booking;
 import pl.piasta.hotel.domainmodel.bookings.BookingCommand;
 import pl.piasta.hotel.domainmodel.utils.PageCommand;
+import pl.piasta.hotel.dto.bookings.BookingInfoResponse;
 import pl.piasta.hotel.dto.bookings.BookingResponse;
+import pl.piasta.hotel.dto.bookings.UserBookingsPageResponse;
 import pl.piasta.hotel.dto.users.AvatarImageResponse;
 import pl.piasta.hotel.dto.users.PagedUserInfo;
 import pl.piasta.hotel.dto.users.UsersPageResponse;
@@ -67,7 +69,7 @@ public class UsersServiceController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Success",
-                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = UsersPageResponse.class))),
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = PagedUserInfo.class))),
                     headers = {
                             @Header(name = HttpHeaders.LINK, description = "Pagination links", schema = @Schema(type = "string")),
                             @Header(name = "X-Count-Per-Page", description = "Number of results per page", schema = @Schema(type = "integer")),
@@ -81,7 +83,7 @@ public class UsersServiceController {
     })
     @Secured("ROLE_ADMIN")
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public PageResponse<PagedUserInfo> getAll(@ParameterObject @Valid UsersPageQuery query) {
+    public PageResponse<PagedUserInfo> getAllUsers(@ParameterObject @Valid UsersPageQuery query) {
         PageCommand command = usersMapper.mapToCommand(query);
         UsersPageResponse response = usersMapper.mapToResponse(usersService.getAllUsers(command));
         return new PageResponse<>(query.getSize(), response.getMeta(), response.getContent());
@@ -183,7 +185,7 @@ public class UsersServiceController {
                                     schema = @Schema(type = "string")),
                     }),
             @ApiResponse(responseCode = "400", description = "Malformed request syntax", content = @Content),
-            @ApiResponse(responseCode = "404", description = "Avatar image not exists", content = @Content),
+            @ApiResponse(responseCode = "409", description = "Avatar image not exists", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
     @GetMapping(value = "/current/avatar", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
@@ -217,6 +219,7 @@ public class UsersServiceController {
             @ApiResponse(responseCode = "422", description = "Validation failed", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/current/bookings", produces = MediaType.APPLICATION_JSON_VALUE)
     public BookingResponse makeBooking(
             Authentication authentication,
@@ -234,6 +237,36 @@ public class UsersServiceController {
         response.setHeader(HttpHeaders.LOCATION, path);
         response.setContentLength(0);
         return bookingResponse;
+    }
+
+    @Operation(
+            summary = "Get all current user bookings",
+            operationId = "getAllCurrentUserBookings"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Success",
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = BookingInfoResponse.class))),
+                    headers = {
+                            @Header(name = HttpHeaders.LINK, description = "Pagination links", schema = @Schema(type = "string")),
+                            @Header(name = "X-Count-Per-Page", description = "Number of results per page", schema = @Schema(type = "integer")),
+                            @Header(name = "X-Current-Page", description = "Current page", schema = @Schema(type = "integer")),
+                            @Header(name = "X-Total-Count", description = "Total number of results", schema = @Schema(type = "integer")),
+                            @Header(name = "X-Total-Pages", description = "Total number of pages", schema = @Schema(type = "integer"))
+                    }),
+            @ApiResponse(responseCode = "400", description = "Malformed request syntax", content = @Content),
+            @ApiResponse(responseCode = "422", description = "Validation failed", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
+    @GetMapping(value = "/current/bookings", produces = MediaType.APPLICATION_JSON_VALUE)
+    public PageResponse<BookingInfoResponse> getAllBookings(
+            Authentication authentication,
+            @ParameterObject @Valid UserBookingsPageQuery query) {
+        Integer id = ((UserDetailsImpl) authentication.getPrincipal()).getId();
+        PageCommand command = usersMapper.mapToCommand(query);
+        UserBookingsPageResponse response = usersMapper.mapToResponse(usersService.getAllUserBookings(id, command));
+        return new PageResponse<>(query.getSize(), response.getMeta(), response.getContent());
     }
 }
 

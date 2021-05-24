@@ -21,6 +21,7 @@
     <properties>
         <java.version>1.8</java.version>
         <spring.boot.starter.version>2.4.5</spring.boot.starter.version>
+        <spring-framework.version>5.3.6</spring-framework.version>
         <io-rest-assured.version>4.3.3</io-rest-assured.version>
         <mapstruct.version>1.4.2.Final</mapstruct.version>
         <springdoc.version>1.5.8</springdoc.version>
@@ -105,6 +106,11 @@
                 <version>${spring-framework.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+            </dependency>
+            <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
                 <version>5.3.6</version>
@@ -156,4 +162,16 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring.boot.starter.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>

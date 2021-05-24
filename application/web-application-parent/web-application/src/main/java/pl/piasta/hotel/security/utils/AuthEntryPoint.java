@@ -2,6 +2,7 @@ package pl.piasta.hotel.security.utils;
 
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -12,10 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 
 @Component
 @RequiredArgsConstructor
-public class AuthEntryPointJwt implements AuthenticationEntryPoint {
+public class AuthEntryPoint implements AuthenticationEntryPoint {
 
     private final HandlerExceptionResolver handlerExceptionResolver;
 
+    @SneakyThrows
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException ex) {
         String tokenExpired = (String) request.getAttribute("token-expired");

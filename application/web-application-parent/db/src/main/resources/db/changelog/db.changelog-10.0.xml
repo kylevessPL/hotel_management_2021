@@ -171,4 +171,7 @@
     <changeSet author="geekon" id="10.0-15">
         <addNotNullConstraint tableName="additional_services" columnName="price"/>
     </changeSet>
+    <changeSet author="geekon" id="10.0-16">
+        <dropColumn tableName="bookings" columnName="offer_id"/>
+    </changeSet>
 </databaseChangeLog>

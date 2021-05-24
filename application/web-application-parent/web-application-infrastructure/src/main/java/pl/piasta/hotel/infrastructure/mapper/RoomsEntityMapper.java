@@ -1,10 +1,13 @@
 package pl.piasta.hotel.infrastructure.mapper;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import pl.piasta.hotel.domainmodel.rooms.Room;
 import pl.piasta.hotel.domainmodel.rooms.RoomDetails;
 import pl.piasta.hotel.domainmodel.rooms.RoomFinalDetails;
+import pl.piasta.hotel.domainmodel.rooms.RoomsPage;
+import pl.piasta.hotel.domainmodel.utils.PageMeta;
 import pl.piasta.hotel.infrastructure.model.AmenitiesEntity;
 import pl.piasta.hotel.infrastructure.model.RoomsEntity;
 
@@ -19,14 +22,19 @@ public class RoomsEntityMapper {
 
     private final AmenitiesEntityMapper amenitiesEntityMapper;
 
-    public List<Room> mapToRoom(List<RoomsEntity> rooms, Map<Integer, List<AmenitiesEntity>> roomAmenitiesMap) {
-        return rooms.stream()
+    public RoomsPage mapToRoom(Page<RoomsEntity> rooms, Map<Integer, List<AmenitiesEntity>> roomAmenitiesMap) {
+        List<Room> result = rooms.stream()
                 .map(entity -> new Room(
                         entity.getId(),
                         entity.getBedAmount(),
                         entity.getStandardPrice(),
                         amenitiesEntityMapper.mapToAmenity(roomAmenitiesMap.get(entity.getId()))))
                 .collect(Collectors.toList());
+        return new RoomsPage(
+                new PageMeta(
+                        rooms.isFirst(), rooms.isLast(), rooms.hasPrevious(), rooms.hasNext(),
+                        rooms.getNumber() + 1, rooms.getTotalPages(), rooms.getTotalElements()),
+                result);
     }
 
     public Optional<RoomDetails> mapToRoomDetails(Optional<RoomsEntity> rooms) {

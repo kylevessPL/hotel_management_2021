@@ -41,7 +41,7 @@ public class BookingsServiceController {
             @ApiResponse(responseCode = "422", description = "Validation failed", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
-    @PreAuthorize("hasRole('ADMIN') OR @securityControl.hasBookingPermission(id)")
+    @PreAuthorize("hasRole('ADMIN') OR @securityControl.hasBookingResourcePermission(#id)")
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public BookingInfoResponse getBookingInfo(@Parameter(description = "Booking id") @PathVariable Integer id) {
         BookingInfo bookingInfo = service.getBookingInfo(id);
@@ -60,7 +60,7 @@ public class BookingsServiceController {
             @ApiResponse(responseCode = "422", description = "Validation failed"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    @PreAuthorize("hasRole('ADMIN') OR @securityControl.hasBookingPermission(id)")
+    @PreAuthorize("hasRole('ADMIN') OR @securityControl.hasBookingResourcePermission(#id)")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping(value = "/{id}/cancellation", produces = MediaType.APPLICATION_JSON_VALUE)
     public void cancelBooking(@Parameter(description = "Booking id") @PathVariable Integer id) {

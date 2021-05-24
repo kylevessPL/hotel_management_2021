@@ -11,7 +11,6 @@ public enum ErrorCode {
     BOOKING_ALREADY_CANCELLED("B01", "Booking already cancelled"),
     BOOKING_ALREADY_CONFIRMED("B02", "Booking already confirmed"),
     BOOKING_EXPIRED("B03", "Booking expired"),
-    BOOKING_NOT_FOUND("B04", "Booking not found"),
     PAYMENT_FORM_NOT_FOUND("P01", "Payment form not found"),
     DISCOUNT_CODE_ALREADY_EXISTS("D01", "Discount code already exists"),
     DISCOUNT_CODE_NOT_FOUND("D02", "Discount code not exists"),
@@ -24,8 +23,7 @@ public enum ErrorCode {
     ACCOUNT_DISABLED("A03", "Account disabled"),
     REFRESH_TOKEN_EXPIRED("A04", "Refresh token expired"),
     REFRESH_TOKEN_NOT_FOUND("A05", "Refresh token invalid or already used"),
-    USER_NOT_FOUND("U01", "User not found"),
-    USER_AVATAR_NOT_FOUND("U02", "User avatar not found"),
+    USER_AVATAR_NOT_FOUND("U01", "User avatar not found"),
     FILE_UPLOAD_COMMON("C01", "File upload error");
 
     private final String code;
