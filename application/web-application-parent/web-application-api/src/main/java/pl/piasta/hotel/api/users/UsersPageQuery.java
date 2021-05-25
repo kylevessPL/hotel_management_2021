@@ -27,8 +27,8 @@ public class UsersPageQuery {
     private Integer size = 20;
     @Parameter(
             description = "Value to sort by",
-            schema = @Schema(type = "string", allowableValues = { "id", "username", "email", "roles", "status" }, defaultValue = "id"))
-    @ValidateString(acceptedValues = { "id", "username", "email", "roles", "status" })
+            schema = @Schema(type = "string", allowableValues = { "id", "username", "email", "status" }, defaultValue = "id"))
+    @ValidateString(acceptedValues = { "id", "username", "email", "status" })
     private String sortBy = "id";
     @Parameter(description = "Sort direction")
     private SortDir sortDir = SortDir.ASC;

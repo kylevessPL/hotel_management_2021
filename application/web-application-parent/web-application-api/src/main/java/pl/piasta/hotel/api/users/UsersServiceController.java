@@ -104,6 +104,7 @@ public class UsersServiceController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping(value = "/{id}/status", produces = MediaType.APPLICATION_JSON_VALUE)
     public void updateAccountStatus(
+            Authentication authentication,
             @Parameter(description = "User id") @PathVariable Integer id,
             @Valid @RequestBody UpdateAccountStatusRequest request) {
         usersService.updateAccountStatus(id, usersMapper.mapToCommand(request));

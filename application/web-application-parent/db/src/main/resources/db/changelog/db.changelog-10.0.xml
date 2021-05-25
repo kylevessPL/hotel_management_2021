@@ -49,8 +49,10 @@
     </changeSet>
     <changeSet author="geekon" id="10.0.5">
         <insert schemaName="public" tableName="roles">
-            <column name="name" value="ROLE_ADMIN"/>
             <column name="name" value="ROLE_USER"/>
+        </insert>
+        <insert schemaName="public" tableName="roles">
+            <column name="name" value="ROLE_ADMIN"/>
         </insert>
     </changeSet>
     <changeSet author="geekon" id="10.0.6">
@@ -163,7 +165,7 @@
     </changeSet>
     <changeSet author="geekon" id="10.0-14">
         <addColumn schemaName="public" tableName="users">
-            <column name="status" type="VARCHAR(6)" defaultValue="ACTIVE">
+            <column name="status" type="VARCHAR(8)" defaultValue="ACTIVE">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
@@ -173,5 +175,28 @@
     </changeSet>
     <changeSet author="geekon" id="10.0-16">
         <dropColumn tableName="bookings" columnName="offer_id"/>
+    </changeSet>
+    <changeSet author="geekon" id="10.0-17">
+        <addDefaultValue
+                schemaName="public"
+                tableName="users"
+                columnName="status"
+                defaultValue="ACTIVE"/>
+    </changeSet>
+    <changeSet author="geekon" id="10.0-18">
+        <comment>Sample admin test account</comment>
+        <insert schemaName="public" tableName="users">
+            <column name="username">admin.adminowski</column>
+            <column name="email">admin@adminowski.pl</column>
+            <column name="password">$argon2id$v=19$m=4096,t=3,p=1$Gaj9eaFzQzL3618cHDGV8w$swWsCfvp/QcT/EGE1gLALwVq3oeT5WNd9v/tZQfvrog</column>
+        </insert>
+        <insert schemaName="public" tableName="users_roles">
+            <column name="user_id" valueSequenceCurrent="seq_users"/>
+            <column name="role_id">1</column>
+        </insert>
+        <insert schemaName="public" tableName="users_roles">
+            <column name="user_id" valueSequenceCurrent="seq_users"/>
+            <column name="role_id">2</column>
+        </insert>
     </changeSet>
 </databaseChangeLog>

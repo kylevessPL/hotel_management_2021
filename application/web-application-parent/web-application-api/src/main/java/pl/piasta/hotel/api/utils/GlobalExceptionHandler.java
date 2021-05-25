@@ -4,6 +4,7 @@ import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.security.access.AccessDeniedException;
@@ -105,6 +106,15 @@ public final class GlobalExceptionHandler extends ResponseEntityExceptionHandler
         } catch (Exception e) {
             return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
         }
+    }
+
+    @Override
+    @NonNull
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(@NonNull HttpMessageNotReadableException ex,
+                                                                  @NonNull HttpHeaders headers,
+                                                                  @NonNull HttpStatus status,
+                                                                  @NonNull WebRequest request) {
+        return handleValidationError(ex);
     }
 
     @Override

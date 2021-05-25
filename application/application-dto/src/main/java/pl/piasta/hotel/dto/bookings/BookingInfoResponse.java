@@ -14,6 +14,8 @@ import java.math.BigDecimal;
 @Setter
 public class BookingInfoResponse {
 
+    @Schema(description = "Booking id", example = "1")
+    private Integer id;
     @Schema(description = "Booking date details")
     private BookingDate bookingDate;
     @Schema(description = "Booked room details")

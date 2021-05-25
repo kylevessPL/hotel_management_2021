@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 @Getter
 public final class BookingFinalDetails {
 
+    private final Integer id;
     private final BookingDate bookingDate;
     private final Integer roomId;
     private final BigDecimal finalPrice;

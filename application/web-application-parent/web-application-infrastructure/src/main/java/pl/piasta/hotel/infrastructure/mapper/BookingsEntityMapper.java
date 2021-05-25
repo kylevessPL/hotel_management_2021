@@ -21,7 +21,7 @@ public class BookingsEntityMapper {
             Integer currentPage, Integer totalPage, Long totalCount) {
         List<BookingFinalDetails> bookingFinalDetailsList = bookingsEntityList
                 .stream()
-                .map(e -> new BookingFinalDetails(mapToBookingDate(e), e.getRoomId(), e.getFinalPrice(), e.getStatus()))
+                .map(e -> new BookingFinalDetails(e.getId(), mapToBookingDate(e), e.getRoomId(), e.getFinalPrice(), e.getStatus()))
                 .collect(Collectors.toList());
         return new BookingsPage(
                 new PageMeta(isFirst, isLast, hasPrev, hasNext, currentPage, totalPage, totalCount),
@@ -29,7 +29,7 @@ public class BookingsEntityMapper {
     }
 
     public Optional<BookingFinalDetails> mapToBookingFinalDetails(Optional<BookingsEntity> bookingsEntity) {
-        return bookingsEntity.map(e -> new BookingFinalDetails(mapToBookingDate(e), e.getRoomId(), e.getFinalPrice(), e.getStatus()));
+        return bookingsEntity.map(e -> new BookingFinalDetails(e.getId(), mapToBookingDate(e), e.getRoomId(), e.getFinalPrice(), e.getStatus()));
     }
 
     public Optional<BookingCancellationDetails> mapToBookingCancellationDetails(Optional<BookingsEntity> bookingsEntity) {
