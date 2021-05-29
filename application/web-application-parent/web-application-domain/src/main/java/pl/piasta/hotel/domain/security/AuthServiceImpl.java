@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.piasta.hotel.domain.security.utils.JwtUtils;
 import pl.piasta.hotel.domainmodel.security.RefreshToken;
-import pl.piasta.hotel.domainmodel.security.RefreshTokenCommand;
 import pl.piasta.hotel.domainmodel.security.RefreshTokenInfo;
 import pl.piasta.hotel.domainmodel.security.TokenInfo;
 import pl.piasta.hotel.domainmodel.security.UserLoginCommand;
@@ -75,8 +74,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public RefreshTokenInfo refreshToken(RefreshTokenCommand command) {
-        return repository.deleteRefreshTokenByToken(command.getToken())
+    public RefreshTokenInfo refreshToken(String token) {
+        return repository.deleteRefreshTokenByToken(token)
                 .map(this::checkRefreshTokenValidity)
                 .map(RefreshToken::getSubject)
                 .map(subject -> {

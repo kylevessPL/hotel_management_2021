@@ -51,7 +51,7 @@ const SignInForm = props => {
                         const data = await response.json();
                         if (response.ok) {
                             setRequestFailed(false)
-                            login(data.accessToken)
+                            login(data)
                             redirectToDashboard()
                         } else if ([401, 403, 422].indexOf(response.status) >= 0) {
                             setRequestFailed(true)

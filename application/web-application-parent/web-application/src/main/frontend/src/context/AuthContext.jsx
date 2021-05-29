@@ -3,14 +3,18 @@ import createTokenStore from "./TokenStore";
 
 export const authContext = createContext({})
 
-const AuthContext = ({ children }) => {
+const AuthContext = ({children}) => {
+
     const tokenProvider = createTokenProvider();
+
     const login = (newTokens) => {
         tokenProvider.setToken(newTokens);
     };
+
     const logout = () => {
         tokenProvider.setToken(null);
     };
+
     const authFetch = () => async (input, init) => {
         const token = await tokenProvider.getToken();
         init = init || {};
@@ -20,6 +24,7 @@ const AuthContext = ({ children }) => {
         };
         return fetch(input, init);
     };
+
     const useAuth = () => {
         const [isLogged, setIsLogged] = useState(tokenProvider.isLoggedIn());
         const listener = useCallback((newIsLogged) => {
@@ -33,109 +38,109 @@ const AuthContext = ({ children }) => {
         }, [listener]);
         return [isLogged];
     };
+
+    const useAdmin = () => {
+        const [isAdmin, setIsAdmin] = useState(tokenProvider.isAdmin());
+        const listener = useCallback((newIsAdmin) => {
+            setIsAdmin(newIsAdmin);
+        }, [setIsAdmin]);
+        useEffect(() => {
+            tokenProvider.subscribe(listener);
+            return () => {
+                tokenProvider.unsubscribe(listener);
+            };
+        }, [listener]);
+        return [isAdmin];
+    };
+
     return (
-        <authContext.Provider value={{ login, logout, authFetch, useAuth }}>
+        <authContext.Provider value={{login, logout, authFetch, useAuth, useAdmin}}>
             {children}
         </authContext.Provider>
     );
 };
 
 const createTokenProvider = () => {
+
     const tokenStore = createTokenStore();
     let listeners = [];
-    const accessTokenKey = 'accessToken';
-    const refreshTokenKey = 'refreshToken';
-    const onUpdateToken = (token) => fetch('/refresh-token', {
+
+    const onUpdateToken = () => fetch('/api/v1/auth/refresh-token', {
         method: 'POST',
-        body: token[refreshTokenKey]
-    }).then(r => r.json())
+        credentials: 'same-origin'
+    }).then(r => r.json());
+
     const getTokenInternal = () => {
-        const data = tokenStore.getItem();
-        return (data && JSON.parse(data)) || null;
+        const token = tokenStore.getToken();
+        return token || null;
     };
+
     const subscribe = (listener) => {
         listeners.push(listener);
     };
+
     const unsubscribe = (listener) => {
         listeners = listeners.filter(l => l !== listener);
     };
-    const jwtExp = (token) => {
-        if (!(typeof token === 'string')) {
-            return null;
-        }
-        const split = token.split('.');
-        if (split.length < 2) {
-            return null;
-        }
-        try {
-            const jwt = JSON.parse(atob(token.split('.')[1]));
-            if (jwt && jwt.exp && Number.isFinite(jwt.exp)) {
-                return jwt.exp * 1000;
-            }
-            else {
-                return null;
-            }
-        }
-        catch (e) {
-            return null;
-        }
-    };
-    const getExpire = (token) => {
-        if (!token) {
-            return null;
-        }
-        if (accessTokenKey) {
-            const exp = jwtExp(token[accessTokenKey]);
-            if (exp) {
-                return exp;
-            }
-        }
-        return jwtExp(token);
-    };
+
     const isExpired = (exp) => {
         if (!exp) {
             return false;
         }
-        return Date.now() > exp;
+        const date = new Date();
+        return date.setSeconds(date.getSeconds() + 5) > exp;
     };
+
     const checkExpiry = async () => {
-        const token = getTokenInternal();
-        if (token && isExpired(getExpire(token))) {
-            const newToken = onUpdateToken ? await onUpdateToken(token) : null;
+        const rfAvailable = isRefreshTokenAvailable();
+        if (tokenStore ? isExpired(tokenStore.getExpiry()) : rfAvailable) {
+            const newToken = await onUpdateToken() || null;
             if (newToken) {
-                tokenStore.setToken(newToken);
+                tokenStore.setItem(newToken);
             }
             else {
                 tokenStore.removeItem();
             }
         }
     };
+
+    const isRefreshTokenAvailable = () => {
+        const loggedOut = window.localStorage.getItem('dotcom_logout')
+        return loggedOut === 'false' && loggedOut;
+    };
+
     const getToken = async () => {
         await checkExpiry();
-        if (accessTokenKey) {
-            const token = getTokenInternal();
-            return token && token[accessTokenKey];
-        }
         return getTokenInternal();
     };
+
     const isLoggedIn = () => {
-        const token = getTokenInternal();
-        return !!token;
+        return isRefreshTokenAvailable();
     };
+
+    const isAdmin = () => {
+        const roles = tokenStore.getRoles();
+        return roles && roles.includes("ROLE_ADMIN");
+    };
+
     const setToken = (token) => {
         if (token) {
-            tokenStore.setItem(JSON.stringify(token));
+            tokenStore.setItem(token);
         }
         else {
             tokenStore.removeItem();
         }
         notify();
     };
+
     const notify = () => {
-        const isLogged = isLoggedIn();
-        listeners.forEach(l => l(isLogged));
+        const logged = isLoggedIn()
+        const admin = isAdmin()
+        listeners.forEach(l => l(logged));
+        listeners.forEach(l => l(admin));
     };
-    return { getToken, isLoggedIn, setToken, subscribe, unsubscribe };
+
+    return { getToken, isLoggedIn, isAdmin, setToken, subscribe, unsubscribe };
 }
 
 export default AuthContext;

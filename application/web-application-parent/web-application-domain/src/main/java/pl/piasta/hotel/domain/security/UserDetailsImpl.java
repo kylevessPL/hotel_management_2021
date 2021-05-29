@@ -1,5 +1,6 @@
 package pl.piasta.hotel.domain.security;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +25,11 @@ public class UserDetailsImpl implements UserDetails {
     private final String username;
     @Getter
     private final String email;
+    @JsonIgnore
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
     @Getter
+    @JsonIgnore
     private final AccountStatus status;
 
     public static UserDetailsImpl build(UserInfo userInfo) {

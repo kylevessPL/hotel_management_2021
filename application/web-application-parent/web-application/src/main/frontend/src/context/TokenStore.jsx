@@ -1,13 +1,40 @@
 const createTokenStore = () => {
-    let data;
-    const getItem = () => data;
+
+    let token;
+    let expiry;
+
+    window.addEventListener('storage', (event) => {
+        if (event.key === 'dotcom_logout' && event.newValue === true.toString()) {
+            token = null;
+            expiry = null;
+        }
+    });
+
+    const getToken = () => token;
+
+    const getExpiry = () => expiry;
+
+    const getRoles = () => JSON.parse(window.localStorage.getItem('dotcom_role'));
+
     const setItem = (value) => {
-        data = value;
+        const date = new Date();
+        token = value.accessToken;
+        expiry = date.setSeconds(date.getSeconds() + value.expires);
+        const roles = value.roles;
+        if (roles) {
+            window.localStorage.setItem('dotcom_role', JSON.stringify(roles));
+        }
+        window.localStorage.setItem('dotcom_logout', false.toString());
     };
+
     const removeItem = () => {
-        data = null;
+        token = null;
+        expiry = null;
+        window.localStorage.setItem('dotcom_logout', true.toString());
+        window.localStorage.removeItem('dotcom_role');
     };
-    return { getItem, setItem, removeItem }
+
+    return { getToken, getExpiry, getRoles, setItem, removeItem }
 };
 
 export default createTokenStore;

@@ -7,8 +7,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseCookie;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +20,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import pl.piasta.hotel.api.security.mapper.AuthMapper;
 import pl.piasta.hotel.domain.security.AuthService;
-import pl.piasta.hotel.domainmodel.security.RefreshTokenCommand;
 import pl.piasta.hotel.domainmodel.security.RefreshTokenInfo;
 import pl.piasta.hotel.domainmodel.security.TokenInfo;
 import pl.piasta.hotel.domainmodel.security.UserLoginCommand;
@@ -24,7 +27,10 @@ import pl.piasta.hotel.domainmodel.security.UserRegisterCommand;
 import pl.piasta.hotel.dto.security.RefreshTokenInfoResponse;
 import pl.piasta.hotel.dto.security.TokenInfoResponse;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.time.Duration;
 
 @Tag(name = "Authentication API", description = "API performing user authentication operations")
 @RestController
@@ -34,6 +40,9 @@ public class AuthController {
 
     private final AuthMapper mapper;
     private final AuthService service;
+
+    @Value("${app.security.refresh-token.expiration}")
+    private int jwtRefreshExpirationMs;
 
     @SecurityRequirements
     @Operation(
@@ -49,9 +58,15 @@ public class AuthController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content)
     })
     @PostMapping(value = "/signin", produces = MediaType.APPLICATION_JSON_VALUE)
-    public TokenInfoResponse authenticateUser(@Valid @RequestBody UserLoginRequest loginRequest) {
+    public TokenInfoResponse authenticateUser(@Valid @RequestBody UserLoginRequest loginRequest, HttpServletResponse response) {
         UserLoginCommand command = mapper.mapToCommand(loginRequest);
         TokenInfo tokenInfo = service.authenticateUser(command);
+        ResponseCookie cookie = ResponseCookie.from("rftoken", tokenInfo.getRefreshToken())
+                .maxAge(Duration.ofMillis(jwtRefreshExpirationMs))
+                .httpOnly(true)
+                .sameSite("Strict")
+                .build();
+        response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return mapper.mapToResponse(tokenInfo);
     }
 
@@ -87,9 +102,26 @@ public class AuthController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content)
     })
     @PostMapping(value = "/refresh-token", produces = MediaType.APPLICATION_JSON_VALUE)
-    public RefreshTokenInfoResponse refreshToken(@Valid @RequestBody RefreshTokenRequest tokenRequest) {
-        RefreshTokenCommand command = mapper.mapToCommand(tokenRequest);
-        RefreshTokenInfo refreshTokenInfo = service.refreshToken(command);
+    public RefreshTokenInfoResponse refreshToken(
+            HttpServletRequest request,
+            @CookieValue(value = "rftoken", required = false) String cookieValue,
+            @Valid @RequestBody(required = false) RefreshTokenRequest tokenRequest,
+            HttpServletResponse response) {
+        String token = null;
+        if (cookieValue != null) {
+            token = cookieValue;
+        } else if (tokenRequest != null) {
+            token = tokenRequest.getToken();
+        } else {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
+        RefreshTokenInfo refreshTokenInfo = service.refreshToken(token);
+        ResponseCookie cookie = ResponseCookie.from("rftoken", refreshTokenInfo.getRefreshToken())
+                .maxAge(Duration.ofMillis(jwtRefreshExpirationMs))
+                .httpOnly(true)
+                .sameSite("Strict")
+                .build();
+        response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return mapper.mapToResponse(refreshTokenInfo);
     }
 }

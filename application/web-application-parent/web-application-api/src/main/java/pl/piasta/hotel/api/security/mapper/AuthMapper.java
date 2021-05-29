@@ -1,10 +1,8 @@
 package pl.piasta.hotel.api.security.mapper;
 
 import org.mapstruct.Mapper;
-import pl.piasta.hotel.api.security.RefreshTokenRequest;
 import pl.piasta.hotel.api.security.UserLoginRequest;
 import pl.piasta.hotel.api.security.UserRegisterRequest;
-import pl.piasta.hotel.domainmodel.security.RefreshTokenCommand;
 import pl.piasta.hotel.domainmodel.security.RefreshTokenInfo;
 import pl.piasta.hotel.domainmodel.security.TokenInfo;
 import pl.piasta.hotel.domainmodel.security.UserLoginCommand;
@@ -19,5 +17,4 @@ public interface AuthMapper {
     RefreshTokenInfoResponse mapToResponse(RefreshTokenInfo tokenInfo);
     UserLoginCommand mapToCommand(UserLoginRequest request);
     UserRegisterCommand mapToCommand(UserRegisterRequest request);
-    RefreshTokenCommand mapToCommand(RefreshTokenRequest request);
 }

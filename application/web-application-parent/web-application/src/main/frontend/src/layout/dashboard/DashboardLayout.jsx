@@ -8,7 +8,7 @@ const DashboardLayout = props => {
     const location = useLocation();
 
     useEffect(() => {
-        document.title = "HoteLA - " + getPageTitle(location.pathname.substr(1))
+        document.title = "HoteLA - " + getPageTitle(location.pathname)
     });
 
     return (
