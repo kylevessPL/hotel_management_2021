@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {Redirect, Route, Switch} from "react-router-dom";
-import createAuthProvider from "./auth/AuthProvider";
+import {authContext} from './context/AuthContext';
 import Home from "./components/home";
 import AuthenticationLayout from "./layout/authentication";
 import DashboardLayout from "./layout/dashboard";
@@ -9,32 +9,7 @@ import SignUpForm from "./components/authentication/signup";
 import DashboardHome from "./components/dashboard";
 import NotFound from "./components/error";
 
-export const authProvider = createAuthProvider();
-
 const App = () => {
-
-    const logged = authProvider.useAuth();
-
-    function PublicRouteWrapper({component: Component, layout: Layout, restricted, ...rest}) {
-        return (
-            <Route {...rest} render={(props) =>
-                logged && restricted
-                    ? <Redirect to="/dashboard" />
-                    : <Layout {...props}><Component {...props} /></Layout>
-            } />
-        );
-    }
-
-    function PrivateRouteWrapper({component: Component, layout: Layout, ...rest}) {
-        return (
-            <Route {...rest} render={(props) =>
-                logged
-                    ? <Layout {...props}><Component {...props} /></Layout>
-                    : <Redirect to="/signin" />
-            } />
-        );
-    }
-
     return (
         <Switch>
             <Route exact path="/" component={Home} />
@@ -44,6 +19,30 @@ const App = () => {
             <Route path="/404" component={NotFound} />
             <Redirect to="/404" />
         </Switch>
+    );
+}
+
+const PublicRouteWrapper = ({component: Component, layout: Layout, restricted, ...rest}) => {
+    const {useAuth} = useContext(authContext);
+    const [isLogged] = useAuth();
+    return (
+        <Route {...rest} render={(props) =>
+            isLogged && restricted
+                ? <Redirect to="/dashboard" />
+                : <Layout {...props}><Component {...props} /></Layout>
+        } />
+    );
+}
+
+const PrivateRouteWrapper = ({component: Component, layout: Layout, ...rest}) => {
+    const {useAuth} = useContext(authContext);
+    const [isLogged] = useAuth();
+    return (
+        <Route {...rest} render={(props) =>
+            isLogged
+                ? <Layout {...props}><Component {...props} /></Layout>
+                : <Redirect to="/signin" />
+        } />
     );
 }
 

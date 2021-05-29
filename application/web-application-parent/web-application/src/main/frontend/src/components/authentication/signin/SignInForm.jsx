@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {Alert, Button, CardTitle, FormGroup, Label} from "reactstrap";
 import {ErrorMessage, Field, Form, Formik} from 'formik';
 import FormikErrorFocus from 'formik-error-focus'
@@ -6,9 +6,11 @@ import * as Yup from 'yup';
 import {Link} from "react-router-dom";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faLongArrowAltLeft} from "@fortawesome/free-solid-svg-icons"
-import authProvider from '../../../auth/AuthProvider'
+import {authContext} from '../../../context/AuthContext';
 
 const SignInForm = props => {
+
+    const {login} = useContext(authContext);
 
     const [registered, setRegistered] = useState(props.location.state && props.location.state.registered || false);
     const [requestFailed, setRequestFailed] = useState(false);
@@ -49,7 +51,7 @@ const SignInForm = props => {
                         const data = await response.json();
                         if (response.ok) {
                             setRequestFailed(false)
-                            authProvider().login(data.accessToken)
+                            login(data.accessToken)
                             redirectToDashboard()
                         } else if ([401, 403, 422].indexOf(response.status) >= 0) {
                             setRequestFailed(true)

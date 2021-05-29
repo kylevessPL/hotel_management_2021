@@ -5,11 +5,14 @@ import './index.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import App from "./App";
 import ScrollToTop from "./utils/ScrollToTop";
+import AuthContext from "./context/AuthContext";
 
 ReactDOM.render(
-    <Router>
-        <ScrollToTop />
-        <App />
-    </Router>,
+    <AuthContext>
+        <Router>
+            <ScrollToTop />
+            <App />
+        </Router>
+    </AuthContext>,
     document.getElementById('root')
 );

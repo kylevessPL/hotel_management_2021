@@ -1,7 +1,9 @@
-import {useCallback, useEffect, useState} from 'react';
+import {createContext, useCallback, useEffect, useState} from 'react';
 import createTokenStore from "./TokenStore";
 
-const createAuthProvider = () => {
+export const authContext = createContext({})
+
+const AuthContext = ({ children }) => {
     const tokenProvider = createTokenProvider();
     const login = (newTokens) => {
         tokenProvider.setToken(newTokens);
@@ -9,7 +11,7 @@ const createAuthProvider = () => {
     const logout = () => {
         tokenProvider.setToken(null);
     };
-    const authFetch = async (input, init) => {
+    const authFetch = () => async (input, init) => {
         const token = await tokenProvider.getToken();
         init = init || {};
         init.headers = {
@@ -19,7 +21,7 @@ const createAuthProvider = () => {
         return fetch(input, init);
     };
     const useAuth = () => {
-        const [isLogged, setIsLogged] = useState(tokenProvider.isLoggedIn);
+        const [isLogged, setIsLogged] = useState(tokenProvider.isLoggedIn());
         const listener = useCallback((newIsLogged) => {
             setIsLogged(newIsLogged);
         }, [setIsLogged]);
@@ -31,7 +33,11 @@ const createAuthProvider = () => {
         }, [listener]);
         return [isLogged];
     };
-    return { useAuth, authFetch, login, logout };
+    return (
+        <authContext.Provider value={{ login, logout, authFetch, useAuth }}>
+            {children}
+        </authContext.Provider>
+    );
 };
 
 const createTokenProvider = () => {
@@ -132,4 +138,4 @@ const createTokenProvider = () => {
     return { getToken, isLoggedIn, setToken, subscribe, unsubscribe };
 }
 
-export default createAuthProvider;
+export default AuthContext;
