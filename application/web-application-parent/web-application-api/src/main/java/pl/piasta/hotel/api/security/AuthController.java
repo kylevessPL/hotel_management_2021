@@ -43,7 +43,8 @@ public class AuthController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success"),
             @ApiResponse(responseCode = "400", description = "Malformed request syntax", content = @Content),
-            @ApiResponse(responseCode = "401", description = "Account locked or bad credentials provided", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Bad credentials provided", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Account disabled", content = @Content),
             @ApiResponse(responseCode = "422", description = "Validation failed", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content)
     })

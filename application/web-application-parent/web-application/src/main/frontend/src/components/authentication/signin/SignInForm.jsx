@@ -1,0 +1,116 @@
+import React, {useState} from 'react';
+import {Alert, Button, CardTitle, FormGroup, Label} from "reactstrap";
+import {ErrorMessage, Field, Form, Formik} from 'formik';
+import FormikErrorFocus from 'formik-error-focus'
+import * as Yup from 'yup';
+import {Link} from "react-router-dom";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faLongArrowAltLeft} from "@fortawesome/free-solid-svg-icons"
+import authProvider from '../../../auth/AuthProvider'
+
+const SignInForm = props => {
+
+    const [registered, setRegistered] = useState(props.location.state && props.location.state.registered || false);
+    const [requestFailed, setRequestFailed] = useState(false);
+    const [requestFailedMessage, setRequestFailedMessage] = useState('');
+
+    const redirectToDashboard = () => {
+        props.history.push('/dashboard')
+    }
+
+    return (
+        <Formik
+            initialValues={{username: '', password: ''}}
+            validationSchema={Yup.object({
+                username: Yup.string()
+                    .required('Username is required'),
+                password: Yup.string()
+                    .required('Password is required')
+            })}
+            onSubmit={async (values, { setSubmitting }) => {
+                setRequestFailed(false);
+                setRegistered(false);
+                const {username, password} = values;
+                const body = {
+                    username: username,
+                    password: password
+                };
+                const options = {
+                    method: 'POST',
+                    mode: 'cors',
+                    body: JSON.stringify(body),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    }
+                };
+                await fetch('api/v1/auth/signin', options)
+                    .then(async response => {
+                        const data = await response.json();
+                        if (response.ok) {
+                            setRequestFailed(false)
+                            authProvider().login(data.accessToken)
+                            redirectToDashboard()
+                        } else if ([401, 403, 422].indexOf(response.status) >= 0) {
+                            setRequestFailed(true)
+                            setRequestFailedMessage(data.message)
+                        } else {
+                            setRequestFailed(true)
+                            setRequestFailedMessage('Request cannot be fulfilled now. Please try again later.')
+                        }
+                    }).catch((error) => {
+                        console.error(error)
+                        setRequestFailed(true)
+                        setRequestFailedMessage('Request cannot be fulfilled now. Please try again later.')
+                    }).finally(() => setSubmitting(false));
+            }}
+        >
+            {({
+                  errors,
+                  touched,
+                  isSubmitting
+            }) => (
+                <div>
+                    <CardTitle tag="h5" className="text-center mb-4">Login</CardTitle>
+                    {registered
+                        ? <Alert color="success">Registration successful. You can login now.</Alert>
+                        : requestFailed && <Alert color="danger">{requestFailedMessage}</Alert>}
+                    <Form>
+                        <FormGroup className="mb-3">
+                            <Label className="mb-1" for="username">Username</Label>
+                            <Field id="username"
+                                   name="username"
+                                   type="text"
+                                   className={'form-control' + (errors.username && touched.username ? ' is-invalid' : '')}
+                            />
+                            <ErrorMessage name="username" component="div" className="invalid-feedback"/>
+                        </FormGroup>
+                        <FormGroup className="mb-3">
+                            <Label className="mb-1" for="password">Password</Label>
+                            <Field id="password"
+                                   name="password"
+                                   type="password"
+                                   className={'form-control' + (errors.password && touched.password ? ' is-invalid' : '')}/>
+                            <ErrorMessage name="password" component="div" className="invalid-feedback"/>
+                        </FormGroup>
+                        <div className="d-flex justify-content-between mt-3">
+                            <Link to="/"><FontAwesomeIcon icon={faLongArrowAltLeft} className="mr-2" />Back to HoteLA Home</Link>
+                            <Link to="/signup">Sign Up</Link>
+                        </div>
+                        <Button color="success"
+                               type="submit"
+                               className="mt-2 w-100"
+                               size="lg"
+                               block
+                               disabled={isSubmitting}>
+                            Sign In
+                        </Button>
+                        <FormikErrorFocus />
+                    </Form>
+                </div>
+            )}
+        </Formik>
+    );
+}
+
+export default SignInForm;

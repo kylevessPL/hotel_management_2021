@@ -36,3 +36,4 @@ out/
 *.ipr
 *.iws
 gen
+DashboardHome.jsx
