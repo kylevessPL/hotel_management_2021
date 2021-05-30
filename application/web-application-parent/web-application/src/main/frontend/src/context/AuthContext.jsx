@@ -15,7 +15,7 @@ const AuthContext = ({children}) => {
         tokenProvider.setToken(null);
     };
 
-    const authFetch = () => async (input, init) => {
+    const authFetch = async (input, init) => {
         const token = await tokenProvider.getToken();
         init = init || {};
         init.headers = {
@@ -31,9 +31,9 @@ const AuthContext = ({children}) => {
             setIsLogged(newIsLogged);
         }, [setIsLogged]);
         useEffect(() => {
-            tokenProvider.subscribe(listener);
+            tokenProvider.subscribeLogged(listener);
             return () => {
-                tokenProvider.unsubscribe(listener);
+                tokenProvider.unsubscribeLogged(listener);
             };
         }, [listener]);
         return [isLogged];
@@ -45,9 +45,9 @@ const AuthContext = ({children}) => {
             setIsAdmin(newIsAdmin);
         }, [setIsAdmin]);
         useEffect(() => {
-            tokenProvider.subscribe(listener);
+            tokenProvider.subscribeAdmin(listener);
             return () => {
-                tokenProvider.unsubscribe(listener);
+                tokenProvider.unsubscribeAdmin(listener);
             };
         }, [listener]);
         return [isAdmin];
@@ -63,7 +63,8 @@ const AuthContext = ({children}) => {
 const createTokenProvider = () => {
 
     const tokenStore = createTokenStore();
-    let listeners = [];
+    let isLoggedListeners = [];
+    let isAdminListeners = [];
 
     const onUpdateToken = () => fetch('/api/v1/auth/refresh-token', {
         method: 'POST',
@@ -75,12 +76,20 @@ const createTokenProvider = () => {
         return token || null;
     };
 
-    const subscribe = (listener) => {
-        listeners.push(listener);
+    const subscribeLogged = (listener) => {
+        isLoggedListeners.push(listener);
     };
 
-    const unsubscribe = (listener) => {
-        listeners = listeners.filter(l => l !== listener);
+    const subscribeAdmin = (listener) => {
+        isAdminListeners.push(listener);
+    };
+
+    const unsubscribeLogged = (listener) => {
+        isLoggedListeners = isLoggedListeners.filter(l => l !== listener);
+    };
+
+    const unsubscribeAdmin = (listener) => {
+        isAdminListeners = isAdminListeners.filter(l => l !== listener);
     };
 
     const isExpired = (exp) => {
@@ -115,6 +124,7 @@ const createTokenProvider = () => {
     };
 
     const isLoggedIn = () => {
+        getToken().then(r => isLoggedListeners.forEach(l => l(!!r)));
         return isRefreshTokenAvailable();
     };
 
@@ -136,11 +146,20 @@ const createTokenProvider = () => {
     const notify = () => {
         const logged = isLoggedIn()
         const admin = isAdmin()
-        listeners.forEach(l => l(logged));
-        listeners.forEach(l => l(admin));
+        isLoggedListeners.forEach(l => l(logged));
+        isAdminListeners.forEach(l => l(admin));
     };
 
-    return { getToken, isLoggedIn, isAdmin, setToken, subscribe, unsubscribe };
+    return {
+        getToken,
+        isLoggedIn,
+        isAdmin,
+        setToken,
+        subscribeLogged,
+        subscribeAdmin,
+        unsubscribeLogged,
+        unsubscribeAdmin
+    };
 }
 
 export default AuthContext;
