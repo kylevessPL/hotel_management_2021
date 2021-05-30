@@ -213,7 +213,7 @@ public class UsersServiceController {
     })
     @GetMapping(value = "/current/info", produces = MediaType.APPLICATION_JSON_VALUE)
     public UserDetails getCurrentUserInfo(Authentication authentication) {
-        return ((UserDetailsImpl) authentication.getDetails());
+        return ((UserDetailsImpl) authentication.getPrincipal());
     }
 
     @Operation(

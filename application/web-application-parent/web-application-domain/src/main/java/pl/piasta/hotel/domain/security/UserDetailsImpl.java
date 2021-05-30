@@ -29,7 +29,6 @@ public class UserDetailsImpl implements UserDetails {
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
     @Getter
-    @JsonIgnore
     private final AccountStatus status;
 
     public static UserDetailsImpl build(UserInfo userInfo) {
@@ -46,21 +45,25 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonExpired() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonLocked() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isEnabled() {
         return status.equals(AccountStatus.ACTIVE);
     }
