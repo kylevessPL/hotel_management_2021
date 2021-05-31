@@ -1,5 +1,5 @@
-.authentication-layout {
-    background: url('../../assets/images/authentication-background.png') no-repeat center fixed;
+.authentication-base {
+    background: url('../../../assets/images/authentication-background.png') no-repeat center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;

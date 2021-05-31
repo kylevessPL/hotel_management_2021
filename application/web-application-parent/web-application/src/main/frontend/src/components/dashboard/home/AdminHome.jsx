@@ -1,9 +1,9 @@
 import React, {useContext} from 'react';
-import {authContext} from '../../context/AuthContext';
-import './UserHome.css';
+import {authContext} from '../../../context/AuthContext';
+import './AdminHome.css';
 import {Button} from "reactstrap";
 
-const UserHome = () => {
+const AdminHome = () => {
 
     const {logout} = useContext(authContext);
 
@@ -12,8 +12,8 @@ const UserHome = () => {
     }
 
     return (
-        <Button onClick={onClick}>Logout user</Button>
+        <Button onClick={onClick}>Logout admin</Button>
     );
 }
 
-export default UserHome;
+export default AdminHome;

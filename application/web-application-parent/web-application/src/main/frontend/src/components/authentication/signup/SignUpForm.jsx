@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Alert, Button, CardTitle, FormGroup, Label} from "reactstrap";
 import {ErrorMessage, Field, Form, Formik} from 'formik';
 import FormikErrorFocus from 'formik-error-focus'
@@ -10,6 +10,10 @@ const SignUpForm = props => {
 
     const [requestFailed, setRequestFailed] = useState(false);
     const [requestFailedMessage, setRequestFailedMessage] = useState('');
+
+    useEffect(() => {
+        document.title = "HoteLA - Login";
+    });
 
     const redirectToSignIn = () => {
         props.history.push({

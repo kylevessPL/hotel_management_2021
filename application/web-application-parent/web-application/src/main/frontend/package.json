@@ -11,7 +11,7 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
-    "bootstrap": "^5.0.1",
+    "bootstrap": "^4.6.0",
     "formik": "^2.2.8",
     "formik-error-focus": "^1.1.0",
     "lodash.uniqueid": "^4.0.1",
@@ -50,5 +50,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "react-router-config": "^5.1.1"
   }
 }
