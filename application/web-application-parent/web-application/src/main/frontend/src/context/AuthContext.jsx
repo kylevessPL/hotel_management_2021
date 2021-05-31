@@ -7,6 +7,12 @@ const AuthContext = ({children}) => {
 
     const tokenProvider = createTokenProvider();
 
+    window.addEventListener('storage', (event) => {
+        if (event.key === 'dotcom_logout' && event.newValue === true.toString()) {
+            tokenProvider.setToken(null);
+        }
+    });
+
     const login = (newTokens) => {
         tokenProvider.setToken(newTokens);
     };
@@ -63,13 +69,13 @@ const AuthContext = ({children}) => {
 const createTokenProvider = () => {
 
     const tokenStore = createTokenStore();
-    let isLoggedListeners = [];
-    let isAdminListeners = [];
+    let loggedListeners = [];
+    let adminListeners = [];
 
     const onUpdateToken = () => fetch('/api/v1/auth/refresh-token', {
         method: 'POST',
         credentials: 'same-origin'
-    }).then(r => r.json());
+    }).then(r => r.ok && r.json());
 
     const getTokenInternal = () => {
         const token = tokenStore.getToken();
@@ -77,19 +83,19 @@ const createTokenProvider = () => {
     };
 
     const subscribeLogged = (listener) => {
-        isLoggedListeners.push(listener);
-    };
-
-    const subscribeAdmin = (listener) => {
-        isAdminListeners.push(listener);
+        loggedListeners.push(listener);
     };
 
     const unsubscribeLogged = (listener) => {
-        isLoggedListeners = isLoggedListeners.filter(l => l !== listener);
+        loggedListeners = loggedListeners.filter(l => l !== listener);
+    };
+
+    const subscribeAdmin = (listener) => {
+        adminListeners.push(listener);
     };
 
     const unsubscribeAdmin = (listener) => {
-        isAdminListeners = isAdminListeners.filter(l => l !== listener);
+        adminListeners = adminListeners.filter(l => l !== listener);
     };
 
     const isExpired = (exp) => {
@@ -102,20 +108,16 @@ const createTokenProvider = () => {
 
     const checkExpiry = async () => {
         const rfAvailable = isRefreshTokenAvailable();
-        if (tokenStore ? isExpired(tokenStore.getExpiry()) : rfAvailable) {
-            const newToken = await onUpdateToken() || null;
-            if (newToken) {
-                tokenStore.setItem(newToken);
-            }
-            else {
-                tokenStore.removeItem();
-            }
+        const token = getTokenInternal();
+        if (token ? isExpired(tokenStore.getExpiry()) : rfAvailable) {
+            const response = await onUpdateToken();
+            setToken(response ? response.refreshToken : null);
         }
     };
 
     const isRefreshTokenAvailable = () => {
         const loggedOut = window.localStorage.getItem('dotcom_logout')
-        return loggedOut === 'false' && loggedOut;
+        return loggedOut === 'false';
     };
 
     const getToken = async () => {
@@ -124,7 +126,7 @@ const createTokenProvider = () => {
     };
 
     const isLoggedIn = () => {
-        getToken().then(r => isLoggedListeners.forEach(l => l(!!r)));
+        getToken().then();
         return isRefreshTokenAvailable();
     };
 
@@ -136,18 +138,11 @@ const createTokenProvider = () => {
     const setToken = (token) => {
         if (token) {
             tokenStore.setItem(token);
-        }
-        else {
+        } else {
             tokenStore.removeItem();
         }
-        notify();
-    };
-
-    const notify = () => {
-        const logged = isLoggedIn()
-        const admin = isAdmin()
-        isLoggedListeners.forEach(l => l(logged));
-        isAdminListeners.forEach(l => l(admin));
+        loggedListeners.forEach(l => l(!!token));
+        adminListeners.forEach(l => l(isAdmin()));
     };
 
     return {
@@ -156,8 +151,8 @@ const createTokenProvider = () => {
         isAdmin,
         setToken,
         subscribeLogged,
-        subscribeAdmin,
         unsubscribeLogged,
+        subscribeAdmin,
         unsubscribeAdmin
     };
 }

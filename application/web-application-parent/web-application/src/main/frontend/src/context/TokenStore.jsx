@@ -3,13 +3,6 @@ const createTokenStore = () => {
     let token;
     let expiry;
 
-    window.addEventListener('storage', (event) => {
-        if (event.key === 'dotcom_logout' && event.newValue === true.toString()) {
-            token = null;
-            expiry = null;
-        }
-    });
-
     const getToken = () => token;
 
     const getExpiry = () => expiry;

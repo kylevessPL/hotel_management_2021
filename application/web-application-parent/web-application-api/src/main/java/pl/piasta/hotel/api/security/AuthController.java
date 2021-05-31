@@ -24,6 +24,7 @@ import pl.piasta.hotel.domainmodel.security.RefreshTokenInfo;
 import pl.piasta.hotel.domainmodel.security.TokenInfo;
 import pl.piasta.hotel.domainmodel.security.UserLoginCommand;
 import pl.piasta.hotel.domainmodel.security.UserRegisterCommand;
+import pl.piasta.hotel.domainmodel.utils.RefreshTokenException;
 import pl.piasta.hotel.dto.security.RefreshTokenInfoResponse;
 import pl.piasta.hotel.dto.security.TokenInfoResponse;
 
@@ -61,7 +62,7 @@ public class AuthController {
         UserLoginCommand command = mapper.mapToCommand(loginRequest);
         TokenInfo tokenInfo = service.authenticateUser(command);
         ResponseCookie cookie = ResponseCookie.from("rftoken", tokenInfo.getRefreshToken())
-                .path("${app.api.base-path}/auth")
+                .path("/api/v1/auth")
                 .maxAge(Duration.ofMillis(jwtRefreshExpirationMs))
                 .httpOnly(true)
                 .sameSite("Strict")
@@ -106,17 +107,17 @@ public class AuthController {
             @CookieValue(value = "rftoken", required = false) String cookieValue,
             @Valid @RequestBody(required = false) RefreshTokenRequest tokenRequest,
             HttpServletResponse response) {
-        String token = null;
+        String token;
         if (cookieValue != null) {
             token = cookieValue;
         } else if (tokenRequest != null) {
             token = tokenRequest.getToken();
         } else {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            throw new RefreshTokenException();
         }
         RefreshTokenInfo refreshTokenInfo = service.refreshToken(token);
         ResponseCookie cookie = ResponseCookie.from("rftoken", refreshTokenInfo.getRefreshToken())
-                .path("${app.api.base-path}/auth")
+                .path("/api/v1/auth")
                 .maxAge(Duration.ofMillis(jwtRefreshExpirationMs))
                 .httpOnly(true)
                 .sameSite("Strict")

@@ -16,10 +16,6 @@ const SignInForm = props => {
     const [requestFailed, setRequestFailed] = useState(false);
     const [requestFailedMessage, setRequestFailedMessage] = useState('');
 
-    const redirectToDashboard = () => {
-        props.history.push('/dashboard')
-    }
-
     return (
         <Formik
             initialValues={{username: '', password: ''}}
@@ -52,7 +48,6 @@ const SignInForm = props => {
                         if (response.ok) {
                             setRequestFailed(false)
                             login(data)
-                            redirectToDashboard()
                         } else if ([401, 403, 422].indexOf(response.status) >= 0) {
                             setRequestFailed(true)
                             setRequestFailedMessage(data.message)

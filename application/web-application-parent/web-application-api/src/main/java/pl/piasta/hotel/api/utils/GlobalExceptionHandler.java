@@ -20,6 +20,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import pl.piasta.hotel.domainmodel.utils.ApplicationException;
 import pl.piasta.hotel.domainmodel.utils.ErrorCode;
 import pl.piasta.hotel.domainmodel.utils.FileUploadException;
+import pl.piasta.hotel.domainmodel.utils.RefreshTokenException;
 import pl.piasta.hotel.domainmodel.utils.ResourceNotFoundException;
 
 import javax.servlet.http.HttpServletResponse;
@@ -39,6 +40,11 @@ public final class GlobalExceptionHandler extends ResponseEntityExceptionHandler
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     protected ResponseEntity<Object> handleMaxUploadSizeExceededError(MaxUploadSizeExceededException ex, WebRequest request) {
         return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.PAYLOAD_TOO_LARGE, request);
+    }
+
+    @ExceptionHandler(RefreshTokenException.class)
+    protected ResponseEntity<Object> handleRefreshTokenError(RefreshTokenException ex, WebRequest request) {
+        return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler({FileUploadException.class, MultipartException.class})
