@@ -7,6 +7,14 @@ import BreadcrumbBar from "../breadcrumb";
 import {AdminHome, UserHome} from '../home'
 import {StrictSwitch} from "../../../utils";
 import Footer from "../footer";
+import AvailableRooms from "../availablerooms";
+import AdditionalServices from "../additionalservices";
+import BookRoom from "../bookroom";
+import MyBookings from "../mybookings";
+import Faq from "../faq";
+import Account from "../account";
+import Users from "../users";
+import Discounts from "../discounts";
 
 const DashboardBase = props => {
 
@@ -17,12 +25,14 @@ const DashboardBase = props => {
             <BreadcrumbBar />
             <StrictSwitch>
                 <Route exact path="/dashboard" component={props.admin ? AdminHome : UserHome} />
-                <Route exact path="/dashboard/available-rooms" component={} />
-                <Route exact path="/dashboard/additional-services" component={} />
-                <Route exact path="/dashboard/book-room" component={} />
-                <Route exact path="/dashboard/my-bookings" component={} />
-                {props.admin && <Route exact path="/dashboard/users" component={} />}
-                {props.admin && <Route exact path="/dashboard/discounts" component={} />}
+                <Route exact path="/dashboard/available-rooms" component={AvailableRooms} />
+                <Route exact path="/dashboard/additional-services" component={AdditionalServices} />
+                <Route exact path="/dashboard/book-room" component={BookRoom} />
+                <Route exact path="/dashboard/my-bookings" component={MyBookings} />
+                <Route exact path="/dashboard/faq" component={Faq} />
+                {!props.admin && <Route exact path="/dashboard/account" component={Account} />}
+                {props.admin && <Route exact path="/dashboard/users" component={Users} />}
+                {props.admin && <Route exact path="/dashboard/discounts" component={Discounts} />}
             </StrictSwitch>
             <Footer />
         </div>

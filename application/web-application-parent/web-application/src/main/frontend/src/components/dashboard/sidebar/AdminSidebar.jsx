@@ -9,7 +9,7 @@ const AdminSidebar = () => {
         <SidebarParent>
             <SidebarItem path="/dashboard" title="Dashboard" icon={HomeIcon} />
             <SidebarItem path="/dashboard/users" title="Users" icon={UsersIcon} />
-            <SidebarItem path="/dashboard/discounts" title="Discounts" icon={TagsIcon} />
+            <SidebarItem path="/dashboard/discounts" title="Users" icon={TagsIcon} />
         </SidebarParent>
     );
 }
