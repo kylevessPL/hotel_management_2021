@@ -3,7 +3,7 @@ import './BreadcrumbBar.css';
 import {Breadcrumb, BreadcrumbItem} from "reactstrap";
 import {matchRoutes} from 'react-router-config';
 import {Link, useLocation} from 'react-router-dom';
-import routes from "./routes";
+import routes from "./utils";
 
 const BreadcrumbBar = () => {
 
@@ -15,16 +15,16 @@ const BreadcrumbBar = () => {
         <Breadcrumb>
             {matchedRoutes.map((matchRoute, i) => {
 
-                const { path, breadcrumbName } = matchRoute.route;
+                const { path, title } = matchRoute.route;
                 const isActive = path === location.pathname;
 
                 return isActive ? (
                     <BreadcrumbItem active key={i}>
-                        {breadcrumbName}
+                        {title}
                     </BreadcrumbItem>
                 ) : (
                     <BreadcrumbItem key={i}>
-                        <Link to={path}>{breadcrumbName} </Link>
+                        <Link to={path}>{title}</Link>
                     </BreadcrumbItem>
                 );
             })}

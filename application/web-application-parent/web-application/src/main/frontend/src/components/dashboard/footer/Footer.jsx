@@ -16,10 +16,7 @@ const Footer = () => {
                                 <NavLink tag={RRNavLink} className="text-secondary" to="/">Home</NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink tag={RRNavLink} className="text-secondary" to="/support/faq">FAQ</NavLink>
-                            </NavItem>
-                            <NavItem>
-                                <NavLink tag={RRNavLink} className="text-secondary" to="/support/contact">Contact</NavLink>
+                                <NavLink tag={RRNavLink} className="text-secondary" to="/dashboard/faq">FAQ</NavLink>
                             </NavItem>
                         </Nav>
                     </footer>

@@ -1,8 +1,13 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {Link} from 'react-router-dom'
 import './NotFound.css';
 
 const NotFound = () => {
+
+    useEffect(() => {
+        document.title = "HoteLA - Page Not Found";
+    });
+
     return (
         <div id="notfound">
             <div className="notfound">

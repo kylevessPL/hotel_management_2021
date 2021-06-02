@@ -1,0 +1,25 @@
+.btn:focus {
+    box-shadow: none !important;
+}
+
+img {
+    pointer-events: none;
+}
+
+label.error {
+    float: none;
+    clear: both;
+    font-size: 14px;
+    color: red;
+    margin-bottom: 5px;
+    margin-left: 5px;
+}
+
+input.error, textarea.error, .dropdown-toggle.error {
+    border: 2px solid red;
+    color: red;
+}
+
+.nav-item > a {
+    color: #0c68f1;
+}

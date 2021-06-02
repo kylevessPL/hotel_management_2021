@@ -1,39 +1,29 @@
 import React from 'react';
 import './DashboardBase.css';
-import {Route} from "react-router-dom";
 import {AdminSidebar, UserSidebar} from "../sidebar";
 import Navbar from "../navbar";
 import BreadcrumbBar from "../breadcrumb";
-import {AdminHome, UserHome} from '../home'
-import {StrictSwitch} from "../../../utils";
 import Footer from "../footer";
-import AvailableRooms from "../availablerooms";
-import AdditionalServices from "../additionalservices";
-import BookRoom from "../bookroom";
-import MyBookings from "../mybookings";
-import Faq from "../faq";
-import Account from "../account";
-import Users from "../users";
-import Discounts from "../discounts";
+import {Container, Row} from "reactstrap";
+import DashboardContentBase from "./DashboardContentBase";
+import {SidebarParent} from "../sidebar/utils";
 
-const DashboardBase = props => {
+const DashboardBase = ({admin}) => {
 
     return (
-        <div className="dashboard-layout w-100 vh-100">
+        <div className="dashboard-layout min-vh-100 d-flex flex-column">
             <Navbar />
-            {props.admin ? <AdminSidebar /> : <UserSidebar />}
-            <BreadcrumbBar />
-            <StrictSwitch>
-                <Route exact path="/dashboard" component={props.admin ? AdminHome : UserHome} />
-                <Route exact path="/dashboard/available-rooms" component={AvailableRooms} />
-                <Route exact path="/dashboard/additional-services" component={AdditionalServices} />
-                <Route exact path="/dashboard/book-room" component={BookRoom} />
-                <Route exact path="/dashboard/my-bookings" component={MyBookings} />
-                <Route exact path="/dashboard/faq" component={Faq} />
-                {!props.admin && <Route exact path="/dashboard/account" component={Account} />}
-                {props.admin && <Route exact path="/dashboard/users" component={Users} />}
-                {props.admin && <Route exact path="/dashboard/discounts" component={Discounts} />}
-            </StrictSwitch>
+            <Container fluid className="main-container flex-grow-1">
+                <Row>
+                    <SidebarParent>
+                        {admin ? <AdminSidebar /> : <UserSidebar />}
+                    </SidebarParent>
+                    <main className="col-md-9 ml-sm-auto col-lg-10 px-md-4 py-4">
+                        <BreadcrumbBar />
+                        <DashboardContentBase admin={admin} />
+                    </main>
+                </Row>
+            </Container>
             <Footer />
         </div>
     );

@@ -5,6 +5,7 @@ import FormikErrorFocus from 'formik-error-focus'
 import * as Yup from 'yup';
 import {Link} from "react-router-dom";
 import PasswordStrengthBar from "react-password-strength-bar";
+import {API_PATH} from '../../../utils';
 
 const SignUpForm = props => {
 
@@ -62,7 +63,7 @@ const SignUpForm = props => {
                         'Access-Control-Allow-Origin': '*'
                     }
                 };
-                await fetch('api/v1/auth/signup', options)
+                await fetch(`${API_PATH}/auth/signup`, options)
                     .then(async response => {
                         if (response.ok) {
                             setRequestFailed(false)

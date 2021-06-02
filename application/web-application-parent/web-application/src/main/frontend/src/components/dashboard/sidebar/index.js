@@ -1,2 +1,2 @@
-export {default as AdminSidebar} from './UserSidebar';
-export {default as UserSidebar} from './AdminSidebar';
+export {default as AdminSidebar} from './AdminSideBar';
+export {default as UserSidebar} from './UserSideBar';

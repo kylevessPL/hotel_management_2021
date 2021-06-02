@@ -1,11 +1,12 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {Link} from 'react-router-dom';
-import './Navbar.css';
-import {AddressBookIcon, SignOutAltIcon} from 'react-line-awesome';
+import {authContext} from '../../../context/AuthContext';
+import './NavBar.css';
+import {SignOutAltIcon, UserCircleIcon} from 'react-line-awesome';
 import {ButtonDropdown, Col, DropdownItem, DropdownMenu, DropdownToggle, Navbar, NavbarBrand} from 'reactstrap'
 import ConfirmationModal from "../../utils";
 
-const Navbar = () => {
+const NavBar = () => {
 
     const username = window.localStorage.getItem('dotcom_user');
 
@@ -24,24 +25,19 @@ const Navbar = () => {
                         <img src="/favicon.ico" alt="HoteLA logo" width="52" height="52" className="mr-2" />
                         HoteLA Client Dashboard
                     </NavbarBrand>
-                    <button className="navbar-toggler d-md-none collapsed mb-3" type="button" data-toggle="collapse"
-                            data-target="#sidebar" aria-controls="sidebar" aria-expanded="false"
-                            aria-label="Toggle navigation">
-                        <span className="navbar-toggler-icon" />
-                    </button>
                 </Col>
                 <Col xs={12} md={5} lg={8} className="d-flex align-items-center justify-content-md-end mt-3 mt-md-0">
-                    <ButtonDropdown isOpen={dropdownOpen} toggle={toggleDropdown}>
+                    <ButtonDropdown isOpen={dropdownOpen} toggle={toggleDropdown} className="navbar-dropdown">
                         <DropdownToggle caret color="primary" className="text-left">
                             Hello, {username}
                         </DropdownToggle>
                         <DropdownMenu right={true} classname="w-100">
                             <DropdownItem tag={Link} exact to="/dashboard/account" className="pl-2">
-                                <AddressBookIcon className="align-top mr-1" />
+                                <UserCircleIcon className="align-top mr-1" style={{fontSize: "28px"}} />
                                 My account
                             </DropdownItem>
                             <DropdownItem onClick={toggleModal} className="pl-2">
-                                <SignOutAltIcon className="align-top mr-1" />
+                                <SignOutAltIcon className="align-top mr-1" style={{fontSize: "28px"}} />
                                 Sign out
                             </DropdownItem>
                         </DropdownMenu>
@@ -59,4 +55,4 @@ const Navbar = () => {
     );
 }
 
-export default Navbar;
+export default NavBar;

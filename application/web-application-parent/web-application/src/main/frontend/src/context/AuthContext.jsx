@@ -8,8 +8,12 @@ const AuthContext = ({children}) => {
     const tokenProvider = createTokenProvider();
 
     window.addEventListener('storage', (event) => {
-        if (event.key === 'dotcom_logout' && event.newValue === true.toString()) {
-            tokenProvider.setToken(null);
+        if (event.key === 'dotcom_logout') {
+            if (event.newValue === true.toString()) {
+                tokenProvider.setToken(null);
+                return;
+            }
+            tokenProvider.updateLoggedListneners(true);
         }
     });
 
@@ -145,6 +149,8 @@ const createTokenProvider = () => {
         adminListeners.forEach(l => l(isAdmin()));
     };
 
+    const updateLoggedListneners = logged => loggedListeners.forEach(l => l(logged));
+
     return {
         getToken,
         isLoggedIn,
@@ -153,7 +159,8 @@ const createTokenProvider = () => {
         subscribeLogged,
         unsubscribeLogged,
         subscribeAdmin,
-        unsubscribeAdmin
+        unsubscribeAdmin,
+        updateLoggedListneners
     };
 }
 

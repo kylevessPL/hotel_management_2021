@@ -7,6 +7,7 @@ import {Link} from "react-router-dom";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faLongArrowAltLeft} from "@fortawesome/free-solid-svg-icons"
 import {authContext} from '../../../context/AuthContext';
+import {API_PATH} from '../../../utils';
 
 const SignInForm = props => {
 
@@ -46,7 +47,7 @@ const SignInForm = props => {
                         'Access-Control-Allow-Origin': '*'
                     }
                 };
-                await fetch('api/v1/auth/signin', options)
+                await fetch(`${API_PATH}/auth/signin`, options)
                     .then(async response => {
                         const data = await response.json();
                         if (response.ok) {
