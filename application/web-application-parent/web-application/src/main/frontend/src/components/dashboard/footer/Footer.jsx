@@ -3,7 +3,7 @@ import './Footer.css';
 import {Col, Container, Nav, NavItem, NavLink, Row} from "reactstrap";
 import {NavLink as RRNavLink} from 'react-router-dom';
 
-const Footer = () => {
+const Footer = ({admin}) => {
 
     return (
         <Container fluid className="footer-component flex-shrink-0">
@@ -15,9 +15,9 @@ const Footer = () => {
                             <NavItem>
                                 <NavLink tag={RRNavLink} className="text-secondary" to="/">Home</NavLink>
                             </NavItem>
-                            <NavItem>
+                            {!admin && <NavItem>
                                 <NavLink tag={RRNavLink} className="text-secondary" to="/dashboard/faq">FAQ</NavLink>
-                            </NavItem>
+                            </NavItem>}
                         </Nav>
                     </footer>
                 </Col>

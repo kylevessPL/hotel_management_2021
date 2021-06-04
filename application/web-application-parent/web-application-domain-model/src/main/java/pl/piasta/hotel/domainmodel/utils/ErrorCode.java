@@ -24,6 +24,7 @@ public enum ErrorCode {
     REFRESH_TOKEN_EXPIRED("A04", "Refresh token expired"),
     REFRESH_TOKEN_NOT_FOUND("A05", "Refresh token invalid or already used"),
     USER_AVATAR_NOT_FOUND("U01", "User avatar not found"),
+    USER_PASSWORD_NOT_MATCHES("U02", "Current password not valid"),
     FILE_UPLOAD_COMMON("C01", "File upload error");
 
     private final String code;

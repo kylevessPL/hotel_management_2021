@@ -124,8 +124,10 @@ public class UsersServiceController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping(value = "/current/password", produces = MediaType.APPLICATION_JSON_VALUE)
     public void updateUserPassword(Authentication authentication, @Valid @RequestBody UpdateUserPasswordRequest request) {
-        Integer id = ((UserDetailsImpl) authentication.getPrincipal()).getId();
-        usersService.updateUserPassword(id, usersMapper.mapToCommand(request));
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        usersService.updateUserPassword(
+                userDetails.getId(), userDetails.getPassword(),
+                usersMapper.mapToCommand(request));
     }
 
     @Operation(

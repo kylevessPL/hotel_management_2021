@@ -13,13 +13,10 @@ const createTokenStore = () => {
         const date = new Date();
         token = value.accessToken;
         expiry = date.setSeconds(date.getSeconds() + value.expires);
-        const roles = value.roles;
-        const username = value.username;
-        if (roles) {
-            window.localStorage.setItem('dotcom_role', JSON.stringify(roles));
-        }
-        if (username) {
-            window.localStorage.setItem('dotcom_user', username);
+        if (value.username) {
+            window.localStorage.setItem('dotcom_user', value.username);
+            window.localStorage.setItem('dotcom_email', value.email);
+            window.localStorage.setItem('dotcom_role', JSON.stringify(value.roles));
         }
         window.localStorage.setItem('dotcom_logout', false.toString());
     };
@@ -28,8 +25,9 @@ const createTokenStore = () => {
         token = null;
         expiry = null;
         window.localStorage.setItem('dotcom_logout', true.toString());
-        window.localStorage.removeItem('dotcom_role');
         window.localStorage.removeItem('dotcom_user');
+        window.localStorage.removeItem('dotcom_email');
+        window.localStorage.removeItem('dotcom_role');
     };
 
     return { getToken, getExpiry, getRoles, setItem, removeItem }

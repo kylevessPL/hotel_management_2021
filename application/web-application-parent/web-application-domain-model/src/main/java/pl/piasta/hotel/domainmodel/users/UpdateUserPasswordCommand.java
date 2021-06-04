@@ -9,5 +9,6 @@ import lombok.Setter;
 @Setter
 public class UpdateUserPasswordCommand {
 
-    private String password;
+    private String oldPassword;
+    private String newPassword;
 }

@@ -24,7 +24,7 @@ const DashboardBase = ({admin}) => {
                     </main>
                 </Row>
             </Container>
-            <Footer />
+            <Footer admin={admin} />
         </div>
     );
 }

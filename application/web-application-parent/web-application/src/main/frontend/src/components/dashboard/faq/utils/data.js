@@ -31,7 +31,7 @@ const data = [
         question: 'Is there a parking available?',
         answer:
             'We offer a huge parking lot on hotel premises. ' +
-            'The parking lot is guarded 24h/7 a week to ensure your vehicle will stay safe the whole time you stay there.'
+            'The parking lot is guarded 24/7 to ensure your vehicle will stay safe the whole time you stay there.'
     }
 ];
 

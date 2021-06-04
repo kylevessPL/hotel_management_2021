@@ -16,12 +16,19 @@ const Faq = () => {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*'
             }
-        }).then(r => r.ok && setPaymentFormsData(r.json()));
+        }).then((response) => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Payment forms data fetch failed');
+            }
+        }).then((data) => setPaymentFormsData(data)
+        ).catch((error) => console.log(error));
     }, []);
 
     return (
         <div>
-            <p>Frequently asked questions</p>
+            <h4 className="mb-4">Frequently asked questions</h4>
             <Row>
                 <Col xs={12} xl={7} className="mb-lg-0">
                     <Container>

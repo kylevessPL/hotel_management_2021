@@ -13,7 +13,7 @@ public interface UsersService {
     UsersPage getAllUsers(PageCommand command);
     UserBookingsPage getAllUserBookings(Integer id, PageCommand command);
     void updateAccountStatus(Integer id, UpdateAccountStatusCommand command);
-    void updateUserPassword(Integer id, UpdateUserPasswordCommand command);
+    void updateUserPassword(Integer id, String currentPassword, UpdateUserPasswordCommand command);
     void updateUserAvatar(Integer id, MultipartFile file);
     void removeUserAvatar(Integer id);
     AvatarImage getUserAvatar(Integer id);

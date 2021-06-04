@@ -14,7 +14,6 @@ const SignInForm = props => {
     const {login} = useContext(authContext);
 
     const [registered, setRegistered] = useState(props.location.state && props.location.state.registered || false);
-    const [requestFailed, setRequestFailed] = useState(false);
     const [requestFailedMessage, setRequestFailedMessage] = useState('');
 
     useEffect(() => {
@@ -31,7 +30,7 @@ const SignInForm = props => {
                     .required('Password is required')
             })}
             onSubmit={async (values, { setSubmitting }) => {
-                setRequestFailed(false);
+                setRequestFailedMessage('');
                 setRegistered(false);
                 const {username, password} = values;
                 const body = {
@@ -51,19 +50,16 @@ const SignInForm = props => {
                     .then(async response => {
                         const data = await response.json();
                         if (response.ok) {
-                            setRequestFailed(false)
-                            login(data)
+                            setRequestFailedMessage('');
+                            login(data);
                         } else if ([401, 403, 422].indexOf(response.status) >= 0) {
-                            setRequestFailed(true)
-                            setRequestFailedMessage(data.message)
+                            setRequestFailedMessage(data.message);
                         } else {
-                            setRequestFailed(true)
-                            setRequestFailedMessage('Request cannot be fulfilled now. Please try again later.')
+                            setRequestFailedMessage('Request cannot be fulfilled now. Please try again later.');
                         }
                     }).catch((error) => {
-                        console.error(error)
-                        setRequestFailed(true)
-                        setRequestFailedMessage('Request cannot be fulfilled now. Please try again later.')
+                        console.error(error);
+                        setRequestFailedMessage('Request cannot be fulfilled now. Please try again later.');
                     }).finally(() => setSubmitting(false));
             }}
         >
@@ -76,7 +72,7 @@ const SignInForm = props => {
                     <CardTitle tag="h5" className="text-center mb-4">Login</CardTitle>
                     {registered
                         ? <Alert color="success">Registration successful. You can login now.</Alert>
-                        : requestFailed && <Alert color="danger">{requestFailedMessage}</Alert>}
+                        : requestFailedMessage.length > 0 && <Alert color="danger">{requestFailedMessage}</Alert>}
                     <Form>
                         <FormGroup className="mb-3">
                             <Label className="mb-1" for="username">Username</Label>

@@ -4,7 +4,7 @@ import {authContext} from '../../../context/AuthContext';
 import './NavBar.css';
 import {SignOutAltIcon, UserCircleIcon} from 'react-line-awesome';
 import {ButtonDropdown, Col, DropdownItem, DropdownMenu, DropdownToggle, Navbar, NavbarBrand} from 'reactstrap'
-import ConfirmationModal from "../../utils";
+import {ConfirmationModal} from "../../utils";
 
 const NavBar = () => {
 

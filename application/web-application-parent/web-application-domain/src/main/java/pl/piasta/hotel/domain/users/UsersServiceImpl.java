@@ -89,9 +89,12 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     @Transactional
-    public void updateUserPassword(Integer id, UpdateUserPasswordCommand command) {
-        String pasword = encoder.encode(command.getPassword());
-        if (!usersRepository.updateUserPassword(id, pasword)) {
+    public void updateUserPassword(Integer id, String currentPassword, UpdateUserPasswordCommand command) {
+        if (!encoder.matches(command.getOldPassword(), currentPassword)) {
+            throw new ApplicationException(ErrorCode.USER_PASSWORD_NOT_MATCHES);
+        }
+        String newPassword = encoder.encode(command.getNewPassword());
+        if (!usersRepository.updateUserPassword(id, newPassword)) {
             throw new ResourceNotFoundException();
         }
     }

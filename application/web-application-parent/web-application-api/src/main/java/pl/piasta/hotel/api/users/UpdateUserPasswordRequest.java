@@ -16,9 +16,12 @@ import java.io.Serializable;
 @Setter
 public class UpdateUserPasswordRequest implements Serializable {
 
-    @Schema(description = "User password", example = "7GJ13T%lwqXaJYo2@^")
+    @Schema(description = "Old password", example = "3cvCD#&YSl6HO7ncGs$O")
+    @NotBlank
+    private String oldPassword;
+    @Schema(description = "New password", example = "7GJ13T%lwqXaJYo2@^")
     @NotBlank
     @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).+$")
     @Size(min = 6, max = 120)
-    private String password;
+    private String newPassword;
 }

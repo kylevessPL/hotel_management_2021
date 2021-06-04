@@ -115,7 +115,7 @@ const createTokenProvider = () => {
         const token = getTokenInternal();
         if (token ? isExpired(tokenStore.getExpiry()) : rfAvailable) {
             const response = await onUpdateToken();
-            setToken(response ? response.refreshToken : null);
+            setToken(response || null);
         }
     };
 

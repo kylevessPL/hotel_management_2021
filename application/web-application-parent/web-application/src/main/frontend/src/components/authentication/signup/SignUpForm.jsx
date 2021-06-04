@@ -9,11 +9,10 @@ import {API_PATH} from '../../../utils';
 
 const SignUpForm = props => {
 
-    const [requestFailed, setRequestFailed] = useState(false);
     const [requestFailedMessage, setRequestFailedMessage] = useState('');
 
     useEffect(() => {
-        document.title = "HoteLA - Login";
+        document.title = "HoteLA - Register";
     });
 
     const redirectToSignIn = () => {
@@ -47,7 +46,7 @@ const SignUpForm = props => {
                     .required('Email is required')
             })}
             onSubmit={async (values, { setSubmitting }) => {
-                setRequestFailed(false);
+                setRequestFailedMessage('');
                 const {username, password, email} = values;
                 const body = {
                     username: username,
@@ -66,24 +65,21 @@ const SignUpForm = props => {
                 await fetch(`${API_PATH}/auth/signup`, options)
                     .then(async response => {
                         if (response.ok) {
-                            setRequestFailed(false)
-                            redirectToSignIn()
+                            setRequestFailedMessage('');
+                            redirectToSignIn();
                         } else {
                             await response.json()
                                 .then((data) => {
                                     if ([409, 422].indexOf(response.status) >= 0) {
-                                        setRequestFailed(true)
-                                        setRequestFailedMessage(data.message)
+                                        setRequestFailedMessage(data.message);
                                     } else {
-                                        setRequestFailed(true)
-                                        setRequestFailedMessage('Request cannot be fulfilled now. Please try again later.')
+                                        setRequestFailedMessage('Request cannot be fulfilled now. Please try again later.');
                                     }
                                 })
                         }
                     }).catch((error) => {
-                        console.error(error)
-                        setRequestFailed(true)
-                        setRequestFailedMessage('Request cannot be fulfilled now. Please try again later.')
+                        console.error(error);
+                        setRequestFailedMessage('Request cannot be fulfilled now. Please try again later.');
                     }).finally(() => setSubmitting(false));
             }}
         >
@@ -92,10 +88,10 @@ const SignUpForm = props => {
                   errors,
                   touched,
                   isSubmitting
-              }) => (
+            }) => (
                 <div>
                     <CardTitle tag="h5" className="text-center mb-4">Register</CardTitle>
-                    {requestFailed && <Alert color="danger">{requestFailedMessage}</Alert>}
+                    {requestFailedMessage.length > 0 && <Alert color="danger">{requestFailedMessage}</Alert>}
                     <Form>
                         <FormGroup className="mb-3">
                             <Label className="mb-1" for="username">Username<span style={{color: "red"}}>*</span></Label>
@@ -116,8 +112,8 @@ const SignUpForm = props => {
                             <ErrorMessage name="password" component="div" className="invalid-feedback"/>
                         </FormGroup>
                         <FormGroup className="mb-3">
-                            <Label className="mb-1" for="repeatPassword">Repeat password<span style={{color: "red"}}>*</span></Label>
-                            <Field id="repeatPassword"
+                            <Label className="mb-1" for="repeat-password">Repeat Password<span style={{color: "red"}}>*</span></Label>
+                            <Field id="repeat-password"
                                    name="repeatPassword"
                                    type="password"
                                    className={'form-control' + (errors.repeatPassword && touched.repeatPassword ? ' is-invalid' : '')}/>
@@ -135,11 +131,11 @@ const SignUpForm = props => {
                             <Link to="/signin">Sign In</Link>
                         </div>
                         <Button color="primary"
-                               type="submit"
-                               className="mt-2 w-100"
-                               size="lg"
-                               block
-                               disabled={isSubmitting}>
+                                type="submit"
+                                className="mt-2 w-100"
+                                size="lg"
+                                block
+                                disabled={isSubmitting}>
                             Sign Up
                         </Button>
                         <FormikErrorFocus />

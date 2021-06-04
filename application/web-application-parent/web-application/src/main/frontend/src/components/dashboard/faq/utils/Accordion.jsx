@@ -12,7 +12,7 @@ const Accordion = ({question, answer}) => {
     return (
         <Card>
             <CardHeader onClick={toggle} className="pl-2">
-                <h2><FontAwesomeIcon icon={faPlus} className="mr-2" />{question}</h2>
+                <h6><FontAwesomeIcon icon={faPlus} size="sm" className="mr-2" />{question}</h6>
             </CardHeader>
             <Collapse isOpen={open}>
                 <CardBody>
