@@ -5,14 +5,25 @@ import {ErrorMessage, Field, Form, Formik} from "formik";
 import * as Yup from 'yup';
 import {API_PATH} from "../../../utils";
 import {authContext} from "../../../context/AuthContext";
+import BrowseImageInput from './utils'
 import avatarDefault from '../../../assets/images/avatar_default.png';
+import FormikErrorFocus from "formik-error-focus";
 
 const Account = () => {
 
+    const FILE_SIZE = 200 * 1024;
+    const SUPPORTED_FORMATS = [
+        "image/jpg",
+        "image/jpeg",
+        "image/png"
+    ];
+
     const {authFetch} = useContext(authContext);
 
-    const [updated, setUpdated] = useState(false);
-    const [requestFailedMessage, setRequestFailedMessage] = useState('');
+    const [profileUpdated, setProfileUpdated] = useState(false);
+    const [profileRequestFailedMessage, setProfileRequestFailedMessage] = useState('');
+    const [avatarUpdated, setAvatarUpdated] = useState(false);
+    const [avatarRequestFailedMessage, setAvatarRequestFailedMessage] = useState('');
 
     const username = window.localStorage.getItem('dotcom_user');
     const email = window.localStorage.getItem('dotcom_email');
@@ -24,9 +35,87 @@ const Account = () => {
                 <Col lg={4} className="pb-5">
                     <Card className="pb-3">
                         <CardBody>
-                            <div className="avatar rounded-circle overflow-hidden">
+                            <div className="avatar rounded-circle overflow-hidden mb-4">
                                 <img src={avatarDefault} alt="Avatar" className="card-img-top" />
                             </div>
+                            {avatarUpdated
+                                ? <Alert color="success">Avatar updated successfully.</Alert>
+                                : avatarRequestFailedMessage.length > 0 && <Alert color="danger">{avatarRequestFailedMessage}</Alert>}
+                            <Formik
+                                initialValues={{file: undefined}}
+                                validationSchema={Yup.object().shape({
+                                    file: Yup.mixed()
+                                        .required('No image file selected')
+                                        .test(
+                                            'fileType',
+                                            `Only ${SUPPORTED_FORMATS.map((type) => type
+                                                .substr(type.indexOf('/'))
+                                                .replace(/\//g, '.')
+                                            ).join(', ')} image files allowed`,
+                                            value => value && SUPPORTED_FORMATS.includes(value.type))
+                                        .test(
+                                            'fileSize',
+                                            `File size too large, maximum ${FILE_SIZE / 1024} kB allowed`,
+                                            value => value && value.size <= FILE_SIZE)
+                                })}
+                                onSubmit={async (values, { setSubmitting }) => {
+                                    setAvatarUpdated(false);
+                                    setAvatarRequestFailedMessage('');
+                                    const data = new FormData();
+                                    data.append('file', values.file);
+                                    const options = {
+                                        method: 'PUT',
+                                        mode: 'cors',
+                                        body: data,
+                                        headers: {
+                                            'Access-Control-Allow-Origin': '*'
+                                        }
+                                    };
+                                    await authFetch(`${API_PATH}/users/current/avatar`, options)
+                                        .then(async response => {
+                                            if (response.ok) {
+                                                setAvatarUpdated(true);
+                                                setAvatarRequestFailedMessage('');
+                                            } else {
+                                                await response.json()
+                                                    .then((data) => {
+                                                        if ([413, 417].indexOf(response.status) >= 0) {
+                                                            setAvatarUpdated(false);
+                                                            setAvatarRequestFailedMessage(data.message);
+                                                        } else {
+                                                            setAvatarUpdated(false);
+                                                            setAvatarRequestFailedMessage('Request cannot be fulfilled now. Please try again later.');
+                                                        }
+                                                    })
+                                            }
+                                        }).catch((error) => {
+                                            console.error(error);
+                                            setAvatarUpdated(false);
+                                            setAvatarRequestFailedMessage('Request cannot be fulfilled now. Please try again later.');
+                                        }).finally(() => setSubmitting(false));
+                                }}
+                            >
+                                {({
+                                      errors,
+                                      touched,
+                                      isSubmitting
+                                }) => (
+                                    <Form>
+                                        <FormGroup>
+                                            <Field
+                                                name="file"
+                                                accept={SUPPORTED_FORMATS.join(', ')}
+                                                className={'form-control' + (errors.file && touched.file ? ' is-invalid' : '')}
+                                                component={BrowseImageInput} />
+                                            <ErrorMessage name="file" component="div" className="invalid-feedback"/>
+                                        </FormGroup>
+                                        <div className="text-right">
+                                            <Button color="success" type="submit" disabled={isSubmitting}>Upload</Button>
+                                        </div>
+                                        <FormikErrorFocus />
+                                    </Form>
+                                )}
+                            </Formik>
                         </CardBody>
                     </Card>
                 </Col>
@@ -47,8 +136,8 @@ const Account = () => {
                             .oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
                     })}
                     onSubmit={async (values, { setSubmitting, resetForm }) => {
-                        setUpdated(false);
-                        setRequestFailedMessage('');
+                        setProfileUpdated(false);
+                        setProfileRequestFailedMessage('');
                         const {currentPassword, newPassword} = values;
                         const body = {
                             oldPassword: currentPassword,
@@ -66,8 +155,8 @@ const Account = () => {
                         await authFetch(`${API_PATH}/users/current/password`, options)
                             .then(async response => {
                                 if (response.ok) {
-                                    setUpdated(true);
-                                    setRequestFailedMessage('');
+                                    setProfileUpdated(true);
+                                    setProfileRequestFailedMessage('');
                                 } else {
                                     await response.json()
                                         .then((data) => {
@@ -75,18 +164,18 @@ const Account = () => {
                                                 if (response.status === 409) {
                                                     resetForm(values);
                                                 }
-                                                setUpdated(false);
-                                                setRequestFailedMessage(data.message);
+                                                setProfileUpdated(false);
+                                                setProfileRequestFailedMessage(data.message);
                                             } else {
-                                                setUpdated(false);
-                                                setRequestFailedMessage('Request cannot be fulfilled now. Please try again later.');
+                                                setProfileUpdated(false);
+                                                setProfileRequestFailedMessage('Request cannot be fulfilled now. Please try again later.');
                                             }
                                         })
                                 }
                             }).catch((error) => {
                                 console.error(error);
-                                setUpdated(false);
-                                setRequestFailedMessage('Request cannot be fulfilled now. Please try again later.');
+                                setProfileUpdated(false);
+                                setProfileRequestFailedMessage('Request cannot be fulfilled now. Please try again later.');
                             }).finally(() => {
                                 resetForm(values);
                                 setSubmitting(false);
@@ -99,9 +188,9 @@ const Account = () => {
                           isSubmitting
                     }) => (
                         <Col lg={8} className="pb-5">
-                            {updated
+                            {profileUpdated
                                 ? <Alert color="success">Profile updated successfully.</Alert>
-                                : requestFailedMessage.length > 0 && <Alert color="danger">{requestFailedMessage}</Alert>}
+                                : profileRequestFailedMessage.length > 0 && <Alert color="danger">{profileRequestFailedMessage}</Alert>}
                             <Form>
                                 <Row form>
                                     <Col md={6}>
@@ -163,6 +252,7 @@ const Account = () => {
                                         </div>
                                     </Col>
                                 </Row>
+                                <FormikErrorFocus />
                             </Form>
                         </Col>
                     )}
