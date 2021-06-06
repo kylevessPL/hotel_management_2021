@@ -12,7 +12,7 @@ const DashboardBase = ({admin}) => {
 
     return (
         <div className="dashboard-layout d-flex flex-column min-vh-100">
-            <Navbar />
+            <Navbar admin={admin} />
             <Container fluid className="main-container flex-grow-1 d-flex flex-column">
                 <Row className="flex-grow-1">
                     <SidebarParent>

@@ -3,19 +3,29 @@ import {Link} from 'react-router-dom';
 import {authContext} from '../../../context/AuthContext';
 import './NavBar.css';
 import {SignOutAltIcon, UserCircleIcon} from 'react-line-awesome';
-import {ButtonDropdown, Col, DropdownItem, DropdownMenu, DropdownToggle, Navbar, NavbarBrand} from 'reactstrap'
+import {
+    Col,
+    DropdownItem,
+    DropdownMenu,
+    DropdownToggle,
+    Nav,
+    Navbar,
+    NavbarBrand,
+    NavbarToggler,
+    UncontrolledButtonDropdown,
+    UncontrolledCollapse
+} from 'reactstrap'
 import {ConfirmationModal} from "../../utils";
+import {AdminSidebar, UserSidebar} from "../sidebar";
 
-const NavBar = () => {
+const NavBar = ({admin}) => {
 
     const username = window.localStorage.getItem('dotcom_user');
 
     const {logout} = useContext(authContext);
-    const [dropdownOpen, setDropdownOpen] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
 
     const toggleModal = () => setModalOpen(!modalOpen);
-    const toggleDropdown = () => setDropdownOpen(prevState => !prevState);
 
     return (
         <div>
@@ -25,9 +35,10 @@ const NavBar = () => {
                         <img src="/favicon.ico" alt="HoteLA logo" width="52" height="52" className="mr-2" />
                         HoteLA Client Dashboard
                     </NavbarBrand>
+                    <NavbarToggler id="toggler" className="d-md-none mb-3" />
                 </Col>
                 <Col xs={12} md={5} lg={8} className="d-flex align-items-center justify-content-md-end mt-3 mt-md-0">
-                    <ButtonDropdown isOpen={dropdownOpen} toggle={toggleDropdown} className="navbar-dropdown">
+                    <UncontrolledButtonDropdown className="navbar-dropdown">
                         <DropdownToggle caret color="primary" className="text-left">
                             Hello, {username}
                         </DropdownToggle>
@@ -41,8 +52,13 @@ const NavBar = () => {
                                 Sign out
                             </DropdownItem>
                         </DropdownMenu>
-                    </ButtonDropdown>
+                    </UncontrolledButtonDropdown>
                 </Col>
+                <UncontrolledCollapse toggler="#toggler" className="d-md-none mt-3">
+                    <Nav vertical className="sidebar-nav">
+                        {admin ? <AdminSidebar /> : <UserSidebar />}
+                    </Nav>
+                </UncontrolledCollapse>
             </Navbar>
             <ConfirmationModal
                 title="Sign out"
