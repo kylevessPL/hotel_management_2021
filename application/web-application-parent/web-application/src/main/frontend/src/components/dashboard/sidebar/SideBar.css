@@ -2,8 +2,7 @@
     top: 0;
     bottom: 0;
     left: 0;
-    z-index: 100;
-    padding: 6.375rem 0 0;
+    padding: 1.45rem 0 0;
     box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1);
 }
 
@@ -12,19 +11,6 @@
     border-radius: 3px;
     margin-left: 15px;
     margin-right: 15px;
-}
-
-@media (max-width: 992px) {
-    .sidebar-component {
-        top: 9px;
-    }
-}
-
-@media (max-width: 768px) {
-    .sidebar-component {
-        top: 9.5rem;
-        padding: 0;
-    }
 }
 
 .sidebar-component .nav-link {

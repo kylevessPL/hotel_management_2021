@@ -25,17 +25,19 @@ const DashboardContentBase = ({admin}) => {
     });
 
     return (
-        <StrictSwitch>
-            <Route exact path="/dashboard" component={admin ? AdminHome : UserHome} />
-            <Route exact path="/dashboard/account" component={Account} />
-            {!admin && <Route exact path="/dashboard/available-rooms" component={AvailableRooms} />}
-            {!admin && <Route exact path="/dashboard/additional-services" component={AdditionalServices} />}
-            {!admin && <Route exact path="/dashboard/book-room" component={BookRoom} />}
-            {!admin && <Route exact path="/dashboard/my-bookings" component={MyBookings} />}
-            {!admin && <Route exact path="/dashboard/faq" component={Faq} />}
-            {admin && <Route exact path="/dashboard/users" component={Users} />}
-            {admin && <Route exact path="/dashboard/discounts" component={Discounts} />}
-        </StrictSwitch>
+        <div className="flex-grow-1">
+            <StrictSwitch>
+                <Route exact path="/dashboard" component={admin ? AdminHome : UserHome} />
+                <Route exact path="/dashboard/account" component={Account} />
+                {!admin && <Route exact path="/dashboard/available-rooms" component={AvailableRooms} />}
+                {!admin && <Route exact path="/dashboard/additional-services" component={AdditionalServices} />}
+                {!admin && <Route exact path="/dashboard/book-room" component={BookRoom} />}
+                {!admin && <Route exact path="/dashboard/my-bookings" component={MyBookings} />}
+                {!admin && <Route exact path="/dashboard/faq" component={Faq} />}
+                {admin && <Route exact path="/dashboard/users" component={Users} />}
+                {admin && <Route exact path="/dashboard/discounts" component={Discounts} />}
+            </StrictSwitch>
+        </div>
     );
 }
 

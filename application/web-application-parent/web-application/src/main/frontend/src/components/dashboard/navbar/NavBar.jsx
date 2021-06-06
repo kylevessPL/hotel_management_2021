@@ -19,7 +19,7 @@ const NavBar = () => {
 
     return (
         <div>
-            <Navbar color="light" light className="p-2 flex-shrink-0">
+            <Navbar color="light" light className="p-2">
                 <Col xs={12} md={3} lg={2} className="d-flex justify-content-between mb-lg-0">
                     <NavbarBrand tag={Link} exact to="/dashboard">
                         <img src="/favicon.ico" alt="HoteLA logo" width="52" height="52" className="mr-2" />

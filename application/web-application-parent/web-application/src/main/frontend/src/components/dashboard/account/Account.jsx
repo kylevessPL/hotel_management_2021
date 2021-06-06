@@ -29,6 +29,7 @@ const Account = () => {
     const [avatarUpdated, setAvatarUpdated] = useState(false);
     const [avatarRequestFailedMessage, setAvatarRequestFailedMessage] = useState('');
     const [modalOpen, setModalOpen] = useState(false);
+    const [filename, setFilename] = useState(null);
 
     const toggleModal = () => setModalOpen(!modalOpen);
 
@@ -118,6 +119,7 @@ const Account = () => {
                                                 setAvatarImage(URL.createObjectURL(values.file));
                                                 setAvatarUpdated(true);
                                                 setAvatarRequestFailedMessage('');
+                                                setFilename(null);
                                                 resetForm(values);
                                             } else {
                                                 await response.json()
@@ -147,6 +149,8 @@ const Account = () => {
                                         <FormGroup>
                                             <Field
                                                 name="file"
+                                                filename={filename}
+                                                setFilename={setFilename}
                                                 accept={SUPPORTED_FORMATS.join(', ')}
                                                 className={'form-control' + (errors.file && touched.file ? ' is-invalid' : '')}
                                                 component={BrowseImageInput} />
@@ -158,7 +162,7 @@ const Account = () => {
                                             <Button
                                                 color="danger"
                                                 type="button"
-                                                onClick={() => {setAvatarUpdated(false); toggleModal()}}
+                                                onClick={() => {toggleModal(); setAvatarUpdated(false)}}
                                                 className="ml-2">
                                                 <FontAwesomeIcon icon={faTrashAlt} />
                                             </Button>}

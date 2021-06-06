@@ -11,20 +11,20 @@ import {SidebarParent} from "../sidebar/utils";
 const DashboardBase = ({admin}) => {
 
     return (
-        <div className="dashboard-layout min-vh-100 d-flex flex-column">
+        <div className="dashboard-layout d-flex flex-column min-vh-100">
             <Navbar />
-            <Container fluid className="main-container flex-grow-1">
-                <Row>
+            <Container fluid className="main-container flex-grow-1 d-flex flex-column">
+                <Row className="flex-grow-1">
                     <SidebarParent>
                         {admin ? <AdminSidebar /> : <UserSidebar />}
                     </SidebarParent>
-                    <main className="col-md-9 ml-sm-auto col-lg-10 px-md-4 py-4">
+                    <main className="col-md-9 ml-sm-auto col-lg-10 px-md-4 py-4 d-flex flex-column">
                         <BreadcrumbBar />
                         <DashboardContentBase admin={admin} />
+                        <Footer admin={admin} />
                     </main>
                 </Row>
             </Container>
-            <Footer admin={admin} />
         </div>
     );
 }

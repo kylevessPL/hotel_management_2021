@@ -5,7 +5,7 @@ import '../SideBar.css';
 const SideBarParent = ({children}) => {
 
     return (
-        <nav className="sidebar-component bg-light col-md-3 col-lg-2 d-md-block collapse position-fixed">
+        <nav className="sidebar-component bg-light col-md-3 col-lg-2 d-md-block collapse">
             <div className="position-sticky">
                 <Nav className="flex-column">
                     {children}

@@ -1,15 +1,15 @@
 import {CustomInput, Input, Label} from "reactstrap";
-import React, {useState} from "react";
+import React from "react";
 
 const BrowseImageInput =
     ({
          field: { name },
+         filename,
+         setFilename,
          accept,
          className,
          form: { isSubmitting, setFieldValue },
     }) => {
-
-    const [filename, setFilename] = useState(null);
 
     const fileInput = React.createRef();
 
@@ -33,7 +33,6 @@ const BrowseImageInput =
             <CustomInput
                 type="file"
                 name="browseAvatar"
-                accept={accept}
                 label={filename || 'Choose an image file'}
                 disabled={isSubmitting}
                 className={className}
@@ -41,6 +40,7 @@ const BrowseImageInput =
             <Input
                 type="file"
                 name={name}
+                accept={accept}
                 className="d-none"
                 innerRef={fileInput}
                 onChange={handleChange} />
