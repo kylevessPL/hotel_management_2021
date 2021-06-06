@@ -133,9 +133,7 @@ const createTokenProvider = () => {
 
     const getToken = async () => {
         await checkExpiry();
-        const token = getTokenInternal();
-        isLoggingIn = Promise.resolve();
-        return token;
+        return getTokenInternal();
     };
 
     const isLoggedIn = () => {
