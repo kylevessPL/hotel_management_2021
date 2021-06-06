@@ -10,7 +10,7 @@ const ConfirmationModal = ({title, content, confirmText, onConfirm, open, toggle
                 <Alert color="danger">{content}</Alert>
             </ModalBody>
             <ModalFooter>
-                <Button color="secondary" onClick={onConfirm}>{confirmText}</Button>
+                <Button color="secondary" onClick={() => {onConfirm(); toggle()}}>{confirmText}</Button>
                 <Button color="danger" onClick={toggle}>Cancel</Button>
             </ModalFooter>
         </Modal>

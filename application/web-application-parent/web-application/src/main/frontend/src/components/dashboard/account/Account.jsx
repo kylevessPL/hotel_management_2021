@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import './Account.css';
 import {Alert, Button, Card, CardBody, Col, FormGroup, Input, Label, Row} from "reactstrap";
 import {ErrorMessage, Field, Form, Formik} from "formik";
@@ -6,8 +6,11 @@ import * as Yup from 'yup';
 import {API_PATH} from "../../../utils";
 import {authContext} from "../../../context/AuthContext";
 import BrowseImageInput from './utils'
+import {ConfirmationModal} from "../../utils";
 import avatarDefault from '../../../assets/images/avatar_default.png';
 import FormikErrorFocus from "formik-error-focus";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faTrashAlt} from "@fortawesome/free-solid-svg-icons"
 
 const Account = () => {
 
@@ -20,13 +23,51 @@ const Account = () => {
 
     const {authFetch} = useContext(authContext);
 
+    const [avatarImage, setAvatarImage] = useState(avatarDefault);
     const [profileUpdated, setProfileUpdated] = useState(false);
     const [profileRequestFailedMessage, setProfileRequestFailedMessage] = useState('');
     const [avatarUpdated, setAvatarUpdated] = useState(false);
     const [avatarRequestFailedMessage, setAvatarRequestFailedMessage] = useState('');
+    const [modalOpen, setModalOpen] = useState(false);
+
+    const toggleModal = () => setModalOpen(!modalOpen);
 
     const username = window.localStorage.getItem('dotcom_user');
     const email = window.localStorage.getItem('dotcom_email');
+
+    const removeAvatar = () => {
+        authFetch(`${API_PATH}/users/current/avatar`, {
+            method: "DELETE",
+            mode: "cors",
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
+            }
+        }).then(async (response) => {
+            if (response.ok) {
+                setAvatarImage(avatarDefault);
+            } else {
+                throw new Error('Avatar image fetch failed');
+            }
+        }).catch((error) => console.log(error));
+    }
+
+    useEffect(() => {
+        authFetch(`${API_PATH}/users/current/avatar`, {
+            method: "GET",
+            mode: "cors",
+            headers: {
+                'Access-Control-Allow-Origin': '*'
+            }
+        }).then(async (response) => {
+            if (response.ok) {
+                await response.blob()
+                    .then(data => setAvatarImage(URL.createObjectURL(data)));
+            } else if (response.status !== 409) {
+                throw new Error('Avatar image fetch failed');
+            }
+        }).catch((error) => console.log(error));
+    }, []);
 
     return (
         <div>
@@ -36,7 +77,7 @@ const Account = () => {
                     <Card className="pb-3">
                         <CardBody>
                             <div className="avatar rounded-circle overflow-hidden mb-4">
-                                <img src={avatarDefault} alt="Avatar" className="card-img-top" />
+                                <img src={avatarImage} alt="Avatar" className="card-img-top" />
                             </div>
                             {avatarUpdated
                                 ? <Alert color="success">Avatar updated successfully.</Alert>
@@ -58,7 +99,7 @@ const Account = () => {
                                             `File size too large, maximum ${FILE_SIZE / 1024} kB allowed`,
                                             value => value && value.size <= FILE_SIZE)
                                 })}
-                                onSubmit={async (values, { setSubmitting }) => {
+                                onSubmit={async (values, { setSubmitting, resetForm }) => {
                                     setAvatarUpdated(false);
                                     setAvatarRequestFailedMessage('');
                                     const data = new FormData();
@@ -74,8 +115,10 @@ const Account = () => {
                                     await authFetch(`${API_PATH}/users/current/avatar`, options)
                                         .then(async response => {
                                             if (response.ok) {
+                                                setAvatarImage(URL.createObjectURL(values.file));
                                                 setAvatarUpdated(true);
                                                 setAvatarRequestFailedMessage('');
+                                                resetForm(values);
                                             } else {
                                                 await response.json()
                                                     .then((data) => {
@@ -111,6 +154,14 @@ const Account = () => {
                                         </FormGroup>
                                         <div className="text-right">
                                             <Button color="success" type="submit" disabled={isSubmitting}>Upload</Button>
+                                            {avatarImage !== avatarDefault &&
+                                            <Button
+                                                color="danger"
+                                                type="button"
+                                                onClick={() => {setAvatarUpdated(false); toggleModal()}}
+                                                className="ml-2">
+                                                <FontAwesomeIcon icon={faTrashAlt} />
+                                            </Button>}
                                         </div>
                                         <FormikErrorFocus />
                                     </Form>
@@ -157,6 +208,7 @@ const Account = () => {
                                 if (response.ok) {
                                     setProfileUpdated(true);
                                     setProfileRequestFailedMessage('');
+                                    resetForm(values);
                                 } else {
                                     await response.json()
                                         .then((data) => {
@@ -177,7 +229,6 @@ const Account = () => {
                                 setProfileUpdated(false);
                                 setProfileRequestFailedMessage('Request cannot be fulfilled now. Please try again later.');
                             }).finally(() => {
-                                resetForm(values);
                                 setSubmitting(false);
                             });
                     }}
@@ -258,6 +309,13 @@ const Account = () => {
                     )}
                 </Formik>
             </Row>
+            <ConfirmationModal
+                title="Remove avatar"
+                content="Are you sure you want to remove avatar?"
+                confirmText="Remove"
+                onConfirm={removeAvatar}
+                open={modalOpen}
+                toggle={toggleModal}/>
         </div>
     );
 }
