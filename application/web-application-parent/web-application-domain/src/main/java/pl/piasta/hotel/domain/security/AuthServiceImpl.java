@@ -82,8 +82,7 @@ public class AuthServiceImpl implements AuthService {
                     String accessToken = jwtUtils.generateAccessTokenFromUsername(subject);
                     String refreshToken = generateRefreshToken(subject);
                     return new RefreshTokenInfo(accessToken, refreshToken, jwtExpirationMs / 1000);
-                })
-                .orElseThrow(() -> new ApplicationException(ErrorCode.REFRESH_TOKEN_NOT_FOUND));
+                }).orElseThrow(() -> new ApplicationException(ErrorCode.REFRESH_TOKEN_NOT_FOUND));
     }
 
     private String generateRefreshToken(String subject) {

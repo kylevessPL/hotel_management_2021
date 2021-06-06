@@ -7,7 +7,7 @@ const AuthContext = ({children}) => {
 
     const tokenProvider = createTokenProvider();
 
-    window.addEventListener('storage', (event) => {
+    window.addEventListener('storage', event => {
         if (event.key === 'dotcom_logout') {
             if (event.newValue === true.toString()) {
                 tokenProvider.setToken(null);
@@ -17,7 +17,7 @@ const AuthContext = ({children}) => {
         }
     });
 
-    const login = (newTokens) => {
+    const login = newTokens => {
         tokenProvider.setToken(newTokens);
     };
 
@@ -26,39 +26,33 @@ const AuthContext = ({children}) => {
     };
 
     const authFetch = async (input, init) => {
-        const token = await tokenProvider.getToken();
-        init = init || {};
-        init.headers = {
-            ...init.headers,
-            Authorization: `Bearer ${token}`,
-        };
-        return fetch(input, init);
+        return tokenProvider.waitForLogin().then(async () => {
+            const token = await tokenProvider.getToken();
+            init = init || {};
+            init.headers = {
+                ...init.headers,
+                Authorization: `Bearer ${token}`,
+            };
+            return fetch(input, init);
+        });
     };
 
     const useAuth = () => {
         const [isLogged, setIsLogged] = useState(tokenProvider.isLoggedIn());
-        const listener = useCallback((newIsLogged) => {
-            setIsLogged(newIsLogged);
-        }, [setIsLogged]);
+        const listener = useCallback( newIsLogged => setIsLogged(newIsLogged), [setIsLogged]);
         useEffect(() => {
             tokenProvider.subscribeLogged(listener);
-            return () => {
-                tokenProvider.unsubscribeLogged(listener);
-            };
+            return () => tokenProvider.unsubscribeLogged(listener);
         }, [listener]);
         return [isLogged];
     };
 
     const useAdmin = () => {
         const [isAdmin, setIsAdmin] = useState(tokenProvider.isAdmin());
-        const listener = useCallback((newIsAdmin) => {
-            setIsAdmin(newIsAdmin);
-        }, [setIsAdmin]);
+        const listener = useCallback(newIsAdmin => setIsAdmin(newIsAdmin), [setIsAdmin]);
         useEffect(() => {
             tokenProvider.subscribeAdmin(listener);
-            return () => {
-                tokenProvider.unsubscribeAdmin(listener);
-            };
+            return () => tokenProvider.unsubscribeAdmin(listener);
         }, [listener]);
         return [isAdmin];
     };
@@ -73,8 +67,21 @@ const AuthContext = ({children}) => {
 const createTokenProvider = () => {
 
     const tokenStore = createTokenStore();
+
     let loggedListeners = [];
     let adminListeners = [];
+
+    let isLoggingIn = null;
+
+    const waitForLogin = () => {
+        if (!isLoggingIn) {
+            return Promise.resolve();
+        }
+        return isLoggingIn.then(() => {
+            isLoggingIn = null;
+            return true;
+        });
+    }
 
     const onUpdateToken = () => fetch('/api/v1/auth/refresh-token', {
         method: 'POST',
@@ -86,23 +93,23 @@ const createTokenProvider = () => {
         return token || null;
     };
 
-    const subscribeLogged = (listener) => {
+    const subscribeLogged = listener => {
         loggedListeners.push(listener);
     };
 
-    const unsubscribeLogged = (listener) => {
+    const unsubscribeLogged = listener => {
         loggedListeners = loggedListeners.filter(l => l !== listener);
     };
 
-    const subscribeAdmin = (listener) => {
+    const subscribeAdmin = listener => {
         adminListeners.push(listener);
     };
 
-    const unsubscribeAdmin = (listener) => {
+    const unsubscribeAdmin = listener => {
         adminListeners = adminListeners.filter(l => l !== listener);
     };
 
-    const isExpired = (exp) => {
+    const isExpired = exp => {
         if (!exp) {
             return false;
         }
@@ -126,11 +133,13 @@ const createTokenProvider = () => {
 
     const getToken = async () => {
         await checkExpiry();
-        return getTokenInternal();
+        const token = getTokenInternal();
+        isLoggingIn = Promise.resolve();
+        return token;
     };
 
     const isLoggedIn = () => {
-        getToken().then();
+        isLoggingIn = getToken();
         return isRefreshTokenAvailable();
     };
 
@@ -139,7 +148,7 @@ const createTokenProvider = () => {
         return roles && roles.includes("ROLE_ADMIN");
     };
 
-    const setToken = (token) => {
+    const setToken = token => {
         if (token) {
             tokenStore.setItem(token);
         } else {
@@ -160,7 +169,8 @@ const createTokenProvider = () => {
         unsubscribeLogged,
         subscribeAdmin,
         unsubscribeAdmin,
-        updateLoggedListneners
+        updateLoggedListneners,
+        waitForLogin
     };
 }
 
