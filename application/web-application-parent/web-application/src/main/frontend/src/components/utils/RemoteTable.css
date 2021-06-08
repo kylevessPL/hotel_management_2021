@@ -1,0 +1,9 @@
+.react-bootstrap-table table {
+    table-layout: auto !important;
+}
+
+.react-bs-table-sizePerPage-dropdown > ul > li > a, .react-bs-table-sizePerPage-dropdown > ul > li > a:hover {
+    display: block;
+    color: #212529;
+    text-decoration: none;
+}

@@ -1,17 +1,9 @@
 import React, {useContext, useEffect, useState} from 'react';
 import './Users.css';
-import {Button, Col, Row, Spinner} from "reactstrap";
+import {Button, Col, Row} from "reactstrap";
 import {API_PATH} from "../../../utils";
 import {authContext} from "../../../context/AuthContext";
-import BootstrapTable from 'react-bootstrap-table-next';
-import paginationFactory, {
-    PaginationListStandalone,
-    PaginationProvider,
-    PaginationTotalStandalone,
-    SizePerPageDropdownStandalone
-} from 'react-bootstrap-table2-paginator';
-import overlayFactory from 'react-bootstrap-table2-overlay';
-import {ConfirmationModal} from "../../utils";
+import {ConfirmationModal, RemoteTable} from "../../utils";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faLock, faUnlock} from "@fortawesome/free-solid-svg-icons"
 
@@ -19,6 +11,8 @@ const Users = () => {
 
     const INITIAL_PAGE = 1;
     const INITIAL_SIZE_PER_PAGE = 10;
+    const INITIAL_SORT_FIELD = 'id';
+    const INITIAL_SORT_ORDER = 'asc';
 
     const {authFetch} = useContext(authContext);
 
@@ -35,14 +29,14 @@ const Users = () => {
     }
 
     useEffect(() => {
-        fetchData(INITIAL_PAGE, INITIAL_SIZE_PER_PAGE)
+        fetchData(INITIAL_PAGE, INITIAL_SIZE_PER_PAGE, INITIAL_SORT_FIELD, INITIAL_SORT_ORDER);
     }, []);
 
-    const handleTableChange = (type, { page, sizePerPage }) => {
-        fetchData(page, sizePerPage);
+    const handleTableChange = (type, { page, sizePerPage, sortField, sortOrder }) => {
+        fetchData(page, sizePerPage, sortField, sortOrder);
     }
 
-    const fetchData = (page, sizePerPage) => {
+    const fetchData = (page, sizePerPage, sortField, sortOrder) => {
 
         const setPageInfo = headers => {
             setTotalSize(headers.get('X-Total-Count'));
@@ -50,7 +44,7 @@ const Users = () => {
 
         setLoading(true);
 
-        authFetch(`${API_PATH}/users?page=${page}&size=${sizePerPage}`, {
+        authFetch(`${API_PATH}/users?page=${page}&size=${sizePerPage}&sortBy=${sortField}&sortDir=${sortOrder.toUpperCase()}`, {
             method: "GET",
             mode: "cors",
             headers: {
@@ -84,7 +78,7 @@ const Users = () => {
             if (response.ok) {
                 const idx = data.findIndex(el => el.id === updatedId);
                 let newData = [...data];
-                newData[idx] = {...newData[idx], status: updatedStatus === 'ACTIVE' ? 'DISABLED' : 'ACTIVE'}
+                newData[idx] = {...newData[idx], status: updatedStatus}
                 setData(newData);
             } else {
                 throw new Error('Update account status failure');
@@ -148,63 +142,20 @@ const Users = () => {
         <div>
             <h4 className="mb-4">Users</h4>
             <Row>
-                <Col xs={12} xl={9} className="mb-lg-0">
-                    <PaginationProvider
-                        pagination={paginationFactory({
-                            custom: true,
-                            totalSize: totalSize,
-                            alwaysShowAllBtns: true,
-                            showTotal: true
-                        })}
-                    >
-                        {
-                            ({
-                                 paginationProps,
-                                 paginationTableProps
-                            }) => (
-                                <>
-                                    <BootstrapTable
-                                        { ...paginationTableProps }
-                                        remote
-                                        bootstrap4
-                                        keyField="id"
-                                        data={data}
-                                        columns={columns}
-                                        onTableChange={handleTableChange}
-                                        noDataIndication={() => <span>{!loading ? 'No users in database' : ''}</span>}
-                                        loading={loading}
-                                        overlay={overlayFactory({
-                                            spinner: <Spinner color="primary" style={{borderWidth: '0.15em'}} />,
-                                            background: 'transparent',
-                                        })}
-                                    />
-                                    <div className="d-flex justify-content-between">
-                                        <div>
-                                            <SizePerPageDropdownStandalone
-                                                { ...paginationProps }
-                                                variation="dropup"
-                                                className="mr-1"
-                                            />
-                                            <PaginationTotalStandalone
-                                                { ...paginationProps }
-                                            />
-                                        </div>
-                                        <div>
-                                            <PaginationListStandalone
-                                                { ...paginationProps }
-                                            />
-                                        </div>
-                                    </div>
-                                </>
-                            )
-                        }
-                    </PaginationProvider>
+                <Col xs={12} className="mb-lg-0">
+                    <RemoteTable
+                        data={data}
+                        columns={columns}
+                        totalSize={totalSize}
+                        loading={loading}
+                        noDataText="No users in database"
+                        onTableChange={handleTableChange}/>
                 </Col>
             </Row>
             <ConfirmationModal
-                title="Disable account"
-                content="Are you sure you want to disable this account?"
-                confirmText={updateAccountStatus === 'DISABLED' ? 'Disable' : 'Enable'}
+                title={(updatedStatus === 'DISABLED' ? 'Disable' : 'Enable') + ' account'}
+                content={'Are you sure you want to ' + (updatedStatus === 'DISABLED' ? 'disable' : 'enable') + ' this account?'}
+                confirmText={updatedStatus === 'DISABLED' ? 'Disable' : 'Enable'}
                 onConfirm={updateAccountStatus}
                 open={modalOpen}
                 toggle={toggleModal} />

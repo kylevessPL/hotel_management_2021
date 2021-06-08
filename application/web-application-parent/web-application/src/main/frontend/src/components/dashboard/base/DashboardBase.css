@@ -1,7 +1,3 @@
-.btn:focus {
-    box-shadow: none !important;
-}
-
 img {
     pointer-events: none;
 }
