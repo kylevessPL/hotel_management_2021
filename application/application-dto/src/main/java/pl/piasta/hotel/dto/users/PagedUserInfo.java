@@ -17,7 +17,7 @@ public class PagedUserInfo {
     private String username;
     @Schema(description = "User email", example = "example@example.com")
     private String email;
-    @Schema(description = "User username", example = "[\"ROLE_ADMIN\", \"ROLE_USER\"]")
+    @Schema(description = "Account roles", example = "[\"ROLE_ADMIN\", \"ROLE_USER\"]")
     private String[] roles;
     @Schema(description = "Account status", example = "DISABLED")
     private String status;

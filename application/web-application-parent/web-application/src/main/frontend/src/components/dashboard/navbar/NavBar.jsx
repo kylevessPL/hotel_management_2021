@@ -12,6 +12,7 @@ import {
     Navbar,
     NavbarBrand,
     NavbarToggler,
+    NavItem,
     UncontrolledButtonDropdown,
     UncontrolledCollapse
 } from 'reactstrap'
@@ -33,25 +34,29 @@ const NavBar = ({admin}) => {
                 <Col xs={12} md={3} lg={2} className="d-flex justify-content-between mb-lg-0">
                     <NavbarBrand tag={Link} exact to="/dashboard">
                         <img src="/favicon.ico" alt="HoteLA logo" width="52" height="52" className="mr-2" />
-                        HoteLA Client Dashboard
+                        HoteLA {admin ? 'Admin' : 'Client'} Dashboard
                     </NavbarBrand>
                     <NavbarToggler id="toggler" className="d-md-none mb-3" />
                 </Col>
                 <Col xs={12} md={5} lg={8} className="d-flex align-items-center justify-content-md-end mt-3 mt-md-0">
                     <UncontrolledButtonDropdown className="navbar-dropdown">
-                        <DropdownToggle caret color="primary" className="text-left">
-                            Hello, {username}
-                        </DropdownToggle>
-                        <DropdownMenu right={true} classname="w-100">
-                            <DropdownItem tag={Link} exact to="/dashboard/account" className="pl-2">
-                                <UserCircleIcon className="align-top mr-1" style={{fontSize: "28px"}} />
-                                My account
-                            </DropdownItem>
-                            <DropdownItem onClick={toggleModal} className="pl-2">
-                                <SignOutAltIcon className="align-top mr-1" style={{fontSize: "28px"}} />
-                                Sign out
-                            </DropdownItem>
-                        </DropdownMenu>
+                        <Nav>
+                            <NavItem class="col-12 px-0">
+                                <DropdownToggle caret color="primary" className="btn-block text-left">
+                                    Hello, {username}
+                                </DropdownToggle>
+                                <DropdownMenu right={true} className="w-100">
+                                    <DropdownItem tag={Link} exact to="/dashboard/account" className="pl-2">
+                                        <UserCircleIcon className="align-top mr-1" style={{fontSize: "28px"}} />
+                                        My account
+                                    </DropdownItem>
+                                    <DropdownItem onClick={toggleModal} className="pl-2">
+                                        <SignOutAltIcon className="align-top mr-1" style={{fontSize: "28px"}} />
+                                        Sign out
+                                    </DropdownItem>
+                                </DropdownMenu>
+                            </NavItem>
+                        </Nav>
                     </UncontrolledButtonDropdown>
                 </Col>
                 <UncontrolledCollapse toggler="#toggler" className="d-md-none mt-3">
@@ -66,7 +71,7 @@ const NavBar = ({admin}) => {
                 confirmText="Sign out"
                 onConfirm={logout}
                 open={modalOpen}
-                toggle={toggleModal}/>
+                toggle={toggleModal} />
         </div>
     );
 }

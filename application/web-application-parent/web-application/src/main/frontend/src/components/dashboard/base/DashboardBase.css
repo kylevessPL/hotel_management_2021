@@ -23,3 +23,7 @@ input.error, textarea.error, .dropdown-toggle.error {
 .nav-item > a {
     color: #0c68f1;
 }
+
+.react-bs-table-no-data {
+    text-align: center !important;
+}
