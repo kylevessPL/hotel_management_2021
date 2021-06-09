@@ -8,6 +8,6 @@ import java.util.Optional;
 public interface DiscountsEntityDao extends JpaRepository<DiscountsEntity, Integer> {
 
     Optional<DiscountsEntity> findByCode(String code);
-    boolean deleteByCode(String code);
+    int deleteByCode(String code);
     boolean existsByCode(String code);
 }

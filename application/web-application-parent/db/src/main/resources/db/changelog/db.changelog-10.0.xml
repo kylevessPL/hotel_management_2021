@@ -199,4 +199,7 @@
             <column name="role_id">2</column>
         </insert>
     </changeSet>
+    <changeSet author="geekon" id="10.0-19">
+        <delete schemaName="public" tableName="discounts" />
+    </changeSet>
 </databaseChangeLog>

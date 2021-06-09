@@ -20,7 +20,7 @@ const Users = () => {
     const [totalSize, setTotalSize] = useState(0);
     const [loading, setLoading] = useState(false);
     const [updatedId, setUpdatedId] = useState(0);
-    const [updatedStatus, setUpdatedStatus] = useState("");
+    const [updatedStatus, setUpdatedStatus] = useState(undefined);
     const [modalOpen, setModalOpen] = useState(false);
 
     const toggleModal = () => {

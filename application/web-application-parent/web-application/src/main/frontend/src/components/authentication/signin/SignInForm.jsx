@@ -55,11 +55,11 @@ const SignInForm = props => {
                         } else if ([401, 403, 422].indexOf(response.status) >= 0) {
                             setRequestFailedMessage(data.message);
                         } else {
-                            setRequestFailedMessage('Request cannot be fulfilled now. Please try again later.');
+                            throw new Error('Request cannot be fulfilled now. Please try again later.');
                         }
                     }).catch((error) => {
                         console.error(error);
-                        setRequestFailedMessage('Request cannot be fulfilled now. Please try again later.');
+                        setRequestFailedMessage(error.message);
                     }).finally(() => setSubmitting(false));
             }}
         >

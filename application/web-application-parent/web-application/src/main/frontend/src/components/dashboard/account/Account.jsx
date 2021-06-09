@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import './Account.css';
-import {Alert, Button, Card, CardBody, Col, FormGroup, Input, Label, Row} from "reactstrap";
+import {Alert, Button, Card, CardBody, CardImg, Col, FormGroup, Input, Label, Row} from "reactstrap";
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import * as Yup from 'yup';
 import {API_PATH} from "../../../utils";
@@ -48,7 +48,7 @@ const Account = () => {
             if (response.ok) {
                 setAvatarImage(avatarDefault);
             } else {
-                throw new Error('Avatar image fetch failed');
+                throw new Error('Avatar image fetch failure');
             }
         }).catch((error) => console.log(error));
     }
@@ -65,7 +65,7 @@ const Account = () => {
                 await response.blob()
                     .then(data => setAvatarImage(URL.createObjectURL(data)));
             } else if (response.status !== 409) {
-                throw new Error('Avatar image fetch failed');
+                throw new Error('Avatar image fetch failure');
             }
         }).catch((error) => console.log(error));
     }, []);
@@ -75,10 +75,10 @@ const Account = () => {
             <h4 className="mb-4">My account</h4>
             <Row>
                 <Col lg={4} className="pb-5">
-                    <Card className="pb-3">
+                    <Card>
                         <CardBody>
                             <div className="avatar rounded-circle overflow-hidden mb-4">
-                                <img src={avatarImage} alt="Avatar" className="card-img-top" />
+                                <CardImg top src={avatarImage} />
                             </div>
                             {avatarUpdated
                                 ? <Alert color="success">Avatar updated successfully.</Alert>
@@ -125,18 +125,16 @@ const Account = () => {
                                                 await response.json()
                                                     .then((data) => {
                                                         if ([413, 417].indexOf(response.status) >= 0) {
-                                                            setAvatarUpdated(false);
-                                                            setAvatarRequestFailedMessage(data.message);
+                                                            throw new Error(data.message);
                                                         } else {
-                                                            setAvatarUpdated(false);
-                                                            setAvatarRequestFailedMessage('Request cannot be fulfilled now. Please try again later.');
+                                                            throw new Error('Request cannot be fulfilled now. Please try again later.');
                                                         }
                                                     })
                                             }
                                         }).catch((error) => {
                                             console.error(error);
                                             setAvatarUpdated(false);
-                                            setAvatarRequestFailedMessage('Request cannot be fulfilled now. Please try again later.');
+                                            setAvatarRequestFailedMessage(error.message);
                                         }).finally(() => setSubmitting(false));
                                 }}
                             >
@@ -178,6 +176,7 @@ const Account = () => {
                     initialValues={{currentPassword: '', newPassword: '', repeatPassword: ''}}
                     validationSchema={Yup.object({
                         currentPassword: Yup.string()
+                            .max(120, 'Current password is too long')
                             .required('Current password is required'),
                         newPassword: Yup.string()
                             .min(3, 'Password must be at least 6 characters long')
@@ -220,18 +219,16 @@ const Account = () => {
                                                 if (response.status === 409) {
                                                     resetForm(values);
                                                 }
-                                                setProfileUpdated(false);
-                                                setProfileRequestFailedMessage(data.message);
+                                                throw new Error(data.message);
                                             } else {
-                                                setProfileUpdated(false);
-                                                setProfileRequestFailedMessage('Request cannot be fulfilled now. Please try again later.');
+                                                throw new Error('Request cannot be fulfilled now. Please try again later.');
                                             }
                                         })
                                 }
                             }).catch((error) => {
                                 console.error(error);
                                 setProfileUpdated(false);
-                                setProfileRequestFailedMessage('Request cannot be fulfilled now. Please try again later.');
+                                setProfileRequestFailedMessage(error.message);
                             }).finally(() => {
                                 setSubmitting(false);
                             });

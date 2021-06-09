@@ -15,9 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,6 +33,9 @@ import pl.piasta.hotel.dto.discounts.DiscountDetailsResponse;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+import java.util.List;
 
 @Tag(name = "Discounts API", description = "API performing operations on discount resources")
 @Validated
@@ -43,6 +46,21 @@ public class DiscountsServiceController {
 
     private final DiscountsService service;
     private final DiscountsMapper mapper;
+
+    @SecurityRequirements
+    @Operation(
+            summary = "Get all discounts",
+            operationId = "getAllDiscounts"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content),
+    })
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<DiscountDetailsResponse> getAllDiscounts() {
+        List<DiscountDetails> discounts = service.getAllDiscounts();
+        return mapper.mapToResponse(discounts);
+    }
 
     @Operation(
             summary = "Add discount",
@@ -90,8 +108,10 @@ public class DiscountsServiceController {
     })
     @Secured("ROLE_ADMIN")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public void removeDiscount(@Parameter(description = "Discount code") @RequestParam @NotBlank String code) {
+    @DeleteMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void removeDiscount(
+            @Parameter(description = "Discount code") @RequestParam
+            @NotBlank @Pattern(regexp = "^[a-zA-Z0-9]*$") @Size(min = 2, max = 20) String code) {
         service.removeDiscount(code);
     }
 
@@ -107,8 +127,10 @@ public class DiscountsServiceController {
             @ApiResponse(responseCode = "422", description = "Validation failed", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public DiscountDetailsResponse getDiscountDetails(@Parameter(description = "Discount code") @RequestParam @NotBlank String code) {
+    @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+    public DiscountDetailsResponse getDiscountDetails(
+            @Parameter(description = "Discount code") @RequestParam
+            @NotBlank @Pattern(regexp = "^[a-zA-Z0-9]*$") @Size(min = 2, max = 20) String code) {
         DiscountDetails discountDetails = service.getDiscountDetails(code);
         return mapper.mapToResponse(discountDetails);
     }

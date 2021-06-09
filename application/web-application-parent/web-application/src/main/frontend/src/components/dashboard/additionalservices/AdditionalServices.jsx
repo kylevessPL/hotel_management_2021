@@ -6,7 +6,7 @@ import ServiceDescriptionModal from "./utils"
 
 const AdditionalServices = () => {
 
-    const [additionalServicesData, setAdditionalServicesData] = useState([]);
+    const [data, setData] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
     const [modalName, setModalName] = useState('');
     const [modalPrice, setModalPrice] = useState('');
@@ -26,9 +26,9 @@ const AdditionalServices = () => {
             if (response.ok) {
                 return response.json();
             } else {
-                throw new Error('Additional services data fetch failed');
+                throw new Error('Additional services data fetch failure');
             }
-        }).then((data) => setAdditionalServicesData(data)
+        }).then((data) => setData(data)
         ).catch((error) => console.log(error));
     }, []);
 
@@ -53,8 +53,8 @@ const AdditionalServices = () => {
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    {additionalServicesData &&
-                                    additionalServicesData.map((object, i) =>
+                                    {data &&
+                                    data.map((object, i) =>
                                         <tr key={i} className="text-center">
                                             <th className="service-id align-middle" scope="row">{i + 1}</th>
                                             <td className="service-name align-middle">{object.name}</td>

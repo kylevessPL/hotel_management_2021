@@ -8,6 +8,8 @@ import pl.piasta.hotel.domainmodel.discounts.DiscountDetails;
 import pl.piasta.hotel.domainmodel.utils.ApplicationException;
 import pl.piasta.hotel.domainmodel.utils.ErrorCode;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class DiscountsServiceImpl implements DiscountsService {
@@ -24,7 +26,7 @@ public class DiscountsServiceImpl implements DiscountsService {
     @Override
     @Transactional
     public void removeDiscount(String code) {
-        if (!repository.removeDiscount(code)) {
+        if (repository.removeDiscount(code) == 0) {
             throw new ApplicationException(ErrorCode.DISCOUNT_CODE_NOT_FOUND);
         }
     }
@@ -34,6 +36,12 @@ public class DiscountsServiceImpl implements DiscountsService {
     public DiscountDetails getDiscountDetails(String code) {
         return repository.getDiscountDetails(code)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.DISCOUNT_CODE_NOT_FOUND));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<DiscountDetails> getAllDiscounts() {
+        return repository.getDiscounts();
     }
 
     private void checkDiscoutCodeValidity(String code) {

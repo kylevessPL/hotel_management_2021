@@ -9,6 +9,7 @@ import pl.piasta.hotel.infrastructure.dao.DiscountsEntityDao;
 import pl.piasta.hotel.infrastructure.mapper.DiscountsEntityMapper;
 import pl.piasta.hotel.infrastructure.model.DiscountsEntity;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -17,6 +18,12 @@ public class DiscountsRepositoryImpl implements DiscountsRepository {
 
     private final DiscountsEntityMapper mapper;
     private final DiscountsEntityDao dao;
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<DiscountDetails> getDiscounts() {
+        return mapper.mapToDiscount(dao.findAll());
+    }
 
     @Override
     @Transactional
@@ -35,7 +42,7 @@ public class DiscountsRepositoryImpl implements DiscountsRepository {
 
     @Override
     @Transactional
-    public boolean removeDiscount(String code) {
+    public int removeDiscount(String code) {
         return dao.deleteByCode(code);
     }
 

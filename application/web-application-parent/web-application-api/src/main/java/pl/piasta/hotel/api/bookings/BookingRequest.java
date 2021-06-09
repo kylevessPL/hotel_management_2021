@@ -40,7 +40,7 @@ public class BookingRequest implements Serializable {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate endDate;
     @Schema(description = "Discount code", example = "PROMO5")
-    @Size(max = 20)
+    @Size(min = 2, max = 20)
     private String discountCode;
     @Schema(description = "Customers")
     @NotEmpty
